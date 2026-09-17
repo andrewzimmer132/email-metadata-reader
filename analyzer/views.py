@@ -30,3 +30,18 @@ class LogoutView(View):
     def get(self, request):
         logout(request)
         return redirect('/')
+
+class HomeView(View):
+    def get(self, request):
+        if not request.user.is_authenticated:
+            return redirect('login')
+        return render(request, 'analyzer/analyzer.html')
+
+    def post(self, request):
+        if not request.user.is_authenticated:
+            return redirect('login')
+        header = request.POST.get('header')
+        body = request.POST.get('body', '')
+        #NEED TO IMPLEMENT ANALYZER LOGIC
+        context = {'submitted': True, 'header_preview': header[:100]}
+        return render(request, 'analyzer/analyzer.html', context)
