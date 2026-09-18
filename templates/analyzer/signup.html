@@ -1,0 +1,24 @@
+{% extends 'analyzer/base.html' %}
+
+{% block title %}Sign Up{% endblock %}
+
+{% block content %}
+<div class="auth-card">
+    <h1>Sign Up</h1>
+
+    {% if not signup_validation and signup_validation is not None %}
+        <p class="error">Invalid username or password</p>
+    {% endif %}
+
+    <form method="POST" action="{% url 'signup' %}">
+        {% csrf_token %}
+        <label for="username">Username</label>
+        <input type="text" name="username" id="username" required>
+        <label for="email">Email</label>
+        <input type="email" name="email" id="email" required>
+        <label for="password">Password</label>
+        <input type="password" name="password" id="password" required>
+        <button type="submit">Sign Up</button>
+    </form>
+</div>
+{% endblock %}

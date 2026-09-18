@@ -1,0 +1,27 @@
+{% extends 'analyzer/base.html' %}
+
+{% block title %}Analyze Email{% endblock %}
+
+{% block content %}
+<h1>Analyze Email</h1>
+<p>Paste full email header below; optional to paste email body</p>
+
+{% if submitted %}
+    <div class="success">
+        <p>✓ Header received (first 100 char):</p>
+        <pre>{{ header_preview }}</pre>
+        <p><em>Implement analysis logic</em></p>
+    </div>
+{% endif %}
+
+<form method="POST" action="">
+    {% csrf_token %}
+    <label for="header">Email Header (required)</label>
+    <textarea name="header" id="header" rows="12" required
+        placeholder="Paste email header here: "></textarea>
+    <label for="body">Email Body (optional)</label>
+    <textarea name="body" id="body" rows="6"
+        placeholder="Paste email body here: "></textarea>
+    <button type="submit">Analyze</button>
+</form>
+{% endblock %}
