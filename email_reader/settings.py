@@ -12,6 +12,8 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 
 from pathlib import Path
 
+from django.conf.global_settings import AUTH_PASSWORD_VALIDATORS
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -38,6 +40,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'analyzer',
+    'email_reader',
 ]
 
 MIDDLEWARE = [
@@ -69,7 +72,7 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'email_reader.wsgi.application'
 
-
+AUTH_USER_MODEL = 'analyzer.User'
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
