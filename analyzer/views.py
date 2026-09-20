@@ -56,17 +56,27 @@ class SignupView(View):
         email = request.POST.get('email')
         password = request.POST.get('password')
 
-        try:
-            user = User.objects.create_user(username=username, email=email, password=password)
-            user.save()
-        except:
-            context = {'signup_validation': False}
+        if not username or not email or not password:
+            context = {'signup_entered': False}
             return render(request, 'analyzer/signup.html', context)
+
+        context = {'signup_entered': True, 'unique_username': True, 'unique_email': True}
+
+        username_exists = User.objects.filter(username=username).exists()
+        if username_exists:
+            context['unique_username'] = False
+            return render(request, 'analyzer/signup.html', context)
+
+        email_exists = User.objects.filter(email=email).exists()
+        if email_exists:
+            context['unique_email'] = False
+            return render(request, 'analyzer/signup.html', context)
+
+        user = User.objects.create_user(username=username, email=email, password=password)
 
         user = authenticate(request, username=username, password=password)
         if user is not None:
-            login(request, user)
-            return redirect('home_view')
+            return redirect('login')
         else:
             context = {'signup_validation': False}
             return render(request, 'analyzer/signup.html', context)
