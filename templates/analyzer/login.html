@@ -6,6 +6,11 @@
 <div class="auth-card">
     <h1>Log In</h1>
 
+    {% if locked %}
+        <p class="error">
+            Too many failed login attempts. Please wait one minute before trying again.
+        </p>
+
     {% if not login_validation and login_validation is not None %}
         <p class="error">Invalid username or password</p>
     {% endif %}
@@ -16,7 +21,7 @@
         <input type="text" name="username" id="username" required>
         <label for="password">Password</label>
         <input type="password" name="password" id="password" required>
-        <button type="submit">Log In</button>
+        <button type="submit" {% if locked %}disabled{% endif %}>Log In</button>
         <p><a href="{% url 'signup' %}">Sign up here.</a></p>
     </form>
 </div>
