@@ -28,8 +28,6 @@ class LoginAttemptModelTest(TestCase):
     def test_str(self):
         self.assertEqual(str(self.test_attempt), 'test_user')
 
-
-
 #View tests
 class LoginViewTest(TestCase):
     def setUp(self):
