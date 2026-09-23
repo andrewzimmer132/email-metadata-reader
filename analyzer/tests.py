@@ -1,3 +1,4 @@
+from django.contrib.auth.models import User
 from django.urls import reverse
 from django.test import TestCase, Client
 
@@ -33,7 +34,7 @@ class LoginViewTest(TestCase):
     def setUp(self):
         self.client = Client()
         self.url = reverse('login')
-        self.test_user = User.objects.create(username='test_user2', password='test', email='test2@uwm.edu')
+        self.test_user = User.objects.create_user(username='test_user2', password='test', email='test2@uwm.edu')
 
     def test_login_get(self):
         response = self.client.get(self.url)
@@ -44,6 +45,7 @@ class LoginViewTest(TestCase):
         response = self.client.post(self.url, {'username': 'test_user2', 'password': 'test'})
         self.assertEqual(response.status_code, 302)
         self.assertRedirects(response, reverse('home_view'))
+        response = self.client.get(reverse('home_view'))
         self.assertTrue(response.wsgi_request.user.is_authenticated)
 
     def test_login_invalid_post(self):
