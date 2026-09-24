@@ -1,7 +1,10 @@
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
+from django.utils import timezone
+from .models import LoginAttempt
 from django.shortcuts import render, redirect
 from django.views import View
+from datetime import timedelta
 
 
 # Create your views here.
@@ -12,20 +15,64 @@ class LoginView(View):
     def post(self, request):
         username = request.POST.get('username')
         password = request.POST.get('password')
-        user = None
-        try:
-            user = authenticate(request, username=username, password=password)
-        except:
-            login_validation = False
+        attempt, created = LoginAttempt.objects.get_or_create(
+            username=username
+        )
 
-        login_validation = False if user is None else True
+        now = timezone.now()
 
-        context = {'login_validation': login_validation}
-        if login_validation:
+        if attempt.lock_time is not None:
+            unlock_time = attempt.lock_time + timedelta(minutes=1)
+
+            if now < unlock_time:
+                seconds_remaining = int(
+                    (unlock_time - now).total_seconds()
+                )
+
+                context = {
+                    'login_validation': False,
+                    'locked': True,
+                    'seconds_remaining': seconds_remaining,
+                }
+
+                return render(
+                    request,
+                    'analyzer/login.html',
+                    context,
+                    status=429,
+                )
+
+            attempt.failures = 0
+            attempt.lock_time = None
+            attempt.save(update_fields=['failures', 'lock_time'])
+
+        user = authenticate(
+            request,
+            username=username,
+            password=password,
+        )
+
+        if user is not None:
+            attempt.failures = 0
+            attempt.lock_time = None
+            attempt.save(update_fields=['failures', 'lock_time'])
+
             login(request, user)
             return redirect('home_view')
-        else:
-            return render(request, 'analyzer/login.html', context)
+
+        attempt.failures += 1
+
+        if attempt.failures >= 3:
+            attempt.lock_time = now
+
+        attempt.save(update_fields=['failures', 'lock_time'])
+
+        context = {
+            'login_validation': False,
+            'locked': attempt.lock_time is not None,
+        }
+
+        return render(request, 'analyzer/login.html', context)
 
 class LogoutView(View):
     def get(self, request):

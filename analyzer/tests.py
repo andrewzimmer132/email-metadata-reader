@@ -2,7 +2,7 @@ from django.contrib.auth.models import User
 from django.urls import reverse
 from django.test import TestCase, Client
 
-from analyzer.models import Email
+from analyzer.models import Email, LoginAttempt
 
 
 # Create your tests here.
@@ -22,6 +22,12 @@ class EmailModelTest(TestCase):
     def test_str(self):
         self.assertEqual(str(self.test_email), 'test email')
 
+class LoginAttemptModelTest(TestCase):
+    def setUp(self):
+        self.test_attempt = LoginAttempt.objects.create(username='test_user')
+
+    def test_str(self):
+        self.assertEqual(str(self.test_attempt), 'test_user')
 
 #View tests
 class LoginViewTest(TestCase):
