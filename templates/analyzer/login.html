@@ -10,6 +10,7 @@
         <p class="error">
             Too many failed login attempts. Please wait one minute before trying again.
         </p>
+    {% endif %}
 
     {% if not login_validation and login_validation is not None %}
         <p class="error">Invalid username or password</p>
