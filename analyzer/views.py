@@ -1,6 +1,7 @@
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
 from django.shortcuts import render, redirect
+from analyzer.parser import analyze_header
 from django.views import View
 
 
@@ -42,9 +43,11 @@ class HomeView(View):
         if not request.user.is_authenticated:
             return redirect('login')
         header = request.POST.get('header')
-        body = request.POST.get('body', '')
-        #NEED TO IMPLEMENT ANALYZER LOGIC
-        context = {'submitted': True, 'header_preview': header[:100]}
+        results = analyze_header(header)
+        context = {'submitted': True,
+                   'header_preview': header[:100],
+                   'results': results
+                   }
         return render(request, 'analyzer/analyzer.html', context)
 
 class SignupView(View):
