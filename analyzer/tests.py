@@ -2,7 +2,7 @@ from django.contrib.auth.models import User
 from django.urls import reverse
 from django.test import TestCase, Client
 
-from analyzer.models import User, Email, LoginAttempt
+from analyzer.models import Email, LoginAttempt
 
 
 # Create your tests here.
