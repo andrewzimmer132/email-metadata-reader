@@ -4,6 +4,8 @@ from django.test import TestCase, Client
 
 from analyzer.models import Email, LoginAttempt
 
+from analyzer.spoofed_chars import find_spoof_characters
+
 
 # Create your tests here.
 
@@ -53,3 +55,13 @@ class LoginViewTest(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, 'analyzer/login.html')
         self.assertFalse(response.wsgi_request.user.is_authenticated)
+
+class FindSpoofCharactersTests(TestCase):
+    """python manage.py test analyzer.tests.FindSpoofCharactersTests"""
+    def test_clean_ascii_text_returns_empty(self):
+        self.assertEqual(find_spoof_characters("Amazon Support"), [])
+
+    def test_accented_character_is_flagged(self):
+        flags = find_spoof_characters("Amazón")
+        self.assertEqual(len(flags), 1)
+        self.assertEqual(flags[0]["char"], "ó")
