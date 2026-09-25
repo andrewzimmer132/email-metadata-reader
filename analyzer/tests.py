@@ -29,6 +29,12 @@ class LoginAttemptModelTest(TestCase):
     def test_str(self):
         self.assertEqual(str(self.test_attempt), 'test_user')
 
+    def test_failed_login(self):
+        self.test_attempt.failures = 3
+        response = self.client.post(reverse('login'), {'username': 'test_user', 'password': 'test'})
+        self.assertTemplateUsed(response, 'analyzer/login.html')
+        self.assertFalse(response.wsgi_request.user.is_authenticated)
+
 #View tests
 class LoginViewTest(TestCase):
     def setUp(self):

@@ -19,6 +19,7 @@ class LoginView(View):
         attempt, created = LoginAttempt.objects.get_or_create(
             username=username
         )
+        context = {}
 
         now = timezone.now()
 
@@ -84,7 +85,9 @@ class HomeView(View):
     def get(self, request):
         if not request.user.is_authenticated:
             return redirect('login')
-        return render(request, 'analyzer/analyzer.html')
+        else:
+            context = {'is_authenticated': True}
+        return render(request, 'analyzer/analyzer.html', context)
 
     def post(self, request):
         if not request.user.is_authenticated:
@@ -111,7 +114,7 @@ class SignupView(View):
             context = {'signup_entered': False}
             return render(request, 'analyzer/signup.html', context)
 
-        context = {'signup_entered': True, 'unique_username': True, 'unique_email': True, 'same_password': True}
+        context = {'is_authenticated': False, 'signup_entered': True, 'unique_username': True, 'unique_email': True, 'same_password': True}
 
         username_exists = User.objects.filter(username=username).exists()
         if username_exists:
