@@ -6,11 +6,41 @@
 <h1>Analyze Email</h1>
 <p>Paste full email header below; optional to paste email body</p>
 
+<details class="instructions">
+    <summary>� How to find email header</summary>
+    <p><strong>Gmail:</strong> Open the email ➜ Click three dots (⋮) ➜ Show original ➜ Copy all text.</p>
+    <p><strong>Yahoo:</strong> Open the email ➜ More ➜ View Raw Message.</p>
+    <p><strong>Outlook:</strong> Open the email ➜ Click three dots (⋮) ➜ View ➜ View message details ➜ Copy all text.</p>
+    <p><strong>Apple Mail:</strong>  Open the email ➜ View ➜ Message ➜ All Headers</p>
+</details>
+
 {% if submitted %}
-    <div class="success">
-        <p>✓ Header received (first 100 char):</p>
-        <pre>{{ header_preview }}</pre>
-        <p><em>Implement analysis logic</em></p>
+    <div class="results-summary">
+        <h2>Parsed Header Information</h2>
+        <div class="results-grid">
+            <p><strong>From:</strong> {{ results.from }}</p> 
+            <p><strong>To:</strong> {{ results.to }}</p> 
+            <p><strong>Subject:</strong> {{ results.subject }}</p> 
+            <p><strong>Date:</strong> {{ results.date }}</p> 
+            <p><strong>Return-Path:</strong> {{ results.return_path }}</p> 
+            <p><strong>Message-ID:</strong> {{ results.message_id }}</p> 
+        </div>
+        <h3>Server Routing (Received)</h3>
+        <ul>
+            {% for hop in results.received %}
+                <li><strong>{{ hop.server }}</strong> - {{ hop.ip }}</li>
+            {% empty %}
+                <li>No routing information found.</li>
+            {% endfor %}
+        </ul>
+         <h3>Authentication:</h3>
+        <ul>
+            {% for auth in results.authentication %}
+                <li>{{ auth }}</li>
+            {% empty %}
+                <li>No authentication results found.</li>
+            {% endfor %}
+        </ul>
     </div>
 {% endif %}
 
