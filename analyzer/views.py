@@ -1,7 +1,7 @@
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
 from django.utils import timezone
-from .models import LoginAttempt
+from .models import LoginAttempt, Email
 from django.shortcuts import render, redirect
 from analyzer.parser import analyze_header
 from django.views import View
@@ -138,4 +138,12 @@ class SignupView(View):
         else:
             context = {'signup_validation': False}
             return render(request, 'analyzer/signup.html', context)
-    
+
+class ResultsView(View):
+    def get(self, request):
+        return render(request, 'analyzer/results.html')
+
+    def post(self, request):
+        email = request.POST.get('email')
+        context = {'email': email}
+        return render(request, 'analyzer/results.html', context)
