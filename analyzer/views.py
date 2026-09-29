@@ -3,7 +3,7 @@ from django.contrib.auth.models import User
 from django.utils import timezone
 from .models import LoginAttempt, Email
 from django.shortcuts import render, redirect
-from analyzer.parser import analyze_header
+from analyzer.parser import analyze_header, analyze_body
 from django.views import View
 from datetime import timedelta
 
@@ -93,10 +93,13 @@ class HomeView(View):
         if not request.user.is_authenticated:
             return redirect('login')
         header = request.POST.get('header')
+        body = request.POST.get('body')
         results = analyze_header(header)
+        body_results = analyze_body(body)
         context = {'submitted': True,
                    'header_preview': header[:100],
-                   'results': results
+                   'results': results,
+                   'body_results': body_results
                    }
         return render(request, 'analyzer/analyzer.html', context)
 

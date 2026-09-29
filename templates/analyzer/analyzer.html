@@ -41,6 +41,16 @@
                 <li>No authentication results found.</li>
             {% endfor %}
         </ul>
+        <br>
+        <h2>Parsed Body Information</h2>
+        <h3>URLs Found:</h3>
+        <ul>
+            {% for body_result in body_results %}
+                <li>{{ body_result.match }}</li>
+            {% empty %}
+                <li>No URL found</li>
+            {% endfor %}
+        </ul>
     </div>
 {% endif %}
 
