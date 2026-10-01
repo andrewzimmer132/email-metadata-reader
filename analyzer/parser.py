@@ -21,6 +21,14 @@ def analyze_header(raw_header):
 
     return results
 
+def analyze_body(raw_body):
+    regex = r'(?:https?://)?(?:www\.)?[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)+(?:/[^\s<>"\']*)?'
+    body_results = []
+    urls = re.findall(regex, raw_body)
+    for url in urls:
+        body_results.append({"match": url})
+    return body_results
+
 #make the path more presentable, gets ips and "from" that email passed through
 def get_received(email):
     received_headers = email.get_all("Received", [])

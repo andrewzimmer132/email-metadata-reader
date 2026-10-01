@@ -1,8 +1,13 @@
+from email import policy
+from nis import match
+
 from django.contrib.auth.models import User
 from django.urls import reverse
 from django.test import TestCase, Client
 
 from analyzer.models import Email, LoginAttempt
+from analyzer.parser import analyze_body
+from email.parser import Parser
 
 
 # Create your tests here.
@@ -59,3 +64,44 @@ class LoginViewTest(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, 'analyzer/login.html')
         self.assertFalse(response.wsgi_request.user.is_authenticated)
+
+class ResultsViewTest(TestCase):
+    def setUp(self):
+        self.client = Client()
+        self.email = Email.objects.create(email='This is a test email', status='pending')
+        self.email2 = Email.objects.create(email='This is a test email', status='safe')
+        self.email3 = Email.objects.create(email='This is a test email', status='unsafe')
+        self.email4 = Email.objects.create(email='This is a test email', status='spam/scam')
+
+    def test_pending_email(self):
+        response = self.client.get(reverse('results'))
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'analyzer/results.html')
+        self.assertTrue(self.email.status == 'pending')
+
+    def test_safe_email(self):
+        response = self.client.get(reverse('results'))
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'analyzer/results.html')
+        self.assertTrue(self.email2.status == 'safe')
+
+    def test_unsafe_email(self):
+        response = self.client.get(reverse('results'))
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'analyzer/results.html')
+        self.assertTrue(self.email3.status == 'unsafe')
+
+    def test_spam_email(self):
+        response = self.client.get(reverse('results'))
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'analyzer/results.html')
+        self.assertTrue(self.email4.status == 'spam/scam')
+
+class ParserEmailBodyTest(TestCase):
+    def setUp(self):
+        self.client = Client()
+        self.email = Email.objects.create(email='Click on the link www.google.com')
+
+    def test_found_url(self):
+        results = analyze_body(self.email.__str__())
+        self.assertTrue({'match': 'www.google.com'} in results)
