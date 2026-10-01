@@ -1,8 +1,13 @@
+from email import policy
+from nis import match
+
 from django.contrib.auth.models import User
 from django.urls import reverse
 from django.test import TestCase, Client
 
 from analyzer.models import Email, LoginAttempt
+from analyzer.parser import analyze_body
+from email.parser import Parser
 
 
 # Create your tests here.
@@ -92,3 +97,11 @@ class ResultsViewTest(TestCase):
         self.assertTemplateUsed(response, 'analyzer/results.html')
         self.assertTrue(self.email4.status == 'spam/scam')
 
+class ParserEmailBodyTest(TestCase):
+    def setUp(self):
+        self.client = Client()
+        self.email = Email.objects.create(email='Click on the link www.google.com')
+
+    def test_found_url(self):
+        results = analyze_body(self.email.__str__())
+        self.assertTrue({'match': 'www.google.com'} in results)
