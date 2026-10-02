@@ -51,6 +51,21 @@
             </ul>
         </div>
 
+        {% if spoof_flags %}
+        <div class="carousel-card">
+            <h2>⚠︎ Spoofed Characters Detected</h2>
+            <p>Either the sender's name or email address contain unusual characters. Might be an attempt to impersonale a real person/brand</p>
+            <ul>
+                {% for flag in spoof_flags %}
+                    <li>
+                        <strong>{{ flag.char }}</strong>
+                        ({{ flag.unicode_name }}, position {{ flag.position }})
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
+        {% endif %}
+
         {% if body_results %}
         <div class="carousel-card">
             <h2>⚠︎ Suspicious URLs Found</h2>
