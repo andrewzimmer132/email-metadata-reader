@@ -68,27 +68,57 @@ button:hover {
     font-weight: bold;
 }
 
-.results-summary {
+/*carousel*/
+.carousel-container{
+    margin-top: 1.5rem;
+}
+
+.carousel-card{
+    display: none;
     background: #ffffff;
     padding: 1.5rem;
     border-radius: 8px;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-    margin-bottom: 1.5rem;
     border-left: 4px solid #2563eb;
+    min-height: 250px;
 }
 
-.results-summary h2{
+.carousel-card.active{
+    display: block;
+}
+
+.carousel-controls{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 1rem;
+    padding: 0 1rem;
+}
+
+.carousel-card h2{
     color: #1d1c1c;
     margin-top: 0;
     border-bottom: 2px solid #fafafa;
     padding-bottom: 0.5rem;
 }
 
-.results-summary h3{
-    color: rgb(58, 58, 58);
-    margin-top: 1.5rem;
-    margin-bottom: 0.5rem;
-    font-size: 1rem;
+.carousel-card ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.carousel-card ul li{
+    background: #fafafa;
+    padding: 0.5em 0.75rem;
+    border-radius: 4px;
+    margin-bottom: 0.4rem;
+    font-size: 0.85rem;
+    word-break: break-word;
+}
+
+.carousel-card ul li strong{
+    color: #2563eb;
 }
 
 .results-grid {
@@ -116,25 +146,7 @@ button:hover {
     margin-bottom: 0.15rem;
 }
 
-.results-summary ul {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-}
-
-.results-summary ul li{
-    background: #fafafa;
-    padding: 0.5em 0.75rem;
-    border-radius: 4px;
-    margin-bottom: 0.4rem;
-    font-size: 0.85rem;
-    word-break: break-word;
-}
-
-.results-summary ul li strong{
-    color: #2563eb;
-}
-
+/*instructions*/
 .instructions {
     background: #bfdbfe;
     border: 1px solid #9cc5f7;
