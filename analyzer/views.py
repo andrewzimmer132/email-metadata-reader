@@ -4,6 +4,7 @@ from django.utils import timezone
 from .models import LoginAttempt, Email
 from django.shortcuts import render, redirect
 from analyzer.parser import analyze_header, analyze_body
+from analyzer.spoofed_chars import find_spoof_characters
 from django.views import View
 from datetime import timedelta
 
@@ -96,10 +97,12 @@ class HomeView(View):
         body = request.POST.get('body')
         results = analyze_header(header)
         body_results = analyze_body(body)
+        spoof_flags = find_spoof_characters(results["from"] or "")
         context = {'submitted': True,
                    'header_preview': header[:100],
                    'results': results,
-                   'body_results': body_results
+                   'body_results': body_results,
+                   'spoof_flags': spoof_flags
                    }
         return render(request, 'analyzer/analyzer.html', context)
 
