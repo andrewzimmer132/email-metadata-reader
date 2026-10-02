@@ -1,5 +1,4 @@
 from email import policy
-from nis import match
 
 from django.contrib.auth.models import User
 from django.urls import reverse
@@ -8,6 +7,8 @@ from django.test import TestCase, Client
 from analyzer.models import Email, LoginAttempt
 from analyzer.parser import analyze_body
 from email.parser import Parser
+
+from analyzer.spoofed_chars import find_spoof_characters
 
 
 # Create your tests here.
@@ -105,3 +106,14 @@ class ParserEmailBodyTest(TestCase):
     def test_found_url(self):
         results = analyze_body(self.email.__str__())
         self.assertTrue({'match': 'www.google.com'} in results)
+
+class FindSpoofCharactersTests(TestCase):
+    """python manage.py test analyzer.tests.FindSpoofCharactersTests"""
+    def test_clean_ascii_text_returns_empty(self):
+        self.assertEqual(find_spoof_characters("Amazon Support"), [])
+
+    def test_accented_character_is_flagged(self):
+        flags = find_spoof_characters("Amazón")
+        self.assertEqual(len(flags), 1)
+        self.assertEqual(flags[0]["char"], "ó")
+
