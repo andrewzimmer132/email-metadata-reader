@@ -64,9 +64,9 @@
         {% endif %}
 
         <div class="carousel-controls">
-            <button type="button" onclick="prevCard()">⮜Previous</button>
+            <button type="button" id="pbutton" onclick="prevCard()">⮜Previous</button>
             <span id="progress"></span>
-            <button type="button" onclick="nextCard()">⮞Next</button>
+            <button type="button" id="nbutton" onclick="nextCard()">⮞Next</button>
         </div>
     </div>
 {% endif %}
@@ -86,11 +86,23 @@
     let currCard = 0;
     const cards = document.querySelectorAll('.carousel-card');
     const progress = document.getElementById('progress');
+    const pbutton = document.getElementById('pbutton');
+    const nbutton = document.getElementById('nbutton');
+
     function showCard(index) {
         cards.forEach((card, i) => {
             card.classList.toggle('active', i === index);
         });
-        progress.textContent = `${index+1} / ${cards.length}`;
+
+        if (progress){
+            progress.textContent = `${index+1} / ${cards.length}`;
+        }
+        if (pbutton) {
+            pbutton.style.visibility = index === 0 ? 'hidden' : 'visible';
+        }
+        if (nbutton) {
+            nbutton.style.visibility = index === cards.length-1 ? 'hidden' : 'visible';
+        }
     }
 
     function nextCard() {
