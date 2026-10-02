@@ -31,6 +31,7 @@
 
         <div class="carousel-card">
             <h2>Server Routing (Received)</h2>
+            <p>This shows the path that the email took in order to reach you. Longer routes through unusual countries may be an indicator of suspicious activity.</p>
             <ul>
                 {% for hop in results.received %}
                     <li><strong>{{ hop.server }}</strong> - {{ hop.ip }}</li>
@@ -42,6 +43,8 @@
 
         <div class="carousel-card">
             <h2>Authentication</h2>
+            <p>Security checks that verify whether the email actually comes from where it claims to.</p>
+            <p><strong>✅ Pass</strong> means the check succeeded. <strong>❌ Fail</strong> means it may be fraudulent.</p>
             <ul>
                 {% for auth in results.authentication %}
                     <li>{{ auth }}</li>
