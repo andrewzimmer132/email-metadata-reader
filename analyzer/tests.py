@@ -28,6 +28,16 @@ class EmailModelTest(TestCase):
         differences = self.test_email.compare(other_email)
         self.assertEqual(differences, [])
 
+    def test_compare_differences(self):
+        """python manage.py test analyzer.tests.EmailModelTest.test_compare_differences"""
+        other_email = Email.objects.create(email='different email', status='safe')
+        differences = self.test_email.compare(other_email)
+        expected_differences = [
+            {'field': 'email', 'current': 'test email', 'other': 'different email'},
+            {'field': 'status', 'current': 'pending', 'other': 'safe'}
+        ]
+        self.assertEqual(differences, expected_differences)
+
 class LoginAttemptModelTest(TestCase):
     def setUp(self):
         self.test_attempt = LoginAttempt.objects.create(username='test_user')
