@@ -193,7 +193,11 @@ class PastEmailsAnalyzedView(View):
         return render(request, 'analyzer/past_emails.html', context)
 
 class DeleteEmailAnalyzedView(View):
-    def get(self, request, email_id):
+    def get(self, request):
+        if not request.user.is_authenticated:
+            return redirect('login')
+
+    def post(self, request, email_id):
         if not request.user.is_authenticated:
             return redirect('login')
         email = get_object_or_404(Email, id=email_id)
