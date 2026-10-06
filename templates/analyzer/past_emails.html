@@ -1,0 +1,26 @@
+{% extends 'analyzer/base.html' %}
+
+{% block content %}
+
+<h1>Past Emails Analyzed</h1>
+
+{% if past_emails %}
+    {% for  email in past_emails %}
+        <div>
+            <h2>Email #{{ email.id }}</h2>
+            <p>{{ email.header|truncatechars:100 }}</p>
+            <a href="{% url 'email_results' email.id %}">
+                View Results
+            </a>
+
+            <form method="post" action="{% url 'delete_email' email.id %}">
+                {% csrf_token %}
+                <button type="submit">Delete</button>
+            </form>
+        </div>
+    {% endfor %}
+{% else %}
+    <p>No emails analyzed yet</p>
+{% endif %}
+
+{% endblock %}

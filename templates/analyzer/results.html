@@ -1,0 +1,132 @@
+{% extends 'analyzer/base.html' %}
+
+{% block title %} Results Page {% endblock %}
+
+{% block content %}
+
+<h1>Results</h1>
+
+{% if submitted %}
+    <div class="carousel-container">
+
+        <div class="carousel-card active">
+            <h2>Sender Information</h2>
+            <div class="results-grid">
+                <p><strong>From:</strong> {{ results.from }}</p>
+                <p><strong>To:</strong> {{ results.to }}</p>
+                <p><strong>Subject:</strong> {{ results.subject }}</p>
+                <p><strong>Date:</strong> {{ results.date }}</p>
+                <p><strong>Return-Path:</strong> {{ results.return_path }}</p>
+                <p><strong>Message-ID:</strong> {{ results.message_id }}</p>
+            </div>
+        </div>
+
+        <div class="carousel-card">
+            <h2>Server Routing (Received)</h2>
+            <p>This shows the path that the email took in order to reach you. Longer routes through unusual countries may be an indicator of suspicious activity.</p>
+            <ul>
+                {% for hop in results.received %}
+                    <li><strong>{{ hop.server }}</strong> - {{ hop.ip }}</li>
+                {% empty %}
+                    <li>No routing information found.</li>
+                {% endfor %}
+            </ul>
+        </div>
+
+        <div class="carousel-card">
+            <h2>Authentication</h2>
+            <p>Security checks that verify whether the email actually comes from where it claims to.</p>
+            <p><strong>✅ Pass</strong> means the check succeeded. <strong>❌ Fail</strong> means it may be fraudulent.</p>
+            <ul>
+                {% for auth in results.authentication %}
+                    <li>{{ auth }}</li>
+                {% empty %}
+                    <li>No authentication results found.</li>
+                {% endfor %}
+            </ul>
+        </div>
+
+        {% if spoof_flags %}
+        <div class="carousel-card">
+            <h2>⚠︎ Spoofed Characters Detected</h2>
+            <p>Either the sender's name or email address contains unusual characters. Might be an attempt to impersonate a real person/brand</p>
+            <ul>
+                {% for flag in spoof_flags %}
+                    <li>
+                        <strong>{{ flag.char }}</strong>
+                        ({{ flag.unicode_name }}, position {{ flag.position }})
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
+        {% endif %}
+
+        {% if body_results %}
+        <div class="carousel-card">
+            <h2>⚠︎ Suspicious URLs Found</h2>
+            <p>These URLs were found within the email body. Caution is advised.</p>
+            <ul>
+                {% for body_result in body_results %}
+                    <li>{{ body_result.match }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+        {% endif %}
+
+        <div class="carousel-controls">
+            <button type="button" id="pbutton" onclick="prevCard()">⮜Previous</button>
+            <span id="progress"></span>
+            <button type="button" id="nbutton" onclick="nextCard()">⮞Next</button>
+        </div>
+    </div>
+
+        <a href="/home/">
+            <button type="button">Back to Analyzer</button>
+        </a>
+        <a href="{% url 'past_emails' %}">
+            <button type="button">Past Emails Analyzed</button>
+        </a>
+{% endif %}
+
+<script>
+    let currCard = 0;
+    const cards = document.querySelectorAll('.carousel-card');
+    const progress = document.getElementById('progress');
+    const pbutton = document.getElementById('pbutton');
+    const nbutton = document.getElementById('nbutton');
+
+    function showCard(index) {
+        cards.forEach((card, i) => {
+            card.classList.toggle('active', i === index);
+        });
+
+        if (progress){
+            progress.textContent = `${index+1} / ${cards.length}`;
+        }
+        if (pbutton) {
+            pbutton.style.visibility = index === 0 ? 'hidden' : 'visible';
+        }
+        if (nbutton) {
+            nbutton.style.visibility = index === cards.length-1 ? 'hidden' : 'visible';
+        }
+    }
+
+    function nextCard() {
+        if (currCard < cards.length-1) {
+            currCard++;
+            showCard(currCard);
+        }
+    }
+
+    function prevCard() {
+        if (currCard > 0) {
+            currCard--;
+            showCard(currCard);
+        }
+    }
+    if (cards.length > 0) {
+        showCard(0);
+    }
+</script>
+
+{% endblock %}

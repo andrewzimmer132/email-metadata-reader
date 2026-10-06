@@ -4,7 +4,8 @@ from django.db import models
 # Create your models here.
 
 class Email(models.Model):
-    email = models.EmailField()
+    header = models.TextField(default="")
+    body = models.TextField(default="")
 
     #Status choices for email
     status = models.CharField(
@@ -19,7 +20,7 @@ class Email(models.Model):
 
     )
     def __str__(self):
-        return self.email
+        return self.body
 
 
 class LoginAttempt(models.Model):
