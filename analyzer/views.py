@@ -1,8 +1,9 @@
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
+from django.http import HttpResponse
 from django.utils import timezone
 from .models import LoginAttempt, Email
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from analyzer.parser import analyze_header, analyze_body
 from analyzer.spoofed_chars import find_spoof_characters
 from django.views import View
@@ -93,17 +94,7 @@ class HomeView(View):
     def post(self, request):
         if not request.user.is_authenticated:
             return redirect('login')
-        header = request.POST.get('header')
-        body = request.POST.get('body')
-        results = analyze_header(header)
-        body_results = analyze_body(body)
-        spoof_flags = find_spoof_characters(results["from"] or "")
-        context = {'submitted': True,
-                   'header_preview': header[:100],
-                   'results': results,
-                   'body_results': body_results,
-                   'spoof_flags': spoof_flags
-                   }
+        context = {'is_authenticated': True}
         return render(request, 'analyzer/analyzer.html', context)
 
 class SignupView(View):
@@ -150,6 +141,65 @@ class ResultsView(View):
         return render(request, 'analyzer/results.html')
 
     def post(self, request):
-        email = request.POST.get('email')
-        context = {'email': email}
+        if not request.user.is_authenticated:
+            return redirect('login')
+        header = request.POST.get('header')
+        body = request.POST.get('body')
+        results = analyze_header(header)
+        body_results = analyze_body(body)
+        spoof_flags = find_spoof_characters(results["from"] or "")
+        new_email = Email(body=body, header=header)
+        new_email.save()
+        context = {
+            'is_authenticated': True,
+            'submitted': True,
+            'header_preview': header[:100],
+            'results': results,
+            'body_results': body_results,
+            'spoof_flags': spoof_flags,
+            'email': new_email,
+        }
+
         return render(request, 'analyzer/results.html', context)
+
+class EmailResultsView(View):
+    def get(self, request, email_id):
+        if not request.user.is_authenticated:
+            return redirect('login')
+        email = get_object_or_404(Email, id=email_id)
+        results = analyze_header(email.header)
+        body_results = analyze_body(email.body)
+        spoof_flags = find_spoof_characters(results["from"] or "")
+        context = {
+                    'is_authenticated': True,
+                    'submitted': True,
+                    'header_preview': email.header[:100],
+                    'results': results,
+                    'body_results': body_results,
+                    'spoof_flags': spoof_flags,
+                    'email': email,
+                   }
+        return render(request, 'analyzer/results.html', context)
+
+class PastEmailsAnalyzedView(View):
+    def get(self, request):
+        if not request.user.is_authenticated:
+            return redirect('login')
+        past_emails = Email.objects.all().order_by('-id')
+        context = {
+           'is_authenticated': True,
+           'past_emails': past_emails,
+        }
+        return render(request, 'analyzer/past_emails.html', context)
+
+class DeleteEmailAnalyzedView(View):
+    def get(self, request):
+        if not request.user.is_authenticated:
+            return redirect('login')
+
+    def post(self, request, email_id):
+        if not request.user.is_authenticated:
+            return redirect('login')
+        email = get_object_or_404(Email, id=email_id)
+        email.delete()
+        return redirect('past_emails')
