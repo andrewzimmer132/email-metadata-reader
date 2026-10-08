@@ -7,7 +7,7 @@
 {% if past_emails %}
     {% for  email in past_emails %}
         <div>
-            <h2>Email #{{ email.id }}</h2>
+            <h2>Email #{{ email.id }} Status: {{ email.status }}</h2>
             <p>{{ email.header|truncatechars:100 }}</p>
             <a href="{% url 'email_results' email.id %}">
                 View Results
@@ -22,5 +22,10 @@
 {% else %}
     <p>No emails analyzed yet</p>
 {% endif %}
+<br>
+
+<a href="/home/">
+    <button>Back to Analyzer</button>
+</a>
 
 {% endblock %}
