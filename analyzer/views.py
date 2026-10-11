@@ -6,6 +6,7 @@ from django.shortcuts import render, redirect
 from analyzer.parser import analyze_header
 from django.views import View
 from datetime import timedelta
+from analyzer.geolocation import add_location_and_network_info
 
 
 # Create your views here.
@@ -94,6 +95,12 @@ class HomeView(View):
             return redirect('login')
         header = request.POST.get('header')
         results = analyze_header(header)
+
+        # Add location and ASN(who runs the server) info to each Received
+        results["received"] = add_location_and_network_info(
+            results["received"]
+        )
+
         context = {'submitted': True,
                    'header_preview': header[:100],
                    'results': results
