@@ -21,6 +21,7 @@
             </div>
         </div>
 
+
         <div class="carousel-card">
             <h2>Server Routing (Received)</h2>
             <p>This shows the path that the email took in order to reach you. Longer routes through unusual countries may be an indicator of suspicious activity.</p>
@@ -33,18 +34,41 @@
             </ul>
         </div>
 
-        <div class="carousel-card">
-            <h2>Authentication</h2>
-            <p>Security checks that verify whether the email actually comes from where it claims to.</p>
-            <p><strong>✅ Pass</strong> means the check succeeded. <strong>❌ Fail</strong> means it may be fraudulent.</p>
-            <ul>
-                {% for auth in results.authentication %}
-                    <li>{{ auth }}</li>
-                {% empty %}
-                    <li>No authentication results found.</li>
-                {% endfor %}
-            </ul>
+
+        {% if spam_result %}
+        <div class="carousel-card spam-result-card">
+            {% if spam_result.potential_spam %}
+                <h2>⚠️ Warning: Potential Spam Detected ⚠️</h2>
+                <p>
+                    This email has a
+                    <strong>{{ spam_result.level }}</strong>
+                    spam risk.
+                </p>
+            {% else %}
+                <h2>✅ No Significant Spam Indicators ✅</h2>
+                <p>This email has a low spam risk based on the available data.</p>
+            {% endif %}
+
+            <p>
+                <strong>Spam warnings detected:</strong>
+                {{ spam_result.score }}
+            </p>
+
+            {% if spam_result.warnings %}
+                <h3>Reasons</h3>
+                <ul>
+                    {% for warning in spam_result.warnings %}
+                        <li>{{ warning }}</li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+        <p> Note: Results may not be completely accurate, please
+         check the user's information before sending files or
+        clicking links.
+        </p>
         </div>
+        {% endif %}
+
 
         {% if spoof_flags %}
         <div class="carousel-card">
