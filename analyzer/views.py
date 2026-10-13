@@ -8,6 +8,7 @@ from analyzer.parser import analyze_header, analyze_body
 from analyzer.spoofed_chars import find_spoof_characters
 from django.views import View
 from datetime import timedelta
+from email import message_from_bytes, policy
 
 
 # Create your views here.
@@ -143,8 +144,18 @@ class ResultsView(View):
     def post(self, request):
         if not request.user.is_authenticated:
             return redirect('login')
-        header = request.POST.get('header')
-        body = request.POST.get('body')
+        if "file" in request.FILES:
+            # Read the uploaded .eml file
+            raw_bytes = request.FILES["file"].read()
+            raw_text = raw_bytes.decode("utf-8", errors="ignore")
+            header = raw_text.replace("\r\n", "\n").partition("\n\n")[0]
+            msg = message_from_bytes(raw_bytes, policy=policy.default)
+            body_part = msg.get_body(preferencelist=("plain", "html"))
+            body = body_part.get_content() if body_part else ""
+        else:
+            # Get the header and body from the form
+            header = request.POST.get("header")
+            body = request.POST.get("body")
         results = analyze_header(header)
         body_results = analyze_body(body)
         spoof_flags = find_spoof_characters(results["from"] or "")
