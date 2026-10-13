@@ -149,6 +149,8 @@ class ResultsView(View):
         body_results = analyze_body(body)
         spoof_flags = find_spoof_characters(results["from"] or "")
         new_email = Email(body=body, header=header)
+        if spoof_flags:
+            new_email.status = 'unsafe'
         new_email.save()
         context = {
             'is_authenticated': True,
