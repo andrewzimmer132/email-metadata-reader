@@ -8,6 +8,7 @@ from analyzer.parser import analyze_header, analyze_body
 from analyzer.spoofed_chars import find_spoof_characters
 from django.views import View
 from datetime import timedelta
+from django.db.models import Q
 
 
 # Create your views here.
@@ -186,9 +187,19 @@ class PastEmailsAnalyzedView(View):
         if not request.user.is_authenticated:
             return redirect('login')
         past_emails = Email.objects.all().order_by('-id')
+        status = request.GET.get('status', '').strip()
+        query = request.GET.get('q', '').strip()
+        if status:
+            past_emails = past_emails.filter(status=status)
+        if query:
+            past_emails = past_emails.filter(
+                Q(header__icontains=query) | Q(body__icontains=query)
+            )
         context = {
            'is_authenticated': True,
            'past_emails': past_emails,
+           'selected_status': status,
+           'search_query': query,
         }
         return render(request, 'analyzer/past_emails.html', context)
 

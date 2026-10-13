@@ -4,6 +4,21 @@
 
 <h1>Past Emails Analyzed</h1>
 
+<form method="GET" action="{% url 'past_emails' %}" class="filter-bar">
+    <select name="status" class="filter-select">
+        <option value="">All Statuses</option>
+        <option value="pending" {% if selected_status == 'pending' %}selected{% endif %}>Pending</option>
+        <option value="safe" {% if selected_status == 'safe' %}selected{% endif %}>Safe</option>
+        <option value="unsafe" {% if selected_status == 'unsafe' %}selected{% endif %}>Unsafe</option>
+        <option value="spam/scam" {% if selected_status == 'spam/scam' %}selected{% endif %}>Spam/Scam</option>
+    </select>
+    <input type="text" name="q" class=""filter-input" placeholder="Search header or body..." value="{{ search_query }}">
+    <button type="submit">Filter</button>
+    <a href="{% url 'past_emails' %}">
+        <button type="button" class=""btn-secondary>Clear</button>
+    </a>
+</form>
+
 {% if past_emails %}
     {% for  email in past_emails %}
         <div>
