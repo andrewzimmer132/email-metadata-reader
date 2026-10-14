@@ -27,7 +27,7 @@ class Email(models.Model):
 
         differences = []
 
-        for field in ("email", "status"): # TODO: Add more fields to compare
+        for field in ("body", "status"): # TODO: Add more fields to compare
             current_value = getattr(self, field)
             other_value = getattr(other_email, field)
 
