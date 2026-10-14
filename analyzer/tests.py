@@ -1,6 +1,7 @@
 from email import policy
 
 from django.contrib.auth.models import User
+from django.template.context_processors import request
 from django.urls import reverse
 from django.test import TestCase, Client
 
@@ -23,10 +24,26 @@ class UserModelTest(TestCase):
 
 class EmailModelTest(TestCase):
     def setUp(self):
-        self.test_email = Email.objects.create(email='test email')
+        self.test_email = Email.objects.create(header='test header', body='test email')
 
     def test_str(self):
         self.assertEqual(str(self.test_email), 'test email')
+
+    def test_compare(self):
+        """python manage.py test analyzer.tests.EmailModelTest.test_compare"""
+        other_email = Email.objects.create(header='test', body='test email')
+        differences = self.test_email.compare(other_email)
+        self.assertEqual(differences, [])
+
+    def test_compare_differences(self):
+        """python manage.py test analyzer.tests.EmailModelTest.test_compare_differences"""
+        other_email = Email.objects.create(header='different', body='different email', status='safe')
+        differences = self.test_email.compare(other_email)
+        expected_differences = [
+            {'field': 'body', 'current': 'test email', 'other': 'different email'},
+            {'field': 'status', 'current': 'pending', 'other': 'safe'}
+        ]
+        self.assertEqual(differences, expected_differences)
 
 class LoginAttemptModelTest(TestCase):
     def setUp(self):
@@ -69,10 +86,10 @@ class LoginViewTest(TestCase):
 class ResultsViewTest(TestCase):
     def setUp(self):
         self.client = Client()
-        self.email = Email.objects.create(email='This is a test email', status='pending')
-        self.email2 = Email.objects.create(email='This is a test email', status='safe')
-        self.email3 = Email.objects.create(email='This is a test email', status='unsafe')
-        self.email4 = Email.objects.create(email='This is a test email', status='spam/scam')
+        self.email = Email.objects.create(body='This is a test email', status='pending')
+        self.email2 = Email.objects.create(body='This is a test email', status='safe')
+        self.email3 = Email.objects.create(body='This is a test email', status='unsafe')
+        self.email4 = Email.objects.create(body='This is a test email', status='spam/scam')
 
     def test_pending_email(self):
         response = self.client.get(reverse('results'))
@@ -98,13 +115,22 @@ class ResultsViewTest(TestCase):
         self.assertTemplateUsed(response, 'analyzer/results.html')
         self.assertTrue(self.email4.status == 'spam/scam')
 
+class PastEmailsAnalyzedViewTest(TestCase):
+    def setUp(self):
+        self.client = Client()
+        self.email = Email.objects.create(body='This is a test email', status='pending')
+
+    def test_past_emails(self):
+        response = self.client.get(reverse('past_emails'))
+        self.assertEqual(response.status_code, 302)
+
 class ParserEmailBodyTest(TestCase):
     def setUp(self):
         self.client = Client()
-        self.email = Email.objects.create(email='Click on the link www.google.com')
+        self.email = Email.objects.create(header='test header', body='Click on the link www.google.com')
 
     def test_found_url(self):
-        results = analyze_body(self.email.__str__())
+        results = analyze_body(self.email.body)
         self.assertTrue({'match': 'www.google.com'} in results)
 
 class FindSpoofCharactersTests(TestCase):
@@ -117,3 +143,21 @@ class FindSpoofCharactersTests(TestCase):
         self.assertEqual(len(flags), 1)
         self.assertEqual(flags[0]["char"], "ó")
 
+    def test_spoof_m_is_flagged(self):
+        flags = find_spoof_characters(".corn")
+        self.assertEqual(len(flags), 2)
+        self.assertEqual(flags[0]["char"], "r")
+        self.assertEqual(flags[1]["char"], "n")
+
+    def test_spoof_l_is_flagged(self):
+        flags = find_spoof_characters("f1agged")
+        self.assertEqual(len(flags), 1)
+        self.assertEqual(flags[0]["char"], "1")
+        flags = find_spoof_characters("fIagged")
+        self.assertEqual(len(flags), 1)
+        self.assertEqual(flags[0]["char"], "I")
+
+    def test_spoof_o_is_flagged(self):
+        flags = find_spoof_characters("w0rd")
+        self.assertEqual(len(flags), 1)
+        self.assertEqual(flags[0]["char"], "0")
