@@ -4,7 +4,7 @@ from django.http import HttpResponse
 from django.utils import timezone
 from .models import LoginAttempt, Email
 from django.shortcuts import render, redirect, get_object_or_404
-from analyzer.parser import analyze_header, analyze_body
+from analyzer.parser import analyze_header, analyze_body, assess_spam
 from analyzer.spoofed_chars import find_spoof_characters
 from django.views import View
 from datetime import timedelta
@@ -79,6 +79,8 @@ class LoginView(View):
 
         return render(request, 'analyzer/login.html', context)
 
+
+
 class LogoutView(View):
     def get(self, request):
         logout(request)
@@ -149,10 +151,24 @@ class ResultsView(View):
         results = analyze_header(header)
         body_results = analyze_body(body)
         spoof_flags = find_spoof_characters(results["from"] or "")
+        spam_result = assess_spam(
+                        results,
+                        body,
+                        body_results,
+                        spoof_flags,
+        )
+
         new_email = Email(body=body, header=header)
+
+        new_email.status = (
+                'spam/scam'
+                if spam_result['potential_spam']
+                else 'safe'
+                )
         if spoof_flags:
             new_email.status = 'unsafe'
         new_email.save()
+
         context = {
             'is_authenticated': True,
             'submitted': True,
@@ -160,6 +176,7 @@ class ResultsView(View):
             'results': results,
             'body_results': body_results,
             'spoof_flags': spoof_flags,
+            'spam_result': spam_result,
             'email': new_email,
         }
 
@@ -182,6 +199,39 @@ class EmailResultsView(View):
                     'spoof_flags': spoof_flags,
                     'email': email,
                    }
+
+        results = analyze_header(email.header)
+        body_results = analyze_body(email.body)
+        spoof_flags = find_spoof_characters(results["from"] or "")
+
+        spam_result = assess_spam(
+                    results,
+                    email.body,
+                    body_results,
+                    spoof_flags,
+        )
+
+
+        if email.status != (
+                            'spam/scam' if spam_result['potential_spam'] else 'safe'
+                                                                               ):
+                        email.status = (
+                                'spam/scam'
+                                if spam_result['potential_spam']
+                                else 'safe'
+                        )
+                        email.save(update_fields=['status'])
+
+        context = {
+            'is_authenticated': True,
+            'submitted': True,
+            'header_preview': email.header[:100],
+            'results': results,
+            'body_results': body_results,
+            'spoof_flags': spoof_flags,
+            'spam_result': spam_result,
+            'email': email,
+        }
         return render(request, 'analyzer/results.html', context)
 
 class PastEmailsAnalyzedView(View):
