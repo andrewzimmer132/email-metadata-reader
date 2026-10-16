@@ -190,37 +190,21 @@ class EmailResultsView(View):
         results = analyze_header(email.header)
         body_results = analyze_body(email.body)
         spoof_flags = find_spoof_characters(results["from"] or "")
-        context = {
-                    'is_authenticated': True,
-                    'submitted': True,
-                    'header_preview': email.header[:100],
-                    'results': results,
-                    'body_results': body_results,
-                    'spoof_flags': spoof_flags,
-                    'email': email,
-                   }
-
-        results = analyze_header(email.header)
-        body_results = analyze_body(email.body)
-        spoof_flags = find_spoof_characters(results["from"] or "")
-
+        
         spam_result = assess_spam(
                     results,
                     email.body,
                     body_results,
                     spoof_flags,
         )
-
-
-        if email.status != (
-                            'spam/scam' if spam_result['potential_spam'] else 'safe'
-                                                                               ):
-                        email.status = (
-                                'spam/scam'
-                                if spam_result['potential_spam']
-                                else 'safe'
-                        )
-                        email.save(update_fields=['status'])
+        new_status = 'spam/scam' if spam_result['potential_spam'] else 'safe'
+        
+        if spoof_flags:
+            new_status='unsafe'
+        
+        if email.status != new_status:
+            email.status = new_status
+            email.save(update_fields=['status'])
 
         context = {
             'is_authenticated': True,
