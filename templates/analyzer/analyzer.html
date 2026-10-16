@@ -14,37 +14,7 @@
     <p><strong>Apple Mail:</strong>  Open the email ➜ View ➜ Message ➜ All Headers</p>
 </details>
 
-{% if submitted %}
-    <div class="results-summary">
-        <h2>Parsed Header Information</h2>
-        <div class="results-grid">
-            <p><strong>From:</strong> {{ results.from }}</p> 
-            <p><strong>To:</strong> {{ results.to }}</p> 
-            <p><strong>Subject:</strong> {{ results.subject }}</p> 
-            <p><strong>Date:</strong> {{ results.date }}</p> 
-            <p><strong>Return-Path:</strong> {{ results.return_path }}</p> 
-            <p><strong>Message-ID:</strong> {{ results.message_id }}</p> 
-        </div>
-        <h3>Server Routing (Received)</h3>
-        <ul>
-            {% for hop in results.received %}
-                <li><strong>{{ hop.server }}</strong> - {{ hop.ip }}</li>
-            {% empty %}
-                <li>No routing information found.</li>
-            {% endfor %}
-        </ul>
-         <h3>Authentication:</h3>
-        <ul>
-            {% for auth in results.authentication %}
-                <li>{{ auth }}</li>
-            {% empty %}
-                <li>No authentication results found.</li>
-            {% endfor %}
-        </ul>
-    </div>
-{% endif %}
-
-<form method="POST" action="">
+<form method="POST" action="/results/">
     {% csrf_token %}
     <label for="header">Email Header (required)</label>
     <textarea name="header" id="header" rows="12" required
@@ -53,5 +23,8 @@
     <textarea name="body" id="body" rows="6"
         placeholder="Paste email body here: "></textarea>
     <button type="submit">Analyze</button>
+    <a href="/past-emails/">
+        <button type="button">Past Emails Analyzed</button>
+    </a>
 </form>
 {% endblock %}

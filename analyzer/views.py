@@ -1,11 +1,14 @@
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
+from django.http import HttpResponse
 from django.utils import timezone
-from .models import LoginAttempt
-from django.shortcuts import render, redirect
-from analyzer.parser import analyze_header
+from .models import LoginAttempt, Email
+from django.shortcuts import render, redirect, get_object_or_404
+from analyzer.parser import analyze_header, analyze_body, assess_spam
+from analyzer.spoofed_chars import find_spoof_characters
 from django.views import View
 from datetime import timedelta
+from django.db.models import Q
 from analyzer.geolocation import add_location_and_network_info
 
 
@@ -77,6 +80,8 @@ class LoginView(View):
 
         return render(request, 'analyzer/login.html', context)
 
+
+
 class LogoutView(View):
     def get(self, request):
         logout(request)
@@ -93,6 +98,7 @@ class HomeView(View):
     def post(self, request):
         if not request.user.is_authenticated:
             return redirect('login')
+        context = {'is_authenticated': True}
         header = request.POST.get('header')
         results = analyze_header(header)
 
@@ -145,4 +151,131 @@ class SignupView(View):
         else:
             context = {'signup_validation': False}
             return render(request, 'analyzer/signup.html', context)
-    
+
+class ResultsView(View):
+    def get(self, request):
+        return render(request, 'analyzer/results.html')
+
+    def post(self, request):
+        if not request.user.is_authenticated:
+            return redirect('login')
+        header = request.POST.get('header')
+        body = request.POST.get('body')
+        results = analyze_header(header)
+        body_results = analyze_body(body)
+        spoof_flags = find_spoof_characters(results["from"] or "")
+        spam_result = assess_spam(
+                        results,
+                        body,
+                        body_results,
+                        spoof_flags,
+        )
+
+        new_email = Email(body=body, header=header)
+
+        new_email.status = (
+                'spam/scam'
+                if spam_result['potential_spam']
+                else 'safe'
+                )
+        if spoof_flags:
+            new_email.status = 'unsafe'
+        new_email.save()
+
+        context = {
+            'is_authenticated': True,
+            'submitted': True,
+            'header_preview': header[:100],
+            'results': results,
+            'body_results': body_results,
+            'spoof_flags': spoof_flags,
+            'spam_result': spam_result,
+            'email': new_email,
+        }
+
+        return render(request, 'analyzer/results.html', context)
+
+class EmailResultsView(View):
+    def get(self, request, email_id):
+        if not request.user.is_authenticated:
+            return redirect('login')
+        email = get_object_or_404(Email, id=email_id)
+        results = analyze_header(email.header)
+        body_results = analyze_body(email.body)
+        spoof_flags = find_spoof_characters(results["from"] or "")
+        context = {
+                    'is_authenticated': True,
+                    'submitted': True,
+                    'header_preview': email.header[:100],
+                    'results': results,
+                    'body_results': body_results,
+                    'spoof_flags': spoof_flags,
+                    'email': email,
+                   }
+
+        results = analyze_header(email.header)
+        body_results = analyze_body(email.body)
+        spoof_flags = find_spoof_characters(results["from"] or "")
+
+        spam_result = assess_spam(
+                    results,
+                    email.body,
+                    body_results,
+                    spoof_flags,
+        )
+
+
+        if email.status != (
+                            'spam/scam' if spam_result['potential_spam'] else 'safe'
+                                                                               ):
+                        email.status = (
+                                'spam/scam'
+                                if spam_result['potential_spam']
+                                else 'safe'
+                        )
+                        email.save(update_fields=['status'])
+
+        context = {
+            'is_authenticated': True,
+            'submitted': True,
+            'header_preview': email.header[:100],
+            'results': results,
+            'body_results': body_results,
+            'spoof_flags': spoof_flags,
+            'spam_result': spam_result,
+            'email': email,
+        }
+        return render(request, 'analyzer/results.html', context)
+
+class PastEmailsAnalyzedView(View):
+    def get(self, request):
+        if not request.user.is_authenticated:
+            return redirect('login')
+        past_emails = Email.objects.all().order_by('-id')
+        status = request.GET.get('status', '').strip()
+        query = request.GET.get('q', '').strip()
+        if status:
+            past_emails = past_emails.filter(status=status)
+        if query:
+            past_emails = past_emails.filter(
+                Q(header__icontains=query) | Q(body__icontains=query)
+            )
+        context = {
+           'is_authenticated': True,
+           'past_emails': past_emails,
+           'selected_status': status,
+           'search_query': query,
+        }
+        return render(request, 'analyzer/past_emails.html', context)
+
+class DeleteEmailAnalyzedView(View):
+    def get(self, request):
+        if not request.user.is_authenticated:
+            return redirect('login')
+
+    def post(self, request, email_id):
+        if not request.user.is_authenticated:
+            return redirect('login')
+        email = get_object_or_404(Email, id=email_id)
+        email.delete()
+        return redirect('past_emails')
