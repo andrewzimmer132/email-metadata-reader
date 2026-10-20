@@ -63,7 +63,7 @@ class LoginView(View):
             attempt.save(update_fields=['failures', 'lock_time'])
 
             login(request, user)
-            return redirect('home_view')
+            return redirect('welcome')
 
         attempt.failures += 1
 
@@ -250,3 +250,10 @@ class DeleteEmailAnalyzedView(View):
         email = get_object_or_404(Email, id=email_id)
         email.delete()
         return redirect('past_emails')
+
+class WelcomePageView(View):
+    def get(self, request):
+        if not request.user.is_authenticated:
+            return redirect('login')
+        context = {'is_authenticated': True}
+        return render(request, 'analyzer/welcome.html', context)
