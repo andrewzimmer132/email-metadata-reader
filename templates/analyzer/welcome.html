@@ -1,0 +1,14 @@
+{% extends 'analyzer/base.html' %}
+
+{% block title %} Welcome Page {% endblock %}
+
+{% block content %}
+<h1>Welcome, {{ user.username }}</h1>
+    <a href="/analyzer/">
+        <button type="button">Access Analyzer</button>
+    </a>
+    <a href="/past-emails/">
+        <button type="button">Past Emails Analyzed</button>
+    </a>
+{% endblock %}
+
