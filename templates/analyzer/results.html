@@ -22,7 +22,6 @@
             </div>
         </div>
 
-
         <div class="carousel-card">
             <h2>Server Routing (Received)</h2>
             <p>This shows the path that the email took in order to reach you. Longer routes through unusual countries may be an indicator of suspicious activity.</p>
@@ -35,6 +34,18 @@
             </ul>
         </div>
 
+        <div class="carousel-card">
+            <h2>Email Authentication</h2>
+            {% if results.authentication %}
+                <ul>
+                    {% for result in results.authentication %}
+                        <li>{{ result }}</li>
+                    {% endfor %}
+                </ul>
+            {% else %}
+                <p>No authentication results were found.</p>
+            {% endif %}
+        </div>
 
         {% if spam_result %}
         <div class="carousel-card spam-result-card">
@@ -70,7 +81,6 @@
         </div>
         {% endif %}
 
-
         {% if spoof_flags %}
         <div class="carousel-card">
             <h2>⚠︎ Spoofed Characters Detected</h2>
@@ -88,13 +98,33 @@
 
         {% if body_results %}
         <div class="carousel-card">
-            <h2>⚠︎ Suspicious URLs Found</h2>
-            <p>These URLs were found within the email body. Caution is advised.</p>
-            <ul>
+            <h2>⚠︎ URLs Found in Email Body</h2>
+            <p class="url-warning">These URLs were found within the email body. Caution is advised.</p>
+            <div class="url-list">
                 {% for body_result in body_results %}
-                    <li>{{ body_result.match }}</li>
+                    <div class="url-item">
+                        <span class="url-label">URL {{ forloop.counter }}</span>
+                        <p class="url-full">{{ body_result.match }}</p>
+                        {% if body_result.hostname %}
+                            <p class="url-domain">
+                                <strong>Domain:</strong>
+                                {{ body_result.hostname }}
+                            </p>
+                        {% endif %}
+                        {% if body_result.warnings %}
+                            <ul class="url-flags">
+                                {% for warning in body_result.warnings %}
+                                    <li>{{ warning }}</li>
+                                {% empty %}
+                                    <p>No warnings found</p>
+                                {% endfor %}
+                            </ul>
+                        {% else %}
+                            <p>No obvious warning signs detected.</p>
+                        {% endif %}
+                    </div>
                 {% endfor %}
-            </ul>
+            </div>
         </div>
         {% endif %}
 
@@ -105,7 +135,7 @@
         </div>
     </div>
 
-        <a href="/home/">
+        <a href="{% url 'home_view' %}">
             <button type="button">Back to Analyzer</button>
         </a>
         <a href="{% url 'past_emails' %}">
