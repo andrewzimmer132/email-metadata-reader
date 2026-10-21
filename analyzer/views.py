@@ -9,6 +9,7 @@ from analyzer.spoofed_chars import find_spoof_characters
 from django.views import View
 from datetime import timedelta
 from django.db.models import Q
+from analyzer.geolocation import add_location_and_network_info
 
 
 # Create your views here.
@@ -98,6 +99,18 @@ class HomeView(View):
         if not request.user.is_authenticated:
             return redirect('login')
         context = {'is_authenticated': True}
+        header = request.POST.get('header')
+        results = analyze_header(header)
+
+        # Add location and ASN(who runs the server) info to each Received
+        results["received"] = add_location_and_network_info(
+            results["received"]
+        )
+
+        context = {'submitted': True,
+                   'header_preview': header[:100],
+                   'results': results
+                   }
         return render(request, 'analyzer/analyzer.html', context)
 
 class SignupView(View):
