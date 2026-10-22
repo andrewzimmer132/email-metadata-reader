@@ -30,4 +30,10 @@
     <button>Main Menu</button>
     </a>
 </form>
+
+<form method="POST" action="/results/" enctype="multipart/form-data">
+    {% csrf_token %}
+    <input type="file" name="file" accept=".eml" required>
+    <button type="submit">Analyze .eml File</button>
+</form>
 {% endblock %}
