@@ -1,6 +1,6 @@
 from django.test import TestCase
 
-from analyzer.parser import analyze_header
+from analyzer.parser import analyze_header, assess_spam
 
 
 class ParserTests(TestCase):
@@ -123,3 +123,78 @@ Received: from server2.example.com [98.76.54.32]
 
         self.assertIsNotNone(results["from"])
         self.assertIsNotNone(results["date"])
+
+
+    def test_assess_spam_detects_failed_authentication(self):
+                header_results = {
+                        "from": "sender@example.com",
+                        "return_path": "<sender@example.com>",
+                        "subject": "Normal subject",
+                        "authentication": [
+                                "mx.example.com; spf=fail; dkim=pass; dmarc=pass"
+                        ],
+                }
+
+
+                result = assess_spam(
+                        header_results,
+                        "This is a normal message.",
+                        [],
+                )
+
+                self.assertTrue(result["potential_spam"])
+                self.assertEqual(result["level"], "medium")
+                self.assertEqual(result["score"], 3)
+                self.assertIn(
+                        "SPF authentication failed.",
+                                result["warnings"],
+            )
+
+
+
+    def test_assess_spam_detects_multiple_indicators(self):
+                header_results = {
+                        "from": "billing@example.com",
+                        "return_path": "<mailer@different-domain.com>",
+                        "subject": "Urgent: verify your account",
+                        "authentication": [],
+            }
+
+                body = (
+                            "Click here to verify your account. "
+                 "Please provide your credit card information."
+                )
+                body_results = [
+                        {"match": "https://example.com/one"},
+                        {"match": "https://example.com/two"},
+                        {"match": "https://example.com/three"},
+            ]
+
+                result = assess_spam(header_results, body, body_results)
+
+                self.assertTrue(result["potential_spam"])
+                self.assertEqual(result["level"], "high")
+                self.assertGreaterEqual(result["score"], 5)
+                self.assertGreaterEqual(len(result["warnings"]), 3)
+
+
+
+    def test_assess_spam_returns_low_for_clean_email(self):
+                header_results = {
+                        "from": "sender@example.com",
+                        "return_path": "<sender@example.com>",
+                        "subject": "Meeting notes",
+                        "authentication": ["mx.example.com; spf=pass; dkim=pass"],
+                }
+
+
+                result = assess_spam(
+                        header_results,
+                        "Here are the notes from today's meeting.",
+                        [],
+                )
+
+                self.assertFalse(result["potential_spam"])
+                self.assertEqual(result["level"], "low")
+                self.assertEqual(result["score"], 0)
+                self.assertEqual(result["warnings"], [])

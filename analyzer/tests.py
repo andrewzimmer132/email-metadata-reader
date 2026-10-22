@@ -31,16 +31,16 @@ class EmailModelTest(TestCase):
 
     def test_compare(self):
         """python manage.py test analyzer.tests.EmailModelTest.test_compare"""
-        other_email = Email.objects.create(email='test email')
+        other_email = Email.objects.create(header='test', body='test email')
         differences = self.test_email.compare(other_email)
         self.assertEqual(differences, [])
 
     def test_compare_differences(self):
         """python manage.py test analyzer.tests.EmailModelTest.test_compare_differences"""
-        other_email = Email.objects.create(email='different email', status='safe')
+        other_email = Email.objects.create(header='different', body='different email', status='safe')
         differences = self.test_email.compare(other_email)
         expected_differences = [
-            {'field': 'email', 'current': 'test email', 'other': 'different email'},
+            {'field': 'body', 'current': 'test email', 'other': 'different email'},
             {'field': 'status', 'current': 'pending', 'other': 'safe'}
         ]
         self.assertEqual(differences, expected_differences)
@@ -143,3 +143,21 @@ class FindSpoofCharactersTests(TestCase):
         self.assertEqual(len(flags), 1)
         self.assertEqual(flags[0]["char"], "ó")
 
+    def test_spoof_m_is_flagged(self):
+        flags = find_spoof_characters(".corn")
+        self.assertEqual(len(flags), 2)
+        self.assertEqual(flags[0]["char"], "r")
+        self.assertEqual(flags[1]["char"], "n")
+
+    def test_spoof_l_is_flagged(self):
+        flags = find_spoof_characters("f1agged")
+        self.assertEqual(len(flags), 1)
+        self.assertEqual(flags[0]["char"], "1")
+        flags = find_spoof_characters("fIagged")
+        self.assertEqual(len(flags), 1)
+        self.assertEqual(flags[0]["char"], "I")
+
+    def test_spoof_o_is_flagged(self):
+        flags = find_spoof_characters("w0rd")
+        self.assertEqual(len(flags), 1)
+        self.assertEqual(flags[0]["char"], "0")
