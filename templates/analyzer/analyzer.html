@@ -4,36 +4,64 @@
 
 {% block content %}
 <h1>Analyze Email</h1>
-<p>Paste full email header below; optional to paste email body</p>
 
-<details class="instructions">
-    <summary>� How to find email header</summary>
-    <p><strong>Gmail:</strong> Open the email ➜ Click three dots (⋮) ➜ Show original ➜ Copy all text.</p>
-    <p><strong>Yahoo:</strong> Open the email ➜ More ➜ View Raw Message.</p>
-    <p><strong>Outlook:</strong> Open the email ➜ Click three dots (⋮) ➜ View ➜ View message details ➜ Copy all text.</p>
-    <p><strong>Apple Mail:</strong>  Open the email ➜ View ➜ Message ➜ All Headers</p>
-</details>
+<div class="tabs">
+  <button class="tab-btn active" onclick="switchTab(event, 'paste-tab')" type="button">
+    Paste Text
+  </button>
+  <button class="tab-btn" onclick="switchTab(event, 'upload-tab')" type="button">
+    Upload .eml File
+  </button>
+</div>
 
-<form method="POST" action="/results/">
-    {% csrf_token %}
-    <label for="header">Email Header (required)</label>
-    <textarea name="header" id="header" rows="12" required
-        placeholder="Paste email header here: "></textarea>
-    <label for="body">Email Body (optional)</label>
-    <textarea name="body" id="body" rows="6"
-        placeholder="Paste email body here: "></textarea>
-    <button type="submit">Analyze</button>
-    <a href="/past-emails/">
-        <button type="button">Past Emails Analyzed</button>
-    </a>
-    <a href="/welcome/">
-    <button>Main Menu</button>
-    </a>
-</form>
+<div id="paste-tab" class="tab-content active">
+    <p>Paste full email header below; optional to paste email body</p>
 
-<form method="POST" action="/results/" enctype="multipart/form-data">
-    {% csrf_token %}
-    <input type="file" name="file" accept=".eml" required>
-    <button type="submit">Analyze .eml File</button>
-</form>
+    <details class="instructions">
+        <summary>� How to find email header</summary>
+        <p><strong>Gmail:</strong> Open the email ➜ Click three dots (⋮) ➜ Show original ➜ Copy all text.</p>
+        <p><strong>Yahoo:</strong> Open the email ➜ More ➜ View Raw Message.</p>
+        <p><strong>Outlook:</strong> Open the email ➜ Click three dots (⋮) ➜ View ➜ View message details ➜ Copy all text.</p>
+        <p><strong>Apple Mail:</strong>  Open the email ➜ View ➜ Message ➜ All Headers</p>
+    </details>
+
+    <form method="POST" action="/results/">
+        {% csrf_token %}
+        <label for="header">Email Header (required)</label>
+        <textarea name="header" id="header" rows="12" required
+            placeholder="Paste email header here: "></textarea>
+        <label for="body">Email Body (optional)</label>
+        <textarea name="body" id="body" rows="6"
+            placeholder="Paste email body here: "></textarea>
+        <button type="submit">Analyze</button>
+        <a href="/past-emails/">
+            <button type="button">Past Emails Analyzed</button>
+        </a>
+        <a href="/welcome/">
+        <button>Main Menu</button>
+        </a>
+    </form>
+</div>
+<div id="upload-tab" class="tab-content">
+    <p>Upload a .eml file to analyze</p>
+    <form method="POST" action="/results/" enctype="multipart/form-data">
+        {% csrf_token %}
+        <input type="file" name="file" accept=".eml" required>
+        <button type="submit">Analyze .eml File</button>
+    </form>
+</div>
+
+<script>
+  function switchTab(event, tabId) {
+    document.querySelectorAll(".tab-content").forEach((content) => {
+      content.classList.remove("active");
+    });
+    document.querySelectorAll(".tab-btn").forEach((btn) => {
+      btn.classList.remove("active");
+    });
+    document.getElementById(tabId).classList.add("active");
+    event.currentTarget.classList.add("active");
+  }
+</script>
+
 {% endblock %}
