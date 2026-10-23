@@ -4,6 +4,9 @@
 
 {% block content %}
 
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+
 <h1>Results</h1>
 
 {% if submitted %}
@@ -32,6 +35,12 @@
                     <li>No routing information found.</li>
                 {% endfor %}
             </ul>
+        </div>
+
+         <div class="carousel-card">
+            <h2>Approximate Email Path</h2>
+            <p>This map shows the approximate geographic path that the email took in order to reach you based on the server IP addresses.</p>
+            <div id="email-map"></div>
         </div>
 
         <div class="carousel-card">
@@ -135,12 +144,14 @@
         </div>
     </div>
 
-        <a href="{% url 'home_view' %}">
-            <button type="button">Back to Analyzer</button>
-        </a>
-        <a href="{% url 'past_emails' %}">
-            <button type="button">Past Emails Analyzed</button>
-        </a>
+    <a href="{% url 'home_view' %}">
+        <button type="button">Back to Analyzer</button>
+    </a>
+    <a href="{% url 'past_emails' %}">
+        <button type="button">Past Emails Analyzed</button>
+    </a>
+
+    {{ results.received|json_script:"received-data" }}
 {% endif %}
 
 <script>
@@ -164,6 +175,13 @@
         if (nbutton) {
             nbutton.style.visibility = index === cards.length-1 ? 'hidden' : 'visible';
         }
+        if (emailMap && index === 2) {
+            setTimeout(() => {emailMap.invalidateSize();
+                if (window.mapBounds) {
+                    emailMap.fitBounds(window.mapBounds, {padding: [50, 50] });
+                }
+            }, 100);
+        }
     }
 
     function nextCard() {
@@ -182,6 +200,43 @@
     if (cards.length > 0) {
         showCard(0);
     }
+</script>
+
+<script>
+    let emailMap;
+    document.addEventListener("DOMContentLoaded", function() {
+        const mapContainer = document.getElementById('email-map');
+        if (!mapContainer) return;
+        const receivedData =JSON.parse(document.getElementById('received-data').textContent);
+        let locations = [];
+        receivedData.forEach((hop, index) => {
+            if (hop.location && hop.location.latitude && hop.location.longitude) {
+                locations.push({
+                    ...hop.location,
+                    hopNumber: index + 1
+                });
+            }
+        });
+        emailMap = L.map('email-map').setView([20, 0], 2);
+        L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; OpenStreetMap',
+            referrerPolicy: 'strict-origin-when-cross-origin'
+        }).addTo(emailMap);
+        if (locations.length > 0) {
+            const latLngs = [];
+            locations.forEach((loc) => {
+                const latLng = [loc.latitude, loc.longitude];
+                latLngs.push(latLng);
+                L.marker(latLng).addTo(emailMap).bindPopup(`<b>Hop ${loc.hopNumber}</b><br>${loc.city || 'Unknown'}, ${loc.country || 'Unknown'}`);
+            })
+            if (latLngs.length > 1) {
+                L.polyline(latLngs, {color: '#2563eb', weight: 3, dashArray: '5, 5'}).addTo(emailMap);
+            }
+            window.mapBounds = L.latLngBounds(latLngs);
+        } else {
+            mapContainer.innerHTML = "<p style='text-align:center; padding-top: 2rem; '>No location data available.</p>";
+        }
+    });
 </script>
 
 {% endblock %}
