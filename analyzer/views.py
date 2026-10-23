@@ -173,6 +173,7 @@ class ResultsView(View):
             header = request.POST.get("header")
             body = request.POST.get("body")
         results = analyze_header(header)
+        results["received"] = add_location_and_network_info(results["received"])
         body_results = analyze_body(body)
         spoof_flags = find_spoof_characters(results["from"] or "")
         spam_result = assess_spam(
@@ -212,6 +213,7 @@ class EmailResultsView(View):
             return redirect('login')
         email = get_object_or_404(Email, id=email_id)
         results = analyze_header(email.header)
+        results["received"] = add_location_and_network_info(results["received"])
         body_results = analyze_body(email.body)
         spoof_flags = find_spoof_characters(results["from"] or "")
         
