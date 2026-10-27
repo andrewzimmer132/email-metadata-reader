@@ -12,35 +12,47 @@
         <option value="unsafe" {% if selected_status == 'unsafe' %}selected{% endif %}>Unsafe</option>
         <option value="spam/scam" {% if selected_status == 'spam/scam' %}selected{% endif %}>Spam/Scam</option>
     </select>
-    <input type="text" name="q" class=""filter-input" placeholder="Search header or body..." value="{{ search_query }}">
+    <labe for="email-search">Search Emails</labe>
+    <input type="text" name="q" class="filter-input" placeholder="Search header or body..." value="{{ search_query }}">
     <button type="submit">Filter</button>
     <a href="{% url 'past_emails' %}">
-        <button type="button" class=""btn-secondary>Clear</button>
+        <button type="button" class="btn-secondary">Clear</button>
     </a>
 </form>
 
 {% if past_emails %}
-    {% for  email in past_emails %}
-        <div>
-            <h2>Email #{{ email.id }} Status: {{ email.status }}</h2>
-            <p>{{ email.header|truncatechars:100 }}</p>
-            <a href="{% url 'email_results' email.id %}">
-                View Results
-            </a>
-
-            <form method="post" action="{% url 'delete_email' email.id %}">
-                {% csrf_token %}
-                <button type="submit">Delete</button>
-            </form>
-        </div>
-    {% endfor %}
+    <div class="email-list">
+        {% for  email in past_emails %}
+            <div class="email-row">
+                <div class="email-info">
+                    <strong>Email #{{ email.id }}</strong>
+                    <span class="status-badge status-{{ email.status }}">{{ email.status }}</span>
+                    <p class="email-preview">{{ email.header|truncatechars:100 }}</p>
+                </div>
+                <div class="email-actions">
+                    <a href="{% url 'email_results' email.id %}">
+                        <button type="button">View Results</button>
+                    </a>
+                    <form method="post" action="{% url 'delete_email' email.id %}" onsubmit="return confirm('Are you sure you want to delete this email?');">
+                        {% csrf_token %}
+                        <button type="submit" class="btn-danger">Delete</button> 
+                    </form>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
 {% else %}
-    <p>No emails analyzed yet</p>
+    <p class="no-results">No emails found.</p>
 {% endif %}
 <br>
 
-<a href="/home/">
+<a href="{% url 'home_view' %}" class="button">
     <button>Back to Analyzer</button>
+</a>
+
+
+    <a href="/welcome/">
+    <button>Main Menu</button>
 </a>
 
 {% endblock %}

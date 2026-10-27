@@ -8,7 +8,9 @@ from analyzer.parser import analyze_header, analyze_body, assess_spam
 from analyzer.spoofed_chars import find_spoof_characters
 from django.views import View
 from datetime import timedelta
+from email import message_from_bytes, policy
 from django.db.models import Q
+from analyzer.geolocation import add_location_and_network_info
 
 
 # Create your views here.
@@ -98,6 +100,18 @@ class HomeView(View):
         if not request.user.is_authenticated:
             return redirect('login')
         context = {'is_authenticated': True}
+        header = request.POST.get('header')
+        results = analyze_header(header)
+
+        # Add location and ASN(who runs the server) info to each Received
+        results["received"] = add_location_and_network_info(
+            results["received"]
+        )
+
+        context = {'submitted': True,
+                   'header_preview': header[:100],
+                   'results': results
+                   }
         return render(request, 'analyzer/analyzer.html', context)
 
 class SignupView(View):
@@ -146,9 +160,20 @@ class ResultsView(View):
     def post(self, request):
         if not request.user.is_authenticated:
             return redirect('login')
-        header = request.POST.get('header')
-        body = request.POST.get('body')
+        if "file" in request.FILES:
+            # Read the uploaded .eml file
+            raw_bytes = request.FILES["file"].read()
+            raw_text = raw_bytes.decode("utf-8", errors="ignore")
+            header = raw_text.replace("\r\n", "\n").partition("\n\n")[0]
+            msg = message_from_bytes(raw_bytes, policy=policy.default)
+            body_part = msg.get_body(preferencelist=("plain", "html"))
+            body = body_part.get_content() if body_part else ""
+        else:
+            # Get the header and body from the form
+            header = request.POST.get("header")
+            body = request.POST.get("body")
         results = analyze_header(header)
+        results["received"] = add_location_and_network_info(results["received"])
         body_results = analyze_body(body)
         spoof_flags = find_spoof_characters(results["from"] or "")
         spam_result = assess_spam(
@@ -188,19 +213,7 @@ class EmailResultsView(View):
             return redirect('login')
         email = get_object_or_404(Email, id=email_id)
         results = analyze_header(email.header)
-        body_results = analyze_body(email.body)
-        spoof_flags = find_spoof_characters(results["from"] or "")
-        context = {
-                    'is_authenticated': True,
-                    'submitted': True,
-                    'header_preview': email.header[:100],
-                    'results': results,
-                    'body_results': body_results,
-                    'spoof_flags': spoof_flags,
-                    'email': email,
-                   }
-
-        results = analyze_header(email.header)
+        results["received"] = add_location_and_network_info(results["received"])
         body_results = analyze_body(email.body)
         spoof_flags = find_spoof_characters(results["from"] or "")
 
@@ -210,17 +223,14 @@ class EmailResultsView(View):
                     body_results,
                     spoof_flags,
         )
+        new_status = 'spam/scam' if spam_result['potential_spam'] else 'safe'
 
+        if spoof_flags:
+            new_status='unsafe'
 
-        if email.status != (
-                            'spam/scam' if spam_result['potential_spam'] else 'safe'
-                                                                               ):
-                        email.status = (
-                                'spam/scam'
-                                if spam_result['potential_spam']
-                                else 'safe'
-                        )
-                        email.save(update_fields=['status'])
+        if email.status != new_status:
+            email.status = new_status
+            email.save(update_fields=['status'])
 
         context = {
             'is_authenticated': True,
@@ -266,6 +276,13 @@ class DeleteEmailAnalyzedView(View):
         email = get_object_or_404(Email, id=email_id)
         email.delete()
         return redirect('past_emails')
+
+class WelcomePageView(View):
+    def get(self, request):
+        if not request.user.is_authenticated:
+            return redirect('login')
+        context = {'is_authenticated': True}
+        return render(request, 'analyzer/welcome.html', context)
 
 def header_help_view(request):
     return render(request, "analyzer/Gmail_header_tutorial.html")

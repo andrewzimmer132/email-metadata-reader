@@ -1,5 +1,6 @@
 from django.urls import path
 from .views import HomeView, LoginView, LogoutView, SignupView, ResultsView, PastEmailsAnalyzedView, \
+    DeleteEmailAnalyzedView, EmailResultsView, WelcomePageView
     DeleteEmailAnalyzedView, EmailResultsView, header_help_view
 
 urlpatterns = [
@@ -11,5 +12,6 @@ urlpatterns = [
     path('past-emails/', PastEmailsAnalyzedView.as_view(), name='past_emails'),
     path('past-emails/<int:email_id>/', EmailResultsView.as_view(), name='email_results'),
     path('past-emails/<int:email_id>/delete/', DeleteEmailAnalyzedView.as_view(), name='delete_email'),
+    path('welcome/', WelcomePageView.as_view(), name='welcome'),
     path("header-help/", header_help_view, name="Gmail_header_help"),
 ]

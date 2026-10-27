@@ -4,6 +4,9 @@
 
 {% block content %}
 
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+
 <h1>Results</h1>
 
 {% if submitted %}
@@ -22,7 +25,6 @@
             </div>
         </div>
 
-
         <div class="carousel-card">
             <h2>Server Routing (Received)</h2>
             <p>This shows the path that the email took in order to reach you. Longer routes through unusual countries may be an indicator of suspicious activity.</p>
@@ -35,6 +37,24 @@
             </ul>
         </div>
 
+         <div class="carousel-card">
+            <h2>Approximate Email Path</h2>
+            <p>This map shows the approximate geographic path that the email took in order to reach you based on the server IP addresses.</p>
+            <div id="email-map"></div>
+        </div>
+
+        <div class="carousel-card">
+            <h2>Email Authentication</h2>
+            {% if results.authentication %}
+                <ul>
+                    {% for result in results.authentication %}
+                        <li>{{ result }}</li>
+                    {% endfor %}
+                </ul>
+            {% else %}
+                <p>No authentication results were found.</p>
+            {% endif %}
+        </div>
 
         {% if spam_result %}
         <div class="carousel-card spam-result-card">
@@ -70,7 +90,6 @@
         </div>
         {% endif %}
 
-
         {% if spoof_flags %}
         <div class="carousel-card">
             <h2>⚠︎ Spoofed Characters Detected</h2>
@@ -88,13 +107,33 @@
 
         {% if body_results %}
         <div class="carousel-card">
-            <h2>⚠︎ Suspicious URLs Found</h2>
-            <p>These URLs were found within the email body. Caution is advised.</p>
-            <ul>
+            <h2>⚠︎ URLs Found in Email Body</h2>
+            <p class="url-warning">These URLs were found within the email body. Caution is advised.</p>
+            <div class="url-list">
                 {% for body_result in body_results %}
-                    <li>{{ body_result.match }}</li>
+                    <div class="url-item">
+                        <span class="url-label">URL {{ forloop.counter }}</span>
+                        <p class="url-full">{{ body_result.match }}</p>
+                        {% if body_result.hostname %}
+                            <p class="url-domain">
+                                <strong>Domain:</strong>
+                                {{ body_result.hostname }}
+                            </p>
+                        {% endif %}
+                        {% if body_result.warnings %}
+                            <ul class="url-flags">
+                                {% for warning in body_result.warnings %}
+                                    <li>{{ warning }}</li>
+                                {% empty %}
+                                    <p>No warnings found</p>
+                                {% endfor %}
+                            </ul>
+                        {% else %}
+                            <p>No obvious warning signs detected.</p>
+                        {% endif %}
+                    </div>
                 {% endfor %}
-            </ul>
+            </div>
         </div>
         {% endif %}
 
@@ -105,12 +144,14 @@
         </div>
     </div>
 
-        <a href="/home/">
-            <button type="button">Back to Analyzer</button>
-        </a>
-        <a href="{% url 'past_emails' %}">
-            <button type="button">Past Emails Analyzed</button>
-        </a>
+    <a href="{% url 'home_view' %}">
+        <button type="button">Back to Analyzer</button>
+    </a>
+    <a href="{% url 'past_emails' %}">
+        <button type="button">Past Emails Analyzed</button>
+    </a>
+
+    {{ results.received|json_script:"received-data" }}
 {% endif %}
 
 <script>
@@ -134,6 +175,13 @@
         if (nbutton) {
             nbutton.style.visibility = index === cards.length-1 ? 'hidden' : 'visible';
         }
+        if (emailMap && index === 2) {
+            setTimeout(() => {emailMap.invalidateSize();
+                if (window.mapBounds) {
+                    emailMap.fitBounds(window.mapBounds, {padding: [50, 50] });
+                }
+            }, 100);
+        }
     }
 
     function nextCard() {
@@ -152,6 +200,43 @@
     if (cards.length > 0) {
         showCard(0);
     }
+</script>
+
+<script>
+    let emailMap;
+    document.addEventListener("DOMContentLoaded", function() {
+        const mapContainer = document.getElementById('email-map');
+        if (!mapContainer) return;
+        const receivedData =JSON.parse(document.getElementById('received-data').textContent);
+        let locations = [];
+        receivedData.forEach((hop, index) => {
+            if (hop.location && hop.location.latitude && hop.location.longitude) {
+                locations.push({
+                    ...hop.location,
+                    hopNumber: index + 1
+                });
+            }
+        });
+        emailMap = L.map('email-map').setView([20, 0], 2);
+        L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; OpenStreetMap',
+            referrerPolicy: 'strict-origin-when-cross-origin'
+        }).addTo(emailMap);
+        if (locations.length > 0) {
+            const latLngs = [];
+            locations.forEach((loc) => {
+                const latLng = [loc.latitude, loc.longitude];
+                latLngs.push(latLng);
+                L.marker(latLng).addTo(emailMap).bindPopup(`<b>Hop ${loc.hopNumber}</b><br>${loc.city || 'Unknown'}, ${loc.country || 'Unknown'}`);
+            })
+            if (latLngs.length > 1) {
+                L.polyline(latLngs, {color: '#2563eb', weight: 3, dashArray: '5, 5'}).addTo(emailMap);
+            }
+            window.mapBounds = L.latLngBounds(latLngs);
+        } else {
+            mapContainer.innerHTML = "<p style='text-align:center; padding-top: 2rem; '>No location data available.</p>";
+        }
+    });
 </script>
 
 {% endblock %}

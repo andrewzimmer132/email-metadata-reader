@@ -1,7 +1,10 @@
+import ipaddress
 from email import policy
 from email.parser import Parser
 from email.utils import parseaddr
 import re
+from urllib.parse import urlsplit
+
 
 def analyze_header(raw_header):
 
@@ -23,11 +26,26 @@ def analyze_header(raw_header):
     return results
 
 def analyze_body(raw_body):
-    regex = r'(?:https?://)?(?:www\.)?[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)+(?:/[^\s<>"\']*)?'
+    regex = (
+        r"""(?i)\b(?:"""
+        r"""(?:https?://|www\.)[^\s<>"']+"""
+        r"""|(?:[a-z0-9-]+\.)+"""
+        r"""(?:com|net|org|edu|gov|io|co|info|biz|me|us|uk|ca|au)"""
+        r"""(?:/[^\s<>"']*)?"""
+        r""")"""
+    )
     body_results = []
     urls = re.findall(regex, raw_body)
     for url in urls:
-        body_results.append({"match": url})
+        parsed = urlsplit(url if "://" in url else "//")
+        hostname = parsed.hostname
+        warnings = get_url_warnings(url, hostname)
+        body_results.append({
+            "match": url,
+            "host": hostname,
+            "warnings": warnings,
+        })
+    print(body_results)
     return body_results
 
 def assess_spam(header_results, body, body_results, spoof_flags=None):
@@ -191,5 +209,30 @@ def get_authentication(email):
     authentication = email.get_all("Authentication-Results", [])
     return authentication
 
+def get_url_warnings(url, hostname):
+    warnings = []
 
+    if url.lower().startswith("http://"):
+        warnings.append("URL starts with HTTP rather than HTTPS.")
 
+    try:
+        ipaddress.ip_address(hostname)
+        warnings.append("URL uses an IP address rather than a domain.")
+    except ValueError:
+        pass
+
+    labels = hostname.split(".")
+
+    for label in labels:
+        if label.startswith("xn--"):
+            try:
+                decoded = label.encode("ascii").decode("idna")
+                if not decoded:
+                    raise UnicodeError
+            except (UnicodeError, ValueError):
+                warnings.append("Domain contains an invalid internationalized label.")
+                break
+            else:
+                warnings.append("Domain contains an invalid internationalized label.")
+                break
+    return warnings
