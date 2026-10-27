@@ -266,3 +266,6 @@ class DeleteEmailAnalyzedView(View):
         email = get_object_or_404(Email, id=email_id)
         email.delete()
         return redirect('past_emails')
+
+def header_help_view(request):
+    return render(request, "analyzer/Gmail_header_tutorial.html")
