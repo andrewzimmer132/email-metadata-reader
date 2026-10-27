@@ -20,19 +20,6 @@
     </a>
 </form>
 
-<form method="POST" action="{% url 'compare_emails' %}" class="email-selection-form">
-    {% csrf_token %}
-    {% for email in past_emails %}
-        <div>
-            <input type="checkbox" name="email_ids" value="{{ email.id }}">
-            <a href="{% url 'email_results' email.id %}">Email #{{ email.id }}</a>
-        </div>
-    {% endfor %}
-    <button type="submit">Compare Selected</button>
-</form>
-
-<br>
-
 {% if past_emails %}
     <div class="email-list">
         {% for  email in past_emails %}
@@ -58,6 +45,20 @@
     <p class="no-results">No emails found.</p>
 {% endif %}
 <br>
+
+<form method="POST" action="{% url 'compare_emails' %}" class="email-selection-form">
+    {% csrf_token %}
+    {% for email in past_emails %}
+        <div>
+            <input class="email-select-row" type="checkbox" name="email_ids" value="{{ email.id }}">
+            <a href="{% url 'email_results' email.id %}">Email #{{ email.id }}</a>
+        </div>
+    {% endfor %}
+    <button type="submit">Compare Selected</button>
+</form>
+
+<br>
+
 
 <a href="{% url 'home_view' %}" class="button">
     <button>Back to Analyzer</button>

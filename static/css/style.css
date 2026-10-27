@@ -399,6 +399,7 @@ button:hover {
 
 .email-selection-form {
     margin-top: 20px;
+    vertical-align: middle;
 }
 
 .email-select-row {
