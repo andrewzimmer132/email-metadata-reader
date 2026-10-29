@@ -34,6 +34,11 @@ body {
     padding: 1rem;
 }
 
+.center {
+    display: flex;
+    justify-content:center;
+}
+
 .auth-card {
     background: #ffffff;
     padding: 2rem;
@@ -227,6 +232,11 @@ button:hover {
     background: #6e90c0;
 }
 
+.btn-big {
+    padding-right: 60px;
+    padding-left: 60px;
+}
+
 /*email list*/
 .email-list {
     display: flex;
@@ -273,7 +283,7 @@ button:hover {
 }
 
 .btn-alt {
-    background: #bdb9c4;
+    background: #85939b;
 }
 
 .btn-alt:hover {
