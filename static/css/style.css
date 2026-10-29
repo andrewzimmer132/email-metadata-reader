@@ -272,6 +272,14 @@ button:hover {
     background: #811313;
 }
 
+.btn-alt {
+    background: #bdb9c4;
+}
+
+.btn-alt:hover {
+    background: #85939b;
+}
+
 .status-badge {
     display: inline-block;
     padding: 0.15rem 0.6rem;
