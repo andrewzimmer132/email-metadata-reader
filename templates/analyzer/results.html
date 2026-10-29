@@ -144,12 +144,8 @@
         </div>
     </div>
 
-    <a href="{% url 'home_view' %}">
-        <button type="button">Back to Analyzer</button>
-    </a>
-    <a href="{% url 'past_emails' %}">
-        <button type="button">Past Emails Analyzed</button>
-    </a>
+    <a href="{% url 'home_view' %}"><button class="btn-alt">Back to Analyzer</button></a>
+    <a href="{% url 'past_emails' %}"><button class="btn-alt">Past Emails Analyzed</button></a>
 
     {{ results.received|json_script:"received-data" }}
 {% endif %}

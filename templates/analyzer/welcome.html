@@ -5,16 +5,12 @@
 {% block content %}
     <img src="https://img.magnific.com/free-vector/work-office-computer-man-woman-business-character-marketing-online-employee-technology-business-man-cartoon-co-working-flat-design-freelance_1150-41790.jpg?semt=ais_hybrid&w=740&q=80" alt="free-lance-design img of analyzation">
 <h1>Welcome, {{ user.username }}!</h1>
-    <a href="/home/">
-        <button type="button">Access Analyzer</button>
-    </a>
-    <a href="/past-emails/">
-        <button type="button">Past Emails Analyzed</button>
-    </a>
+    <a href="/home/"><button type="button">Access Analyzer</button></a>
+    <a href="/past-emails/"><button type="button">Past Emails Analyzed</button></a>
     <br>
     <br>
     <p> New to analyzer?</p>
-        <button type="button">Click here for a quick tutorial!</button>
+        <button class="btn-alt">Click here for a quick tutorial!</button>
 
 {% endblock %}
 
