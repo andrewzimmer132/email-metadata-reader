@@ -33,14 +33,16 @@
         <label for="body">Email Body (optional)</label>
         <textarea name="body" id="body" rows="6"
             placeholder="Paste email body here: "></textarea>
-        <button type="submit">Analyze</button>
-        <a href="/past-emails/">
-            <button type="button">Past Emails Analyzed</button>
-        </a>
-        <a href="/welcome/">
-        <button>Main Menu</button>
-        </a>
+        <div class="center">
+            <button type="submit" class="btn-big">Analyze</button>
+        </div>
     </form>
+    <br>
+      <a href="/past-emails/"><button type="button" class="btn-alt">Past Emails Analyzed</button></a>
+        &nbsp;&nbsp;&nbsp;
+        <a href="/welcome/"><button type="button" class="btn-alt">Main Menu</button></a>
+
+
 </div>
 <div id="upload-tab" class="tab-content">
     <p>Upload a .eml file to analyze</p>
