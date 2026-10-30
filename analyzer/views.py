@@ -1,4 +1,5 @@
 from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.http import HttpResponse
 from django.utils import timezone
@@ -291,3 +292,22 @@ class WelcomePageView(View):
             return redirect('login')
         context = {'is_authenticated': True}
         return render(request, 'analyzer/welcome.html', context)
+
+@login_required
+def compare_emails(request):
+    if request.method != "POST":
+        return redirect('past_emails')
+    email_ids = request.POST.getlist('email_ids')
+
+    if len(set(email_ids)) < 2:
+        return redirect('past_emails')
+
+    emails = Email.objects.filter(id__in=email_ids)
+
+    if emails.count() < 2:
+        return redirect('past_emails')
+
+    email_ids = request.POST.getlist('email_ids')
+    print(email_ids)
+
+    return render(request, 'analyzer/compare_emails.html', {'emails': emails})
