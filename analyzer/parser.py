@@ -37,7 +37,7 @@ def analyze_body(raw_body):
     body_results = []
     urls = re.findall(regex, raw_body)
     for url in urls:
-        parsed = urlsplit(url if "://" in url else "//")
+        parsed = urlsplit(url if "://" in url else "//" + url)
         hostname = parsed.hostname
         warnings = get_url_warnings(url, hostname)
         body_results.append({
@@ -45,7 +45,6 @@ def analyze_body(raw_body):
             "host": hostname,
             "warnings": warnings,
         })
-    print(body_results)
     return body_results
 
 def assess_spam(header_results, body, body_results, spoof_flags=None):
@@ -211,6 +210,10 @@ def get_authentication(email):
 
 def get_url_warnings(url, hostname):
     warnings = []
+
+    if not hostname:
+        warnings.append("Could not determine the URL hostname.")
+        return warnings
 
     if url.lower().startswith("http://"):
         warnings.append("URL starts with HTTP rather than HTTPS.")

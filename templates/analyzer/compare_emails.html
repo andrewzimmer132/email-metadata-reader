@@ -1,0 +1,18 @@
+{% extends 'analyzer/base.html' %}
+
+{% block content %}
+<h1>Compare Emails</h1>
+
+<div class="comparison">
+    {% for email in emails %}
+        <section class="email-column">
+            <strong>Email #{{ email.id }}</strong>
+            <span class="status-badge status-{{ email.status }}">{{ email.status }}</span>
+            <pre>{{ email.header|truncatechars:100 }}</pre>
+            <pre>{{ email.body|truncatechars:1024 }}</pre>
+        </section>
+    {% empty %}
+        <p>No emails found.</p>
+    {% endfor %}
+</div>
+{% endblock %}
