@@ -122,6 +122,54 @@ button:hover {
     color: #2563eb;
 }
 
+.verdict {
+    padding: 1rem;
+    border-radius: 8px;
+    margin-bottom: 1.5rem;
+    text-align: center;
+}
+
+.verdict h3 {
+    margin: 0 0 0.5rem 0;
+    font-size: 1.4rem;
+}
+
+.safe-verdict {
+    background: #a5efcb;
+    color: #095841;
+    border: 1px solid #12c287;
+}
+
+.unsafe-verdict {
+    background: #f2d6d6;
+    color: #861313;
+    border: 1px solid #ef4444;
+}
+
+.spam-verdict {
+    background: #fffbeb;
+    color: #92400e;
+    border: 1px solid #cf870b;
+}
+
+.empty-state {
+    text-align: center;
+    padding: 3rem 1rem;
+    background: #f0f5fa;
+    border-radius: 8px;
+    border: 1px dashed #aabcd6
+}
+
+.empty-state h3 {
+    margin-top: 0;
+    color: #384253;
+}
+
+.empty-state p {
+    color: #6d7585;
+    margin-bottom: 1rem;
+}
+
 .results-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;

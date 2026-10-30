@@ -12,8 +12,13 @@
         <option value="unsafe" {% if selected_status == 'unsafe' %}selected{% endif %}>Unsafe</option>
         <option value="spam/scam" {% if selected_status == 'spam/scam' %}selected{% endif %}>Spam/Scam</option>
     </select>
-    <labe for="email-search">Search Emails</labe>
-    <input type="text" name="q" class="filter-input" placeholder="Search header or body..." value="{{ search_query }}">
+    <select name="sort" class="filter-select">
+        <option value="-id" {% if selected_sort == '-id' or not selected_sort %}selected{% endif %}>Newest First</option>
+        <option value="id" {% if selected_sort == 'id' %}selected{% endif %}>Oldest First</option>
+        <option value="status" {% if selected_sort == 'status' %}selected{% endif %}>Status (Safe First)</option>
+    </select>
+    <label for="email-search">Search Emails</label>
+    <input type="text" name="q" class="filter-input" id="email-search" placeholder="Search header or body..." value="{{ search_query }}">
     <button type="submit">Filter</button>
     <a href="{% url 'past_emails' %}">
         <button type="button" class="btn-secondary">Clear</button>
@@ -42,7 +47,15 @@
         {% endfor %}
     </div>
 {% else %}
-    <p class="no-results">No emails found.</p>
+    <div class="empty-state">
+        <h3>No Emails Found</h3>
+        {% if selected_status or search_query %}
+            <p>We couldn't find any emails matching search/filters.</p>
+            <a href="{% url 'past_emails' %}"><button type ="button" class = "btn-secondary">Clear Filters</button></a>
+        {% else %}
+            <p>You haven't analyzed any emails yet. Results from Analyzer will appear here</p>
+        {% endif %}
+    </div>
 {% endif %}
 <br>
 

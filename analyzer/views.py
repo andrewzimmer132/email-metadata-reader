@@ -248,7 +248,14 @@ class PastEmailsAnalyzedView(View):
     def get(self, request):
         if not request.user.is_authenticated:
             return redirect('login')
-        past_emails = Email.objects.all().order_by('-id')
+        past_emails = Email.objects.all()
+        sort_by = request.GET.get('sort', '-id').strip()
+        if sort_by == 'id':
+            past_emails = past_emails.order_by('id')
+        elif sort_by == 'status':
+            past_emails = past_emails.order_by('status', '-id')
+        else:
+            past_emails = past_emails.order_by('-id')
         status = request.GET.get('status', '').strip()
         query = request.GET.get('q', '').strip()
         if status:
@@ -262,6 +269,7 @@ class PastEmailsAnalyzedView(View):
            'past_emails': past_emails,
            'selected_status': status,
            'search_query': query,
+           'selected_sort': sort_by,
         }
         return render(request, 'analyzer/past_emails.html', context)
 
