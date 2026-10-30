@@ -66,7 +66,7 @@ class LoginView(View):
             attempt.save(update_fields=['failures', 'lock_time'])
 
             login(request, user)
-            return redirect('home_view')
+            return redirect('welcome')
 
         attempt.failures += 1
 
