@@ -15,4 +15,10 @@
         <p>No emails found.</p>
     {% endfor %}
 </div>
+
+<br>
+
+<a href="{% url 'home_view' %}"><button class="btn-alt">Back to Analyzer</button></a>
+<a href="{% url 'past_emails' %}"><button class="btn-alt">Past Emails Analyzed</button></a>
+
 {% endblock %}
