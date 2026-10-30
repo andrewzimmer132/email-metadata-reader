@@ -73,8 +73,8 @@ class LoginViewTest(TestCase):
     def test_login_post(self):
         response = self.client.post(self.url, {'username': 'test_user2', 'password': 'test'})
         self.assertEqual(response.status_code, 302)
-        self.assertRedirects(response, reverse('home_view'))
-        response = self.client.get(reverse('home_view'))
+        self.assertRedirects(response, reverse('welcome'))
+        response = self.client.get(reverse('welcome'))
         self.assertTrue(response.wsgi_request.user.is_authenticated)
 
     def test_login_invalid_post(self):
@@ -127,11 +127,11 @@ class PastEmailsAnalyzedViewTest(TestCase):
 class ParserEmailBodyTest(TestCase):
     def setUp(self):
         self.client = Client()
-        self.email = Email.objects.create(header='test header', body='Click on the link www.google.com')
+        self.email = Email.objects.create(header='test header', body='Click on the link https://www.google.com')
 
     def test_found_url(self):
         results = analyze_body(self.email.body)
-        self.assertTrue({'match': 'www.google.com'} in results)
+        self.assertTrue(any(result['match'] == 'https://www.google.com' for result in results))
 
 class FindSpoofCharactersTests(TestCase):
     """python manage.py test analyzer.tests.FindSpoofCharactersTests"""

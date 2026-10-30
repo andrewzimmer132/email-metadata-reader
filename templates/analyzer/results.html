@@ -12,8 +12,47 @@
 {% if submitted %}
     <h3>Status: {{ email.status }}</h3>
     <div class="carousel-container">
+        
+        <div class="carousel-card">
+            <h2>Analysis Summary</h2>
+            {% if email.status == 'safe' %}
+                <div class="verdict safe-verdict">
+                    <h3>✅ This email appears to be safe.</h3>
+                    <p>No major red flags were detected.</p>
+                </div>
+            {% elif email.status == 'unsafe' %}
+                <div class="verdict unsafe-verdict">
+                    <h3>⚠️ Warning: Suspicious Email</h3>
+                    <p>This email shows signs of spoofing or impersonation. Caution is advised.</p>
+                </div>
+            {% elif email.status == 'spam/scam' %}
+                <div class="verdict spam-verdict">
+                    <h3>🚨 Danger: High Spam Risk</h3>
+                    <p>This email contains language or links commonly found in scams. </p>
+                </div>
+            {% else %}
+                <div class="verdict">
+                    <h3>Analysis Pending</h3>
+                </div>
+            {% endif %}
+            <h3>What was checked:</h3>
+            <ul>
+                <li>Sender & Routing Information</li>
+                <li>Email Authentication (SPF/DKIM/DMARC)</li>
+                {% if spoof_flags %}
+                    <li style="color: #b91c1c; font-weight: bold;">⚠️ Spoofed Characters Detected</li>
+                {% endif %}
+                {% if body_results %}
+                    <li style="color: #b91c1c; font-weight: bold;">⚠️ Suspicious URLs found</li>
+                {% endif %}
+                {% if spam_result.potential_spam %}
+                    <li style="color: #b91c1c; font-weight: bold;">⚠️ Spam Language Detected</li>
+                {% endif %}
+            </ul>
+            <p>Click <strong>Next</strong> to see in-depth breakdown</p>
+        </div>
 
-        <div class="carousel-card active">
+        <div class="carousel-card">
             <h2>Sender Information</h2>
             <div class="results-grid">
                 <p><strong>From:</strong> {{ results.from }}</p>
@@ -171,7 +210,7 @@
         if (nbutton) {
             nbutton.style.visibility = index === cards.length-1 ? 'hidden' : 'visible';
         }
-        if (emailMap && index === 2) {
+        if (emailMap && index === 3) {
             setTimeout(() => {emailMap.invalidateSize();
                 if (window.mapBounds) {
                     emailMap.fitBounds(window.mapBounds, {padding: [50, 50] });

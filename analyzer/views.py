@@ -1,4 +1,5 @@
 from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.http import HttpResponse
 from django.utils import timezone
@@ -248,7 +249,14 @@ class PastEmailsAnalyzedView(View):
     def get(self, request):
         if not request.user.is_authenticated:
             return redirect('login')
-        past_emails = Email.objects.all().order_by('-id')
+        past_emails = Email.objects.all()
+        sort_by = request.GET.get('sort', '-id').strip()
+        if sort_by == 'id':
+            past_emails = past_emails.order_by('id')
+        elif sort_by == 'status':
+            past_emails = past_emails.order_by('status', '-id')
+        else:
+            past_emails = past_emails.order_by('-id')
         status = request.GET.get('status', '').strip()
         query = request.GET.get('q', '').strip()
         if status:
@@ -262,6 +270,7 @@ class PastEmailsAnalyzedView(View):
            'past_emails': past_emails,
            'selected_status': status,
            'search_query': query,
+           'selected_sort': sort_by,
         }
         return render(request, 'analyzer/past_emails.html', context)
 
@@ -283,3 +292,25 @@ class WelcomePageView(View):
             return redirect('login')
         context = {'is_authenticated': True}
         return render(request, 'analyzer/welcome.html', context)
+
+@login_required
+def compare_emails(request):
+    if request.method != "POST":
+        return redirect('past_emails')
+    email_ids = request.POST.getlist('email_ids')
+
+    if len(set(email_ids)) < 2:
+        return redirect('past_emails')
+
+    emails = Email.objects.filter(id__in=email_ids)
+
+    if emails.count() < 2:
+        return redirect('past_emails')
+
+    email_ids = request.POST.getlist('email_ids')
+    print(email_ids)
+
+    return render(request, 'analyzer/compare_emails.html', {'emails': emails})
+
+def header_help_view(request):
+    return render(request, "analyzer/Gmail_header_tutorial.html")
