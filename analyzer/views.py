@@ -295,6 +295,8 @@ class WelcomePageView(View):
 
 @login_required
 def compare_emails(request):
+    if not request.user.is_authenticated:
+        return redirect('login')
     if request.method != "POST":
         return redirect('past_emails')
     email_ids = request.POST.getlist('email_ids')
@@ -307,10 +309,7 @@ def compare_emails(request):
     if emails.count() < 2:
         return redirect('past_emails')
 
-    email_ids = request.POST.getlist('email_ids')
-    print(email_ids)
-
-    return render(request, 'analyzer/compare_emails.html', {'emails': emails})
+    return render(request, 'analyzer/compare_emails.html', {'is_authenticated': True, 'emails': emails})
 
 def header_help_view(request):
     return render(request, "analyzer/Gmail_header_tutorial.html")
