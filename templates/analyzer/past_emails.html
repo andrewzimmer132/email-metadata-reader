@@ -62,8 +62,8 @@
 <form method="POST" action="{% url 'compare_emails' %}" class="email-selection-form">
     {% csrf_token %}
     {% for email in past_emails %}
-        <div>
-            <input class="email-select-row" type="checkbox" name="email_ids" value="{{ email.id }}">
+        <div class="email-select-row">
+            <input type="checkbox" name="email_ids" value="{{ email.id }}">
             <a href="{% url 'email_results' email.id %}">Email #{{ email.id }}</a>
         </div>
     {% endfor %}

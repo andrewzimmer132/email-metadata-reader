@@ -312,4 +312,7 @@ def compare_emails(request):
     return render(request, 'analyzer/compare_emails.html', {'is_authenticated': True, 'emails': emails})
 
 def header_help_view(request):
-    return render(request, "analyzer/Gmail_header_tutorial.html")
+    if not request.user.is_authenticated:
+        return redirect('login')
+    context = {'is_authenticated': True}
+    return render(request, "analyzer/Gmail_header_tutorial.html", context)

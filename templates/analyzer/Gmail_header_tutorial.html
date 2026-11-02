@@ -1,5 +1,7 @@
-
+{% extends 'analyzer/base.html' %}
 {% load static %}
+
+{% block content %}
 
 <h2>How to find your email header</h2>
 
@@ -10,3 +12,10 @@
             type="video/mp4">
     Your browser does not support video playback.
 </video>
+<br>
+<br>
+<a href="{% url 'home_view' %}"><button class="button">To Analyzer</button></a>
+<a href="{% url 'past_emails' %}"><button class="button">Past Emails Analyzed</button></a>
+<a href="/welcome/"><button class="button">Main Menu</button></a>
+
+{% endblock %}
