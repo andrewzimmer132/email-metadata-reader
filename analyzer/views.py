@@ -328,10 +328,10 @@ def reminder_view(request):
     local_dt = datetime.fromisoformat(local_time_str).replace(tzinfo=user_tz)
     utc_dt = local_dt.astimezone(ZoneInfo("UTC"))
 
-    Reminder.objects.create(
+    EmailReminder.objects.create(
         email=email, timezone=tz_str, remind_at=utc_dt, message=message
     )
     # Set flag to True so the template knows to display a success message
     success = True
 
-  return render(request, "reminders/reminder_form.html", {"success": success})
+  return render(request, "analyzer/reminder.html", {"success": success})
