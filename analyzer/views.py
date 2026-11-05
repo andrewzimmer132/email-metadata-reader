@@ -3,15 +3,16 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.http import HttpResponse
 from django.utils import timezone
-from .models import LoginAttempt, Email
+from .models import LoginAttempt, Email, EmailReminder
 from django.shortcuts import render, redirect, get_object_or_404
 from analyzer.parser import analyze_header, analyze_body, assess_spam
 from analyzer.spoofed_chars import find_spoof_characters
 from django.views import View
-from datetime import timedelta
+from datetime import timedelta, datetime
 from email import message_from_bytes, policy
 from django.db.models import Q
 from analyzer.geolocation import add_location_and_network_info
+from zoneinfo import ZoneInfo
 
 
 # Create your views here.
@@ -313,3 +314,24 @@ def compare_emails(request):
 
 def header_help_view(request):
     return render(request, "analyzer/Gmail_header_tutorial.html")
+
+def reminder_view(request):
+  success = False
+
+  if request.method == "POST":
+    email = request.POST.get("email")
+    tz_str = request.POST.get("timezone")
+    local_time_str = request.POST.get("remind_at")
+    message = request.POST.get("message")
+
+    user_tz = ZoneInfo(tz_str)
+    local_dt = datetime.fromisoformat(local_time_str).replace(tzinfo=user_tz)
+    utc_dt = local_dt.astimezone(ZoneInfo("UTC"))
+
+    Reminder.objects.create(
+        email=email, timezone=tz_str, remind_at=utc_dt, message=message
+    )
+    # Set flag to True so the template knows to display a success message
+    success = True
+
+  return render(request, "reminders/reminder_form.html", {"success": success})

@@ -2,7 +2,7 @@ from django.urls import path
 
 from . import views
 from .views import HomeView, LoginView, LogoutView, SignupView, ResultsView, PastEmailsAnalyzedView, \
-    DeleteEmailAnalyzedView, EmailResultsView, WelcomePageView, header_help_view
+    DeleteEmailAnalyzedView, EmailResultsView, WelcomePageView, header_help_view, reminder_view
 
 urlpatterns = [
     path('home/', HomeView.as_view(), name='home_view'),
@@ -17,4 +17,5 @@ urlpatterns = [
     path('compare_emails/', views.compare_emails, name='compare_emails'),
     path('welcome/', WelcomePageView.as_view(), name='welcome'),
     path("header-help/", header_help_view, name="Gmail_header_help"),
+    path('set-reminder/', reminder_view, name='reminder_view'),
 ]
