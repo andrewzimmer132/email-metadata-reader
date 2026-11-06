@@ -16,5 +16,5 @@ urlpatterns = [
     path('welcome/', WelcomePageView.as_view(), name='welcome'),
     path('compare_emails/', views.compare_emails, name='compare_emails'),
     path('welcome/', WelcomePageView.as_view(), name='welcome'),
-    path("header-help/", header_help_view, name="Gmail_header_help"),
+    path("header-help/", header_help_view, name="header_help"),
 ]

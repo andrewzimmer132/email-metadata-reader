@@ -483,3 +483,45 @@ button:hover {
     border-radius: 6px;
     cursor: pointer;
 }
+/* Main tutorial container */
+.tutorial-container {
+    max-width: 1000px;
+    margin: 10px auto;
+    padding: 20px;
+}
+
+/* Page heading */
+.tutorial-container h1 {
+    text-align: center;
+    margin-bottom: 10px;
+}
+
+.intro {
+    text-align: center;
+    color: #666;
+    margin-bottom: 35px;
+}
+
+/* Individual tutorial sections */
+.tutorial-card {
+    background: #f8f9fa;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    padding: 25px;
+    margin-bottom: 30px;
+}
+
+/* Tutorial headings */
+.tutorial-card h2 {
+    margin-top: 0;
+    margin-bottom: 10px;
+}
+
+/* Video sizing */
+.tutorial-card video {
+    display: block;
+    width: 100%;
+    max-width: 850px;
+    margin: 20px auto 0;
+    border-radius: 8px;
+}
