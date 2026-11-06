@@ -184,7 +184,7 @@ class ResultsView(View):
                         spoof_flags,
         )
 
-        new_email = Email(body=body, header=header)
+        new_email = Email(body=body, header=header, user=request.user)
 
         new_email.status = (
                 'spam/scam'
@@ -212,7 +212,7 @@ class EmailResultsView(View):
     def get(self, request, email_id):
         if not request.user.is_authenticated:
             return redirect('login')
-        email = get_object_or_404(Email, id=email_id)
+        email = get_object_or_404(Email, id=email_id, user=request.user)
         results = analyze_header(email.header)
         results["received"] = add_location_and_network_info(results["received"])
         body_results = analyze_body(email.body)
@@ -249,7 +249,7 @@ class PastEmailsAnalyzedView(View):
     def get(self, request):
         if not request.user.is_authenticated:
             return redirect('login')
-        past_emails = Email.objects.all()
+        past_emails = Email.objects.filter(user=request.user)
         sort_by = request.GET.get('sort', '-id').strip()
         if sort_by == 'id':
             past_emails = past_emails.order_by('id')
@@ -282,7 +282,7 @@ class DeleteEmailAnalyzedView(View):
     def post(self, request, email_id):
         if not request.user.is_authenticated:
             return redirect('login')
-        email = get_object_or_404(Email, id=email_id)
+        email = get_object_or_404(Email, id=email_id, user=request.user)
         email.delete()
         return redirect('past_emails')
 
@@ -304,7 +304,7 @@ def compare_emails(request):
     if len(set(email_ids)) < 2:
         return redirect('past_emails')
 
-    emails = Email.objects.filter(id__in=email_ids)
+    emails = Email.objects.filter(id__in=email_ids, user=request.user)
 
     if emails.count() < 2:
         return redirect('past_emails')
