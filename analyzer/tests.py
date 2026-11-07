@@ -10,6 +10,7 @@ from analyzer.parser import analyze_body
 from email.parser import Parser
 
 from analyzer.spoofed_chars import find_spoof_characters
+from analyzer.views import email_similarity, compare_email_text
 
 
 # Create your tests here.
@@ -161,3 +162,32 @@ class FindSpoofCharactersTests(TestCase):
         flags = find_spoof_characters("w0rd")
         self.assertEqual(len(flags), 1)
         self.assertEqual(flags[0]["char"], "0")
+
+class CompareEmailsTests(TestCase):
+    def setUp(self):
+        self.user = User.objects.create_user(username='test_user3', password='test_password')
+        self.email = Email.objects.create(header='email1', body='This is a test email', status='safe', user=self.user)
+        self.email2 = Email.objects.create(header='email2', body='This is another test email', status='unsafe', user=self.user)
+        self.email3 = Email.objects.create(header='email3', body='Singular email', status='unsafe', user=self.user)
+        self.compare_url = reverse('compare_emails')
+        self.past_emails_url = reverse('past_emails')
+
+    def test_compare_emails(self):
+        self.client.login(username='test_user3', password='test_password')
+        email_ids = [self.email.pk, self.email2.pk]
+        response = self.client.post(self.compare_url, {'email_ids': email_ids})
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'analyzer/compare_emails.html')
+
+    def test_compare_one_email(self):
+        self.client.login(username='test_user3', password='test_password')
+        email_ids = [self.email3.pk]
+        response = self.client.post(self.compare_url, {'email_ids': email_ids})
+        self.assertEqual(response.status_code, 302)
+
+    def test_email_differences(self):
+        self.client.login(username='test_user3', password='')
+        ratio = email_similarity(self.email, self.email2)
+        self.assertTrue(ratio < 100, ratio > 0)
+        email1_lines, email2_lines = compare_email_text(self.email, self.email2)
+        self.assertEqual(len(email1_lines), len(email2_lines))
