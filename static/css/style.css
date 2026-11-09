@@ -519,6 +519,20 @@ button:hover {
       align-items: start;
   }
 
+.added {
+    background-color: white;
+    color: #095841;
+}
+
+.removed {
+    background-color: white;
+    color: #b91c1c;
+}
+
+.unchanged {
+    color: inherit;
+}
+
 .email-checkbox {
     display: flex;
     align-items: center;
