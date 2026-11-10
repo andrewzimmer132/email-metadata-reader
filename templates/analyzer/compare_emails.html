@@ -6,15 +6,18 @@
 <div class="comparison">
     {% for email in emails %}
         <section class="email-column">
+            <a href="{% url 'email_results' email.id %}">
             <strong>Email #{{ email.id }}</strong>
+            </a>
             <span class="status-badge status-{{ email.status }}">{{ email.status }}</span>
             <pre>{{ email.body|truncatechars:100 }}</pre>
-            <pre>Similarity: {{ ratio }}%</pre>
+
         </section>
     {% empty %}
         <p>No emails found.</p>
     {% endfor %}
     <section class="email-column">
+        <pre>Similarity: {{ ratio }}%</pre>
         <h3>Differences:</h3>
         {% for line in email1_lines %}
             <span class="{{ line.type }}">
@@ -23,6 +26,7 @@
         {% endfor %}
     </section>
     <section class="email-column">
+        <pre>Similarity: {{ ratio }}%</pre>
         <h3>Differences:</h3>
         {% for line in email2_lines %}
         <span class="{{ line.type }}">
