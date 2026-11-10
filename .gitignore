@@ -25,3 +25,4 @@ Thumbs.db
 
 #geolocation database
 geoip/**/*.mmdb
+/geoip
