@@ -11,7 +11,6 @@
             </a>
             <span class="status-badge status-{{ email.status }}">{{ email.status }}</span>
             <pre>{{ email.body|truncatechars:100 }}</pre>
-
         </section>
     {% empty %}
         <p>No emails found.</p>
@@ -22,16 +21,16 @@
         {% for line in email1_lines %}
             <span class="{{ line.type }}">
                 {{ line.text }}
-             </span>
+            </span>
         {% endfor %}
     </section>
     <section class="email-column">
         <pre>Similarity: {{ ratio }}%</pre>
         <h3>Differences:</h3>
         {% for line in email2_lines %}
-        <span class="{{ line.type }}">
-            {{ line.text }}
-        </span>
+            <span class="{{ line.type }}">
+                {{ line.text }}
+            </span>
         {% endfor %}
     </section>
 </div>
