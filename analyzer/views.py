@@ -373,7 +373,7 @@ class EmailHTMLParser(HTMLParser):
 def clean_email_body(body):
     # Remove HTML
     body = re.sub(r'@media[^{]*\{(?:[^{}]|\{[^{}]*\})*\}','',body, flags=re.IGNORECASE)
-    body = re.sub('(?is)<(style|script|head)\b[^>]*>.*?</\1\s*>', '', body)
+    body = re.sub(r'(?is)<(style|script|head)\b[^>]*>.*?</\1\s*>', '', body)
 
     parser = EmailHTMLParser()
     parser.feed(body)
