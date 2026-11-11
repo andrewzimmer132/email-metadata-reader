@@ -1,8 +1,26 @@
+:root {
+    --primary-color: #2563eb;
+    --primary-color-hover: #022075;
+    --secondary-color: #6b7280;
+    --success-color-background: #92ffdb;
+    --success-color-border: #0c6e4f;
+    --success-color: #138f68;
+    --danger-color: #dc2626;
+    --danger-color-background: #fca5a5;
+    --danger-color-border: #dc2626;
+    --warning-color: #f59e0b;
+    --warning-color-background: #fef3c7;
+    --warning-color-border: #f59e0b;
+    --navbar-color: #1f2937;
+    --background-color: #f9fafb;
+    --text-color: #1f2937;
+}
+
 body {
     font-family: Arial, sans-serif;
     margin: 0;
-    background: #ffffff;
-    color: #000;
+    background: var(--background-color);
+    color: var(--text-color);
     padding-bottom: 90px;
 }
 
@@ -10,7 +28,7 @@ body {
     display: flex;
     justify-content: space-between;
     padding: 1rem 2rem;
-    background: #333;
+    background: var(--navbar-color);
     color: #f0f0f0;
 }
 
@@ -41,7 +59,7 @@ body {
 }
 
 .auth-card {
-    background: #ffffff;
+    background: var(--background-color);
     padding: 2rem;
     border-radius: 8px;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
@@ -57,7 +75,7 @@ input, textarea {
 }
 
 button {
-    background: #2563eb;
+    background: var(--primary-color);
     color: #ffffff;
     padding: 0.6rem 1.2rem;
     border: none;
@@ -66,11 +84,11 @@ button {
 }
 
 button:hover {
-    background: #022075;
+    background: var(--primary-color-hover);
 }
 
 .error {
-    color: #b91c1c;
+    color: var(--danger-color);
     font-weight: bold;
 }
 
@@ -81,11 +99,11 @@ button:hover {
 
 .carousel-card{
     display: none;
-    background: #ffffff;
+    background: var(--background-color);
     padding: 1.5rem;
     border-radius: 8px;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-    border-left: 4px solid #2563eb;
+    border-left: 4px solid var(--primary-color);
     min-height: 250px;
 }
 
@@ -116,7 +134,7 @@ button:hover {
 }
 
 .carousel-card ul li{
-    background: #fafafa;
+    background: var(--background-color);
     padding: 0.5em 0.75rem;
     border-radius: 4px;
     margin-bottom: 0.4rem;
@@ -125,7 +143,7 @@ button:hover {
 }
 
 .carousel-card ul li strong{
-    color: #2563eb;
+    color: var(--primary-color);
 }
 
 .verdict {
@@ -141,29 +159,29 @@ button:hover {
 }
 
 .safe-verdict {
-    background: #a5efcb;
-    color: #095841;
-    border: 1px solid #12c287;
+    background: var(--success-color-background);
+    color: var(--success-color);
+    border: 1px solid var(--success-color-border);
 }
 
 .unsafe-verdict {
-    background: #f2d6d6;
-    color: #861313;
-    border: 1px solid #ef4444;
+    background: var(--danger-color-background);
+    color: var(--danger-color);
+    border: 1px solid var(--danger-color-border);
 }
 
 .spam-verdict {
-    background: #fffbeb;
-    color: #92400e;
-    border: 1px solid #cf870b;
+    background: var(--warning-color-background);
+    color: var(--warning-color);
+    border: 1px solid var(--warning-color-border);
 }
 
 .empty-state {
     text-align: center;
     padding: 3rem 1rem;
-    background: #f0f5fa;
+    background: var(--background-color);
     border-radius: 8px;
-    border: 1px dashed #aabcd6
+    border: 1px dashed var(--border-color);
 }
 
 .empty-state h3 {
@@ -455,7 +473,7 @@ button:hover {
     padding: 16px;
     border: 1px solid #d1d5db;
     border-radius: 8px;
-    background-color: #f9fafb;
+    background-color: var(--background-color);
     min-width: 0;
 }
 
@@ -482,8 +500,8 @@ button:hover {
 .url-flags {
     margin: 10px 0 0;
     padding: 10px 10px 10px 30px;
-    background-color: #fee2e2;
-    color: #991b1b;
+    background-color: var(--background-color);
+    color: var(--text-color);
     border-radius: 5px;
 }
 
@@ -498,7 +516,7 @@ button:hover {
     border-bottom: 3px solid transparent;
   }
   .tab-btn.active {
-    border-bottom-color: #429cfd;
+    border-bottom-color: var(--primary-color);
     font-weight: bold;
   }
   .tab-content {
@@ -520,12 +538,12 @@ button:hover {
   }
 
 .added {
-    background-color: white;
+    background-color: var(--background-color);
     color: #095841;
 }
 
 .removed {
-    background-color: white;
+    background-color: var(--background-color);
     color: #b91c1c;
 }
 
