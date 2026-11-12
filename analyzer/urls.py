@@ -1,8 +1,9 @@
+from django.contrib.auth.views import PasswordResetView
 from django.urls import path
 
 from . import views
 from .views import HomeView, LoginView, LogoutView, SignupView, ResultsView, PastEmailsAnalyzedView, \
-    DeleteEmailAnalyzedView, EmailResultsView, WelcomePageView, header_help_view
+    DeleteEmailAnalyzedView, EmailResultsView, WelcomePageView, header_help_view, ResetPasswordView
 
 urlpatterns = [
     path('home/', HomeView.as_view(), name='home_view'),
@@ -17,4 +18,5 @@ urlpatterns = [
     path('compare_emails/', views.compare_emails, name='compare_emails'),
     path('welcome/', WelcomePageView.as_view(), name='welcome'),
     path("header-help/", header_help_view, name="header_help"),
+    path('reset_password/', ResetPasswordView.as_view(), name='reset_password'),
 ]

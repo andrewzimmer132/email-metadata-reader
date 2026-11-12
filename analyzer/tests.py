@@ -125,6 +125,42 @@ class PastEmailsAnalyzedViewTest(TestCase):
         response = self.client.get(reverse('past_emails'))
         self.assertEqual(response.status_code, 302)
 
+class ResetPasswordViewTest(TestCase):
+    def setUp(self):
+        self.client = Client()
+        self.user = User.objects.create_user(username='test_user', email='test_user@uwm.edu', password='old_password')
+
+    def test_reset_password_get(self):
+        response = self.client.get(reverse('reset_password'))
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'analyzer/reset_password.html')
+
+    def test_reset_password_post(self):
+        response = self.client.post(reverse('reset_password'), {'username': 'test_user', 'email': 'test_user@uwm.edu','new_password': 'new_password', 'confirm_new_password': 'new_password'})
+        self.assertEqual(response.status_code, 302)
+        self.assertRedirects(response, reverse('login'))
+        self.user.refresh_from_db()
+        self.assertTrue(self.user.check_password('new_password'))
+
+    def invalid_reset_password_post(self):
+        response = self.client.post(reverse('reset_password'), {'username': 'test_user', 'email': 'test_user@uwm.edu', 'new_password': 'new_password', 'confirm_new_password': 'old_password'})
+        self.assertEqual(response.status_code, 302)
+        self.assertTemplateUsed(response, 'analyzer/reset_password.html')
+        self.user.refresh_from_db()
+        self.assertFalse(self.user.check_password('new_password'))
+
+        response = self.client.post(reverse('reset_password'), {'username': 'incorrect', 'email': 'test_user@uwm.edu', 'new_password': 'new_password', 'confirm_new_password': 'new_password'})
+        self.assertEqual(response.status_code, 302)
+        self.assertTemplateUsed(response, 'analyzer/reset_password.html')
+        self.user.refresh_from_db()
+        self.assertFalse(self.user.check_password('new_password'))
+
+        response = self.client.post(reverse('reset_password'), {'username': 'test_user', 'email': 'incorrect', 'new_password': 'new_password', 'confirm_new_password': 'new_password'})
+        self.assertEqual(response.status_code, 302)
+        self.assertTemplateUsed(response, 'analyzer/reset_password.html')
+        self.user.refresh_from_db()
+        self.assertFalse(self.user.check_password('new_password'))
+
 class ParserEmailBodyTest(TestCase):
     def setUp(self):
         self.client = Client()
