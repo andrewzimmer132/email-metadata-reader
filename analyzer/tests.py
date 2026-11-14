@@ -5,11 +5,13 @@ from django.template.context_processors import request
 from django.urls import reverse
 from django.test import TestCase, Client
 
-from analyzer.models import Email, LoginAttempt
+from analyzer.models import Email, LoginAttempt, EmailReminder
 from analyzer.parser import analyze_body
 from email.parser import Parser
 
 from analyzer.spoofed_chars import find_spoof_characters
+from zoneinfo import ZoneInfo
+from datetime import datetime
 
 
 # Create your tests here.
@@ -161,3 +163,47 @@ class FindSpoofCharactersTests(TestCase):
         flags = find_spoof_characters("w0rd")
         self.assertEqual(len(flags), 1)
         self.assertEqual(flags[0]["char"], "0")
+
+
+class ReminderViewTests(TestCase):
+    #Unit tests included here
+    def test_model_creation_and_defaults(self):
+        dt = datetime(2026, 12, 25, 10, 0, tzinfo=ZoneInfo("UTC"))
+        reminder = EmailReminder.objects.create(
+            email="test@example.com",
+            timezone="US/Eastern",
+            remind_at=dt,
+            message="Holiday check-in"
+        )
+        self.assertEqual(str(reminder), "test@example.com")
+        self.assertFalse(reminder.sent)
+
+    def test_timezone_conversion_to_utc(self):
+        local_dt = datetime(2026, 11, 14, 12, 0).replace(tzinfo=ZoneInfo("US/Central"))
+        utc_dt = local_dt.astimezone(ZoneInfo("UTC"))
+
+        self.assertEqual(utc_dt.hour, 18)
+        self.assertEqual(utc_dt.tzinfo, ZoneInfo("UTC"))
+
+    #Acceptance or end-to-end tests included here
+    def setUp(self):
+        self.client = Client()
+        self.url = reverse("reminder_view")
+
+    def test_get_reminder_page(self):
+        response = self.client.get(self.url)
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, "analyzer/reminder.html")
+        self.assertContains(response, "Meta-Data Reminder")
+        self.assertContains(response, 'name="remind_at"')
+
+    def test_submit_optional_empty_message(self):
+        form_data = {
+            "email": "user@example.com",
+            "timezone": "US/Eastern",
+            "remind_at": "2026-11-20T09:00",
+            "message": ""
+        }
+        self.client.post(self.url, data=form_data)
+        self.assertEqual(EmailReminder.objects.count(), 1)
+        self.assertEqual(EmailReminder.objects.first().message, "")

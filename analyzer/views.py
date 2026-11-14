@@ -13,6 +13,7 @@ from email import message_from_bytes, policy
 from django.db.models import Q
 from analyzer.geolocation import add_location_and_network_info
 from zoneinfo import ZoneInfo
+from django.contrib import messages
 
 
 # Create your views here.
@@ -315,23 +316,25 @@ def compare_emails(request):
 def header_help_view(request):
     return render(request, "analyzer/Gmail_header_tutorial.html")
 
+
 def reminder_view(request):
-  success = False
+    if request.method == "POST":
+        email = request.POST.get("email")
+        tz_str = request.POST.get("timezone")
+        local_time_str = request.POST.get("remind_at")
+        message = request.POST.get("message", "")
 
-  if request.method == "POST":
-    email = request.POST.get("email")
-    tz_str = request.POST.get("timezone")
-    local_time_str = request.POST.get("remind_at")
-    message = request.POST.get("message")
+        user_tz = ZoneInfo(tz_str)
+        local_dt = datetime.fromisoformat(local_time_str).replace(tzinfo=user_tz)
 
-    user_tz = ZoneInfo(tz_str)
-    local_dt = datetime.fromisoformat(local_time_str).replace(tzinfo=user_tz)
-    utc_dt = local_dt.astimezone(ZoneInfo("UTC"))
+        EmailReminder.objects.create(
+            email=email,
+            timezone=tz_str,
+            remind_at=local_dt,  # Django stores this in UTC automatically if USE_TZ=True
+            message=message
+        )
 
-    EmailReminder.objects.create(
-        email=email, timezone=tz_str, remind_at=utc_dt, message=message
-    )
-    # Set flag to True so the template knows to display a success message
-    success = True
+        messages.success(request, "Reminder scheduled successfully!")
+        return redirect("reminder_view")
 
-  return render(request, "analyzer/reminder.html", {"success": success})
+    return render(request, "analyzer/reminder.html")
