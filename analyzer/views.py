@@ -1,3 +1,8 @@
+import difflib
+import re
+from html import unescape
+from html.parser import HTMLParser
+
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
@@ -186,7 +191,7 @@ class ResultsView(View):
                         spoof_flags,
         )
 
-        new_email = Email(body=body, header=header)
+        new_email = Email(body=body, header=header, user=request.user)
 
         new_email.status = (
                 'spam/scam'
@@ -214,7 +219,7 @@ class EmailResultsView(View):
     def get(self, request, email_id):
         if not request.user.is_authenticated:
             return redirect('login')
-        email = get_object_or_404(Email, id=email_id)
+        email = get_object_or_404(Email, id=email_id, user=request.user)
         results = analyze_header(email.header)
         results["received"] = add_location_and_network_info(results["received"])
         body_results = analyze_body(email.body)
@@ -251,7 +256,7 @@ class PastEmailsAnalyzedView(View):
     def get(self, request):
         if not request.user.is_authenticated:
             return redirect('login')
-        past_emails = Email.objects.all()
+        past_emails = Email.objects.filter(user=request.user)
         sort_by = request.GET.get('sort', '-id').strip()
         if sort_by == 'id':
             past_emails = past_emails.order_by('id')
@@ -284,7 +289,7 @@ class DeleteEmailAnalyzedView(View):
     def post(self, request, email_id):
         if not request.user.is_authenticated:
             return redirect('login')
-        email = get_object_or_404(Email, id=email_id)
+        email = get_object_or_404(Email, id=email_id, user=request.user)
         email.delete()
         return redirect('past_emails')
 
@@ -303,15 +308,84 @@ def compare_emails(request):
         return redirect('past_emails')
     email_ids = request.POST.getlist('email_ids')
 
-    if len(set(email_ids)) < 2:
+    if len(set(email_ids)) != 2:
         return redirect('past_emails')
 
-    emails = Email.objects.filter(id__in=email_ids)
+    emails = Email.objects.filter(id__in=email_ids, user=request.user)
 
     if emails.count() < 2:
         return redirect('past_emails')
 
-    return render(request, 'analyzer/compare_emails.html', {'is_authenticated': True, 'emails': emails})
+    email1 = emails.order_by('-id')[0]
+    email2 = emails.order_by('-id')[1]
+
+    email1_lines, email2_lines = list(compare_email_text(email1, email2))
+    ratio = email_similarity(email1, email2)
+
+    return render(request, 'analyzer/compare_emails.html', {'is_authenticated': True, 'emails': emails, 'ratio': ratio, 'email1_lines': email1_lines, 'email2_lines': email2_lines})
+
+def compare_email_text(email1, email2):
+    body1 = clean_email_body(email1.body).split(' ')
+    body2 = clean_email_body(email2.body).split(' ')
+
+    diff = list(difflib.ndiff(body1, body2))
+
+    email1_lines= []
+    email2_lines= []
+
+    for line in diff:
+        if line.startswith('+'):
+            email2_lines.append({'text': line[2:], 'type': 'added'})
+        elif line.startswith('-'):
+            email1_lines.append({'text': line[2:], 'type': 'removed'})
+        elif line.startswith(' '):
+            text = line[2:]
+            email1_lines.append({'text': text, 'type': 'unchanged'})
+            email2_lines.append({'text': text, 'type': 'unchanged'})
+
+    return email1_lines, email2_lines
+
+def email_similarity(email1, email2):
+    body1 = clean_email_body(email1.body)
+    body2 = clean_email_body(email2.body)
+    return round(difflib.SequenceMatcher(None, body1, body2).ratio() * 100, 2)
+
+class EmailHTMLParser(HTMLParser):
+    def __init__(self):
+        super().__init__()
+        self.text = []
+        self.skip_tags = {'style', 'script', 'head'}
+        self.skip_depth = 0
+
+    def handle_starttag(self, tag, attrs):
+        if tag in self.skip_tags:
+            self.skip_depth += 1
+
+    def handle_endtag(self, tag):
+        if tag in self.skip_tags and self.skip_depth > 0:
+            self.skip_depth -= 1
+
+    def handle_data(self, data):
+        if self.skip_depth == 0:
+            self.text.append(data)
+
+    def get_text(self):
+        return ' '.join(self.text)
+
+def clean_email_body(body):
+    # Remove HTML
+    body = re.sub(r'@media[^{]*\{(?:[^{}]|\{[^{}]*\})*\}','',body, flags=re.IGNORECASE)
+    body = re.sub(r'(?is)<(style|script|head)\b[^>]*>.*?</\1\s*>', '', body)
+
+    parser = EmailHTMLParser()
+    parser.feed(body)
+    text = unescape(parser.get_text())
+    # Remove unicode
+    text = re.sub(r'[\u200b-\u200f\u2060\ufeff\u00ad]', '', text)
+    # Add and normalize whitespace
+    text = re.sub(r'(?<=[a-zA-Z0-9])(?=[A-Z])', '', text)
+    text = re.sub(r'\s+', ' ', text)
+    return text.strip()
 
 def header_help_view(request):
     return render(request, "analyzer/Gmail_header_tutorial.html")
@@ -338,3 +412,4 @@ def reminder_view(request):
         return redirect("reminder_view")
 
     return render(request, "analyzer/reminder.html")
+    return render(request, "analyzer/header_tutorial.html")

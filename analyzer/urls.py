@@ -18,4 +18,5 @@ urlpatterns = [
     path('welcome/', WelcomePageView.as_view(), name='welcome'),
     path("header-help/", header_help_view, name="Gmail_header_help"),
     path('set-reminder/', reminder_view, name='reminder_view'),
+    path("header-help/", header_help_view, name="header_help"),
 ]
