@@ -417,4 +417,8 @@ def clean_email_body(body):
     return text.strip()
 
 def header_help_view(request):
-    return render(request, "analyzer/header_tutorial.html")
+    context = {
+        "is_authenticated": request.user.is_authenticated,
+        "user": request.user,
+    }
+    return render(request, "analyzer/header_tutorial.html", context)

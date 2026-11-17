@@ -567,11 +567,58 @@ button:hover {
 
 /* Individual tutorial sections */
 .tutorial-card {
+    position: relative;
     background: #f8f9fa;
     border: 1px solid #ddd;
     border-radius: 10px;
-    padding: 25px;
+    padding: 25px 25px 25px 31px;
     margin-bottom: 30px;
+    overflow: hidden;
+}
+
+/* Top page banner */
+.tutorial-banner {
+    position: relative;
+    background: #f8f9fa;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    padding: 30px 30px 30px 36px;
+    margin-bottom: 35px;
+    overflow: hidden;
+    text-align: center;
+}
+
+.tutorial-banner h1 {
+    margin: 0 0 8px 0;
+    font-size: 1.8rem;
+    color: rgb(0 0 0 / 0.55);
+}
+
+.tutorial-banner p {
+    margin: 0;
+    color: #666;
+    font-size: 1.05rem;
+}
+
+
+/* Shared pseudo-element rules for the bar */
+.tutorial-card::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    width: 6px;
+}
+
+/* Color variations for the left border */
+.tutorial-card.gradient-one::before {
+    background: linear-gradient(to bottom, #BB001B, #EA4335, #BB001B, #FBBC05, #34A853, #4285F4);
+}
+
+/* Gradient for Card 2 (e.g., Warm sunset: Orange to Red to Yellow) */
+.tutorial-card.gradient-two::before {
+    background: linear-gradient(to bottom, #0078d4, #54daff, #034fa0);
 }
 
 /* Tutorial headings */
