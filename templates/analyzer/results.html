@@ -86,10 +86,36 @@
         <div class="carousel-card">
             <h2>Email Authentication</h2>
             {% if results.authentication %}
-                <ul>
-                    {% for result in results.authentication %}
-                        <li>{{ result }}</li>
-                    {% endfor %}
+                <ul class="auth-list">
+                    <li>
+                        {% if auth_results.spf == 'pass' %}
+                            <span class="check-pass">✅ Pass</span> <strong>SPF:</strong> Verified sender IP.
+                        {% elif auth_results.spf %}
+                            <span class="check-fail">❌ Fail</span> <strong>SPF:</strong> Sender IP not authorized.
+                        {% else %}
+                            <span class="check-unknown">⚠️ Unknown</span> <strong>SPF:</strong> Not checked.
+                        {% endif %}
+                    </li>
+
+                    <li>
+                        {% if auth_results.dkim == 'pass' %}
+                            <span class="check-pass">✅ Pass</span> <strong>DKIM:</strong> Valid signature.
+                        {% elif auth_results.dkim %}
+                            <span class="check-fail">❌ Fail</span> <strong>DKIM:</strong> Invalid or missing signature.
+                        {% else %}
+                            <span class="check-unknown">⚠️ Unknown</span> <strong>DKIM:</strong> Not checked.
+                        {% endif %}
+                    </li>
+
+                    <li>
+                        {% if auth_results.dmarc == 'pass' %}
+                            <span class="check-pass">✅ Pass</span> <strong>DMARC:</strong> Policy alignment passed.
+                        {% elif auth_results.dmarc %}
+                            <span class="check-fail">❌ Fail</span> <strong>DMARC:</strong> Policy alignment failed.
+                        {% else %}
+                            <span class="check-unknown">⚠️ Unknown</span> <strong>DMARC:</strong> Not checked.
+                        {% endif %}
+                    </li>
                 </ul>
             {% else %}
                 <p>No authentication results were found.</p>

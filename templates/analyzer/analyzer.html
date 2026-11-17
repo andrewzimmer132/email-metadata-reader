@@ -37,10 +37,12 @@
             <button type="submit" class="btn-big">Analyze</button>
         </div>
     </form>
-    <br>
-      <a href="/past-emails/"><button type="button" class="btn-alt">Past Emails Analyzed</button></a>
-        &nbsp;&nbsp;&nbsp;
-        <a href="/welcome/"><button type="button" class="btn-alt">Main Menu</button></a>
+    <div class="sticky-bar">
+        <div class="sticky-nav">
+            <a href="{% url 'past_emails' %}"><button>Past Emails</button></a>
+            <a href="/welcome/"><button>Main Menu</button></a>
+        </div>
+    </div>
 
 
 </div>
