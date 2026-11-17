@@ -313,4 +313,8 @@ def compare_emails(request):
     return render(request, 'analyzer/compare_emails.html', {'emails': emails})
 
 def header_help_view(request):
-    return render(request, "analyzer/header_tutorial.html")
+    context = {
+        "is_authenticated": request.user.is_authenticated,
+        "user": request.user,
+    }
+    return render(request, "analyzer/header_tutorial.html", context)
