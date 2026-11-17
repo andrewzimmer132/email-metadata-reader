@@ -4,6 +4,12 @@
 
 <h1>Past Emails Analyzed</h1>
 
+{% if messages %}
+    {% for message in messages %}
+        <p class="error">{{ message }}</p>
+    {% endfor %}
+{% endif %}
+
 <form method="GET" action="{% url 'past_emails' %}" class="filter-bar">
     <select name="status" class="filter-select">
         <option value="">All Statuses</option>

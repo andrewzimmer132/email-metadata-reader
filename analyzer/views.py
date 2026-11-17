@@ -3,6 +3,7 @@ import re
 from html import unescape
 from html.parser import HTMLParser
 
+from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
@@ -300,6 +301,34 @@ class WelcomePageView(View):
         context = {'is_authenticated': True}
         return render(request, 'analyzer/welcome.html', context)
 
+class ResetPasswordView(View):
+    def get(self, request):
+        return render(request, 'analyzer/reset_password.html')
+
+    def post(self, request):
+        username = request.POST.get('username')
+        email = request.POST.get('email')
+        new_password = request.POST.get('new_password')
+        confirm_new_password = request.POST.get('confirm_new_password')
+
+        context = {'is_authenticated': False, 'reset_entered': True, 'username_exists': User.objects.filter(username=username).exists(), 'email_exists': User.objects.filter(email=email).exists(),'user_exists': False, 'same_password': True}
+
+        if not new_password or (new_password != confirm_new_password):
+            context['same_password'] = False
+            return render(request, 'analyzer/reset_password.html', context)
+
+        user = User.objects.filter(username=username, email=email).first()
+
+        if user:
+            context['user_exists'] = True
+            user.set_password(new_password)
+            user.save()
+            return redirect('login')
+        else:
+            context = {'reset_entered': True, 'username_exists': User.objects.filter(username=username), 'email_exists': User.objects.filter(email=email), 'same_password': False}
+            return render(request, 'analyzer/reset_password.html', context)
+
+
 @login_required
 def compare_emails(request):
     if not request.user.is_authenticated:
@@ -309,11 +338,13 @@ def compare_emails(request):
     email_ids = request.POST.getlist('email_ids')
 
     if len(set(email_ids)) != 2:
+        messages.error(request, 'Exactly two emails can be compared.')
         return redirect('past_emails')
 
     emails = Email.objects.filter(id__in=email_ids, user=request.user)
 
-    if emails.count() < 2:
+    if emails.count() != 2:
+        messages.error(request, 'One or more emails could not be found')
         return redirect('past_emails')
 
     email1 = emails.order_by('-id')[0]
