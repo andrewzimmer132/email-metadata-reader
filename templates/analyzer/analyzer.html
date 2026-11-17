@@ -18,7 +18,7 @@
     <p>Paste full email header below; optional to paste email body</p>
 
     <details class="instructions">
-        <summary>� How to find email header</summary>
+        <summary> How to find email header?</summary>
         <p><strong>Gmail:</strong> Open the email ➜ Click three dots (⋮) ➜ Show original ➜ Copy all text.</p>
         <p><strong>Yahoo:</strong> Open the email ➜ More ➜ View Raw Message.</p>
         <p><strong>Outlook:</strong> Open the email ➜ Click three dots (⋮) ➜ View ➜ View message details ➜ Copy all text.</p>
@@ -37,14 +37,6 @@
             <button type="submit" class="btn-big">Analyze</button>
         </div>
     </form>
-    <div class="sticky-bar">
-        <div class="sticky-nav">
-            <a href="{% url 'past_emails' %}"><button>Past Emails</button></a>
-            <a href="/welcome/"><button>Main Menu</button></a>
-        </div>
-    </div>
-
-
 </div>
 <div id="upload-tab" class="tab-content">
     <p>Upload a .eml file to analyze</p>
@@ -53,6 +45,14 @@
         <input type="file" name="file" accept=".eml" required>
         <button type="submit">Analyze .eml File</button>
     </form>
+</div>
+
+<div class="sticky-bar">
+  <div class="sticky-nav">
+    <a href="{% url 'past_emails' %}"><button>Past Emails</button></a>
+    <a href="{% url 'header_help' %}"><button>Tutorial</button></a>
+    <a href="/welcome/"><button>Main Menu</button></a>
+    </div>
 </div>
 
 <script>
