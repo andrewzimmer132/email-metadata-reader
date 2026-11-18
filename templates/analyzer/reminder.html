@@ -1,0 +1,41 @@
+{% extends 'analyzer/base.html' %}
+
+{% block title %} Email Reminder {% endblock %}
+
+{% block content %}
+    <h1>Meta-Data Reminder</h1>
+
+    {% if messages %}
+        {% for message in messages %}
+            <div style="color: green; font-weight: bold; margin-bottom: 15px;">
+                {{ message }}
+            </div>
+        {% endfor %}
+    {% endif %}
+
+    <form method="POST" action="{% url 'reminder_view' %}">
+    {% csrf_token %}
+        <label for="email">Email</label>
+        <input type="email" name="email" id="email" required>
+        <br>
+        <label for="timezone">Timezone</label>
+        <select name="timezone" id="timezone" required>
+            <option value="" disabled selected>-- Select a Timezone --</option>
+            <option value="US/Eastern">Eastern (EST/EDT)</option>
+            <option value="US/Central">Central (CST/CDT)</option>
+            <option value="US/Mountain">Mountain (MST/MDT)</option>
+            <option value="US/Pacific">Pacific (PST/PDT)</option>
+        </select>
+        <br>
+        <br>
+        <label for="remind_at">Remind Me At:</label>
+        <input type="datetime-local" name="remind_at" id="remind_at" required>
+        <br>
+        <label for="message">Message (Optional):</label>
+        <textarea name="message" id="message" rows="4" required></textarea>
+        <button type="submit">Remind Me!</button>
+    </form>
+    <br>
+    <br>
+    <a href="/welcome/"><button class="btn-alt">Main Menu</button></a>
+{% endblock %}

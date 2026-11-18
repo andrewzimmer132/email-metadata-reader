@@ -7,6 +7,7 @@
 <h1>Welcome, {{ user.username }}!</h1>
     <a href="/home/"><button type="button">Access Analyzer</button></a>
     <a href="/past-emails/"><button type="button">Past Emails Analyzed</button></a>
+    <a href="{% url 'reminder_view' %}"><button type="button">Analyzer Reminder</button></a>
     <br>
     <br>
     <p> New to Analyzer?</p>
