@@ -60,6 +60,7 @@
     <div class="sticky-bar">
         <div class="sticky-nav">
             <a href="{% url 'home_view' %}"><button>Back to Analyzer</button></a>
+            <a href="{% url 'header_help' %}"><button>Tutorial</button></a>
             <a href="/welcome/"><button>Main Menu</button></a>
         </div>
 
@@ -82,17 +83,5 @@
     <a href="/welcome/"><button>Main Menu</button></a>
 {% endif %}
 <br>
-<script>
-    document.addEventListener("DOMContentLoaded", function() {
-        const selectAllCheckbox = document.getElementById("selectAll");
-        const emailCheckboxes = document.querySelectorAll(".email-checkbox-input");
-        if (selectAllCheckbox) {
-            selectAllCheckbox.addEventListener("change", function() {
-                emailCheckboxes.forEach(cb => {
-                    cb.checked = selectAllCheckbox.checked;
-                })
-            })
-        }
-    })
-</script>
+
 {% endblock %}

@@ -23,6 +23,19 @@ from django.contrib import messages
 
 
 # Create your views here.
+def parse_authentication(auth_list):
+    parsed = {'spf': None, 'dkim': None, 'dmarc': None}
+    if not auth_list:
+        return parsed
+    auth_str = " ".join(auth_list).lower()
+    spf_match = re.search(r"spf=(\w+)", auth_str)
+    dkim_match = re.search(r"dkim=(\w+)", auth_str)
+    dmarc_match = re.search(r"dmarc=(\w+)", auth_str)
+    if spf_match: parsed['spf'] = spf_match.group(1)
+    if dkim_match: parsed['dkim'] = dkim_match.group(1)
+    if dmarc_match: parsed['dmarc'] = dmarc_match.group(1)
+    return parsed
+
 class LoginView(View):
     def get(self, request):
         return render(request, 'analyzer/login.html')
@@ -203,6 +216,8 @@ class ResultsView(View):
             new_email.status = 'unsafe'
         new_email.save()
 
+        auth_results = parse_authentication(results["authentication"])
+
         context = {
             'is_authenticated': True,
             'submitted': True,
@@ -212,6 +227,7 @@ class ResultsView(View):
             'spoof_flags': spoof_flags,
             'spam_result': spam_result,
             'email': new_email,
+            'auth_results': auth_results,
         }
 
         return render(request, 'analyzer/results.html', context)
@@ -241,6 +257,8 @@ class EmailResultsView(View):
             email.status = new_status
             email.save(update_fields=['status'])
 
+        auth_results = parse_authentication(results["authentication"])
+
         context = {
             'is_authenticated': True,
             'submitted': True,
@@ -250,6 +268,7 @@ class EmailResultsView(View):
             'spoof_flags': spoof_flags,
             'spam_result': spam_result,
             'email': email,
+            'auth_results': auth_results,
         }
         return render(request, 'analyzer/results.html', context)
 
@@ -444,3 +463,8 @@ def reminder_view(request):
 
     return render(request, "analyzer/reminder.html")
     return render(request, "analyzer/header_tutorial.html")
+    context = {
+        "is_authenticated": request.user.is_authenticated,
+        "user": request.user,
+    }
+    return render(request, "analyzer/header_tutorial.html", context)

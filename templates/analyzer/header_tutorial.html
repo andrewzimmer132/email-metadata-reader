@@ -7,10 +7,12 @@
 
 <div class="tutorial-container">
 
-    <h1>Email Header Tutorials</h1>
-    <p>Learn how to retrieve email headers from your email provider.</p>
+    <div class="tutorial-banner">
+        <h1>Email Header Tutorials</h1>
+        <p>Learn how to retrieve email headers from your email provider.</p>
+    </div>
 
-    <div class="tutorial-card">
+    <div class="tutorial-card gradient-one">
         <h2>Gmail Tutorial</h2>
         <p>Follow this video to learn how to retrieve an email header in Gmail.</p>
 
@@ -19,7 +21,7 @@
         </video>
     </div>
 
-    <div class="tutorial-card">
+    <div class="tutorial-card gradient-two">
         <h2>Outlook Tutorial</h2>
         <p>Follow this video to learn how to retrieve an email header in Outlook.</p>
 
@@ -30,8 +32,12 @@
 
 </div>
 
-<a href="{% url 'home_view' %}">
-    <button type="button">Back to Analyzer</button>
-</a>
+<div class="sticky-bar">
+    <div class="sticky-nav">
+        <a href="{% url 'home_view' %}"><button>Back to Analyzer</button></a>
+        <a href="{% url 'past_emails' %}"><button>Past Emails</button></a>
+        <a href="/welcome/"><button>Main Menu</button></a>
+    </div>
+</div>
 
 {% endblock %}
