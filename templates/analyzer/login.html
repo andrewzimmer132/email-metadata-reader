@@ -1,14 +1,26 @@
 {% extends 'analyzer/base.html' %}
-
+{% load i18n %}
 {% block title %}Login{% endblock %}
 
 {% block content %}
+    {% get_current_language as LANGUAGE_CODE %}
 <div class="auth-card">
-    <h1>Log In</h1>
+    <h1>
+        {% if LANGUAGE_CODE == 'es' %}Iniciar sesión
+        {% elif LANGUAGE_CODE == 'fr' %}Connexion
+        {% elif LANGUAGE_CODE == 'de' %}Anmelden
+        {% elif LANGUAGE_CODE == 'ja' %}ログイン
+        {% elif LANGUAGE_CODE == 'zh-hans' %}登录
+        {% else %}Log In{% endif %}</h1>
 
     {% if locked %}
         <p class="error">
-            Too many failed login attempts. Please wait one minute before trying again.
+            {% if LANGUAGE_CODE == 'es' %}Demasiados intentos fallidos de inicio de sesión. Por favor, espera un minuto antes de volver a intentarlo.
+            {% elif LANGUAGE_CODE == 'fr' %}Connexion
+            {% elif LANGUAGE_CODE == 'de' %}Anmelden
+            {% elif LANGUAGE_CODE == 'ja' %}ログインの失敗回数が多すぎます。1分待ってから、再度お試しください。
+            {% elif LANGUAGE_CODE == 'zh-hans' %}登录
+            {% else %}Too many failed login attempts. Please wait one minute before trying again.{% endif %}
         </p>
     {% endif %}
 
