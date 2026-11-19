@@ -1,7 +1,23 @@
 {% extends 'analyzer/base.html' %}
 {% load i18n %}
+{% block title %}
+    {% if LANGUAGE_CODE == 'es' %}Comparar correos electrónicos
+    {% elif LANGUAGE_CODE == 'fr' %}Comparer les e-mails
+    {% elif LANGUAGE_CODE == 'de' %}E-Mails vergleichen
+    {% elif LANGUAGE_CODE == 'ja' %}メールを比較する
+    {% elif LANGUAGE_CODE == 'zh-hans' %}对比电子邮件
+    {% else %}Compare Emails{% endif %}
+{% endblock %}
 {% block content %}
-<h1>Compare Emails</h1>
+{% get_current_language as LANGUAGE_CODE %}
+    <h1>
+     {% if LANGUAGE_CODE == 'es' %}Comparar correos electrónicos
+    {% elif LANGUAGE_CODE == 'fr' %}Comparer les e-mails
+    {% elif LANGUAGE_CODE == 'de' %}E-Mails vergleichen
+    {% elif LANGUAGE_CODE == 'ja' %}メールを比較する
+    {% elif LANGUAGE_CODE == 'zh-hans' %}对比电子邮件
+    {% else %}Compare Emails{% endif %}
+    </h1>
 
 <div class="comparison">
     {% for email in emails %}
@@ -16,8 +32,20 @@
         <p>No emails found.</p>
     {% endfor %}
     <section class="email-column">
-        <pre>Similarity: {{ ratio }}%</pre>
-        <h3>Differences:</h3>
+        <pre>
+            {% if LANGUAGE_CODE == 'es' %}Semejanza: {{ ratio }}%
+    {% elif LANGUAGE_CODE == 'fr' %}Similarité: {{ ratio }}%
+    {% elif LANGUAGE_CODE == 'de' %}Ähnlichkeit: {{ ratio }}%
+    {% elif LANGUAGE_CODE == 'ja' %}類似性: {{ ratio }}%
+    {% elif LANGUAGE_CODE == 'zh-hans' %}相似: {{ ratio }}%
+    {% else %}Similarity: {{ ratio }}%{% endif %}</pre>
+        <h3>
+            {% if LANGUAGE_CODE == 'es' %}Diferencias:
+    {% elif LANGUAGE_CODE == 'fr' %}Différences:
+    {% elif LANGUAGE_CODE == 'de' %}Unterschiede:
+    {% elif LANGUAGE_CODE == 'ja' %}相違点：
+    {% elif LANGUAGE_CODE == 'zh-hans' %}差异：
+    {% else %}Differences:{% endif %}</h3>
         {% for line in email1_lines %}
             <span class="{{ line.type }}">
                 {{ line.text }}
@@ -25,8 +53,22 @@
         {% endfor %}
     </section>
     <section class="email-column">
-        <pre>Similarity: {{ ratio }}%</pre>
-        <h3>Differences:</h3>
+        <pre>
+            {% if LANGUAGE_CODE == 'es' %}Semejanza: {{ ratio }}%
+    {% elif LANGUAGE_CODE == 'fr' %}Similarité: {{ ratio }}%
+    {% elif LANGUAGE_CODE == 'de' %}Ähnlichkeit: {{ ratio }}%
+    {% elif LANGUAGE_CODE == 'ja' %}類似性: {{ ratio }}%
+    {% elif LANGUAGE_CODE == 'zh-hans' %}相似: {{ ratio }}%
+    {% else %}Similarity: {{ ratio }}%{% endif %}
+        </pre>
+        <h3>
+            {% if LANGUAGE_CODE == 'es' %}Diferencias:
+    {% elif LANGUAGE_CODE == 'fr' %}Différences:
+    {% elif LANGUAGE_CODE == 'de' %}Unterschiede:
+    {% elif LANGUAGE_CODE == 'ja' %}相違点：
+    {% elif LANGUAGE_CODE == 'zh-hans' %}差异：
+    {% else %}Differences:{% endif %}
+        </h3>
         {% for line in email2_lines %}
             <span class="{{ line.type }}">
                 {{ line.text }}
@@ -37,7 +79,20 @@
 
 <br>
 
-<a href="{% url 'home_view' %}"><button class="btn-alt">Back to Analyzer</button></a>
-<a href="{% url 'past_emails' %}"><button class="btn-alt">Past Emails Analyzed</button></a>
+<a href="{% url 'home_view' %}"><button class="btn-alt">
+    {% if LANGUAGE_CODE == 'es' %}Volver al analizador
+          {% elif LANGUAGE_CODE == 'fr' %}Retour à l’analyseur
+          {% elif LANGUAGE_CODE == 'de' %}Zurück zum Analyzer
+          {% elif LANGUAGE_CODE == 'ja' %}アナライザーに戻る
+          {% elif LANGUAGE_CODE == 'zh-hans' %}返回分析器
+          {% else %}Back to Analyzer{% endif %}</button></a>
+<a href="{% url 'past_emails' %}"><button class="btn-alt">
+     {% if LANGUAGE_CODE == 'es' %}Correos electrónicos analizados
+          {% elif LANGUAGE_CODE == 'fr' %}E-mails analysés
+          {% elif LANGUAGE_CODE == 'de' %}Analysierte E-Mails
+          {% elif LANGUAGE_CODE == 'ja' %}分析済みメール
+          {% elif LANGUAGE_CODE == 'zh-hans' %}已分析的电子邮件
+          {% else %}Past Emails Analyzed{% endif %}
+</button></a>
 
 {% endblock %}
