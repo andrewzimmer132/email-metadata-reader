@@ -1,6 +1,13 @@
 {% extends 'analyzer/base.html' %}
 {% load i18n %}
-{% block title %}Login{% endblock %}
+{% block title %}
+    {% if LANGUAGE_CODE == 'es' %}Iniciar sesión
+        {% elif LANGUAGE_CODE == 'fr' %}Connexion
+        {% elif LANGUAGE_CODE == 'de' %}Anmelden
+        {% elif LANGUAGE_CODE == 'ja' %}ログイン
+        {% elif LANGUAGE_CODE == 'zh-hans' %}登录
+        {% else %}Login{% endif %}
+{% endblock %}
 
 {% block content %}
     {% get_current_language as LANGUAGE_CODE %}
@@ -16,28 +23,70 @@
     {% if locked %}
         <p class="error">
             {% if LANGUAGE_CODE == 'es' %}Demasiados intentos fallidos de inicio de sesión. Por favor, espera un minuto antes de volver a intentarlo.
-            {% elif LANGUAGE_CODE == 'fr' %}Connexion
-            {% elif LANGUAGE_CODE == 'de' %}Anmelden
+            {% elif LANGUAGE_CODE == 'fr' %}Trop de tentatives de connexion infructueuses. Veuillez patienter une minute avant de réessayer.
+            {% elif LANGUAGE_CODE == 'de' %}Zu viele fehlgeschlagene Anmeldeversuche. Bitte warten Sie eine Minute, bevor Sie es erneut versuchen.
             {% elif LANGUAGE_CODE == 'ja' %}ログインの失敗回数が多すぎます。1分待ってから、再度お試しください。
-            {% elif LANGUAGE_CODE == 'zh-hans' %}登录
+            {% elif LANGUAGE_CODE == 'zh-hans' %}登录尝试失败次数过多。请等待一分钟后再试。
             {% else %}Too many failed login attempts. Please wait one minute before trying again.{% endif %}
         </p>
     {% endif %}
 
     {% if not login_validation and login_validation is not None %}
-        <p class="error">Invalid username or password</p>
+        <p class="error">
+            {% if LANGUAGE_CODE == 'es' %}Nombre de usuario o contraseña no válidos
+            {% elif LANGUAGE_CODE == 'fr' %}Nom d’utilisateur ou mot de passe incorrect
+            {% elif LANGUAGE_CODE == 'de' %}Ungültiger Benutzername oder ungültiges Passwort
+            {% elif LANGUAGE_CODE == 'ja' %}ユーザー名またはパスワードが無効です
+            {% elif LANGUAGE_CODE == 'zh-hans' %}用户名或密码无效
+            {% else %}Invalid username or password{% endif %}</p>
     {% endif %}
 
     <form method="POST" action="{% url 'login' %}">
         {% csrf_token %}
-        <label for="username">Username</label>
+        <label for="username">
+            {% if LANGUAGE_CODE == 'es' %}Nombre de usuario
+            {% elif LANGUAGE_CODE == 'fr' %}Nom d'utilisateur
+            {% elif LANGUAGE_CODE == 'de' %}Benutzername
+            {% elif LANGUAGE_CODE == 'ja' %}ユーザー名
+            {% elif LANGUAGE_CODE == 'zh-hans' %}用户名
+            {% else %}Username{% endif %}</label>
         <input type="text" name="username" id="username" required>
-        <label for="password">Password</label>
+        <label for="password">
+            {% if LANGUAGE_CODE == 'es' %}Contraseña
+            {% elif LANGUAGE_CODE == 'fr' %}Mot de passe
+            {% elif LANGUAGE_CODE == 'de' %}Passwort
+            {% elif LANGUAGE_CODE == 'ja' %}パスワード
+            {% elif LANGUAGE_CODE == 'zh-hans' %}密码
+            {% else %}Password{% endif %}</label>
         <input type="password" name="password" id="password" required>
-        <button type="submit" {% if locked %}disabled{% endif %}>Log In</button>
-        <p>Don't have an account?</p>
+        <button type="submit" {% if locked %}disabled{% endif %}>
+            {% if LANGUAGE_CODE == 'es' %}Iniciar sesión
+        {% elif LANGUAGE_CODE == 'fr' %}Connexion
+        {% elif LANGUAGE_CODE == 'de' %}Anmelden
+        {% elif LANGUAGE_CODE == 'ja' %}ログイン
+        {% elif LANGUAGE_CODE == 'zh-hans' %}登录
+        {% else %}Log In{% endif %}</button>
+        <p>
+            {% if LANGUAGE_CODE == 'es' %}¿No tienes una cuenta?
+        {% elif LANGUAGE_CODE == 'fr' %}Vous n’avez pas de compte?
+        {% elif LANGUAGE_CODE == 'de' %}Hast du kein Konto?
+        {% elif LANGUAGE_CODE == 'ja' %}アカウントをお持ちではありませんか？
+        {% elif LANGUAGE_CODE == 'zh-hans' %}还没有账户？
+        {% else %}Don't have an account?{% endif %}</p>
     </form>
-    <a href="{% url 'signup' %}"><button class="btn-alt">Sign up here.</button></a>
-    <a href="{% url 'reset_password' %}"><button class="btn-alt">Reset Password</button></a>
+    <a href="{% url 'signup' %}"><button class="btn-alt">
+        {% if LANGUAGE_CODE == 'es' %}Regístrate aquí.
+        {% elif LANGUAGE_CODE == 'fr' %}Inscrivez-vous ici.
+        {% elif LANGUAGE_CODE == 'de' %}Hier anmelden.
+        {% elif LANGUAGE_CODE == 'ja' %}こちらから登録してください。
+        {% elif LANGUAGE_CODE == 'zh-hans' %}在此注册。
+        {% else %}Sign up here.{% endif %}</button></a>
+    <a href="{% url 'reset_password' %}"><button class="btn-alt">
+        {% if LANGUAGE_CODE == 'es' %}Restablecer contraseña
+        {% elif LANGUAGE_CODE == 'fr' %}Réinitialiser le mot de passe
+        {% elif LANGUAGE_CODE == 'de' %}Passwort zurücksetzen
+        {% elif LANGUAGE_CODE == 'ja' %}パスワードをリセット
+        {% elif LANGUAGE_CODE == 'zh-hans' %}重置密码
+        {% else %}Reset Password{% endif %}</button></a>
 </div>
 {% endblock %}
