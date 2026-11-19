@@ -1,14 +1,36 @@
 {% extends 'analyzer/base.html' %}
+{% load i18n %}
 
-{% block title %} Welcome Page {% endblock %}
+{% block title %}
+    {% get_current_language as LANGUAGE_CODE %}
+    {% if LANGUAGE_CODE == 'es' %}Página de bienvenida{% else %}Welcome Page{% endif %}
+{% endblock %}
 
 {% block content %}
+    {% get_current_language as LANGUAGE_CODE %}
     <img src="https://img.magnific.com/free-vector/work-office-computer-man-woman-business-character-marketing-online-employee-technology-business-man-cartoon-co-working-flat-design-freelance_1150-41790.jpg?semt=ais_hybrid&w=740&q=80" alt="free-lance-design img of analyzation">
-<h1>Welcome, {{ user.username }}!</h1>
-    <a href="/home/"><button type="button">Access Analyzer</button></a>
+    <p>Active Language Code: <strong>{{ LANGUAGE_CODE }}</strong></p>
+
+    <h1>
+        {% if LANGUAGE_CODE == 'es' %}¡Bienvenida, {{ user.username }}!{% else %}Welcome, {{ user.username }}!{% endif %}
+    </h1>
+    <a href="/home/"><button type="button">{% if LANGUAGE_CODE == 'es' %}Acceder Al Analizador{% else %}Access Analyzer{% endif %}</button></a>
     <a href="/past-emails/"><button type="button">Past Emails Analyzed</button></a>
     <br>
     <br>
+   <form action="{% url 'set_language' %}" method="post">
+        {% csrf_token %}
+        <input name="next" type="hidden" value="{{ request.path }}">
+        <select name="language">
+            {% get_available_languages as LANGUAGES %}
+            {% for lang in LANGUAGES %}
+                <option value="{{ lang.0 }}" {% if lang.0 == LANGUAGE_CODE %}selected{% endif %}>
+                    {{ lang.1 }}
+                </option>
+            {% endfor %}
+        </select>
+        <button type="submit">Switch Language</button>
+    </form>
     <p> New to analyzer?</p>
         <a href="{% url 'header_help' %}">
         <button type="button">Click here for a quick tutorial!</button>
