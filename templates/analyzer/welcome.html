@@ -4,7 +4,10 @@
 {% block title %}
     {% get_current_language as LANGUAGE_CODE %}
     {% if LANGUAGE_CODE == 'es' %}Página de bienvenida
-    {% else if LANGUAGE_CODE == 'fr' %}Page d’accueil
+    {% elif LANGUAGE_CODE == 'fr' %}Page d’accueil
+    {% elif LANGUAGE_CODE == 'de' %}Willkommensseite
+    {% elif LANGUAGE_CODE == 'ja' %}ウェルカムページ
+    {% elif LANGUAGE_CODE == 'zh-hans' %}欢迎页面
     {% else %}Welcome Page{% endif %}
 {% endblock %}
 
@@ -14,14 +17,26 @@
     <p>Active Language Code: <strong>{{ LANGUAGE_CODE }}</strong></p>
 
     <h1>
-        {% if LANGUAGE_CODE == 'es' %}¡Bienvenida, {{ user.username }}!{% else %}Welcome, {{ user.username }}!{% endif %}
+        {% if LANGUAGE_CODE == 'es' %}¡Bienvenida, {{ user.username }}!
+        {% elif LANGUAGE_CODE == 'fr' %}Bienvenue, {{ user.username }}!
+        {% elif LANGUAGE_CODE == 'de' %}Willkommen, {{ user.username }}!
+        {% elif LANGUAGE_CODE == 'ja' %}ようこそ、{{ user.username }}さん!
+        {% elif LANGUAGE_CODE == 'zh-hans' %}欢迎，{{ user.username }}!
+        {% else %}Welcome, {{ user.username }}!{% endif %}
     </h1>
     <a href="/home/"><button type="button">
         {% if LANGUAGE_CODE == 'es' %}Acceder al analizador
-        {% else if LANGUAGE_CODE == 'fr' %}Analyseur d'accès
+        {% elif LANGUAGE_CODE == 'fr' %}Analyseur d'accès
+        {% elif LANGUAGE_CODE == 'de' %}Zugriffsanalysator
+        {% elif LANGUAGE_CODE == 'ja' %}アクセスアナライザー
+        {% elif LANGUAGE_CODE == 'zh-hans' %}访问分析器
         {% else %}Access Analyzer{% endif %}</button></a>
     <a href="/past-emails/"><button type="button">
         {% if LANGUAGE_CODE == 'es' %}Correos electrónicos analizados
+        {% elif LANGUAGE_CODE == 'fr' %}E-mails analysés
+        {% elif LANGUAGE_CODE == 'de' %}Analysierte E-Mails
+        {% elif LANGUAGE_CODE == 'ja' %}分析済みメール
+        {% elif LANGUAGE_CODE == 'zh-hans' %}已分析的电子邮件
         {% else %}Past Emails Analyzed{% endif %}</button></a>
     <br>
     <br>
@@ -36,13 +51,27 @@
                 </option>
             {% endfor %}
         </select>
-        <button type="submit">{% if LANGUAGE_CODE == 'es' %}Cambiar idioma
-        {% else %}Switch Language{% endif %}</button>
+        <button type="submit">
+            {% if LANGUAGE_CODE == 'es' %}Cambiar idioma
+            {% elif LANGUAGE_CODE == 'fr' %}Changer de langue
+            {% elif LANGUAGE_CODE == 'de' %}Sprache wechseln
+            {% elif LANGUAGE_CODE == 'ja' %}言語を切り替える
+            {% elif LANGUAGE_CODE == 'zh-hans' %}切换语言
+            {% else %}Switch Language{% endif %}
+        </button>
     </form>
     <p> {% if LANGUAGE_CODE == 'es' %}¿Eres nuevo en el analizador?
+        {% elif LANGUAGE_CODE == 'fr' %}Vous découvrez Analyzer?
+        {% elif LANGUAGE_CODE == 'de' %}Neu bei Analyzer?
+        {% elif LANGUAGE_CODE == 'ja' %}Analyzerを初めてお使いですか？
+        {% elif LANGUAGE_CODE == 'zh-hans' %}刚接触 Analyzer？
         {% else %}New to analyzer?{% endif %}</p>
         <a href="{% url 'header_help' %}">
         <button type="button">{% if LANGUAGE_CODE == 'es' %}¡Haz clic aquí para ver un tutorial!
+        {% elif LANGUAGE_CODE == 'fr' %}Cliquez ici pour un tutoriel rapide!
+        {% elif LANGUAGE_CODE == 'de' %}Hier klicken für eine Kurzanleitung!
+        {% elif LANGUAGE_CODE == 'ja' %}簡単なチュートリアルはこちらをクリック！
+        {% elif LANGUAGE_CODE == 'zh-hans' %}点击此处查看快速教程！
         {% else %}Click here for a quick tutorial!{% endif %}</button>
         </a>
 {% endblock %}
