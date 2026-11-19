@@ -1,8 +1,9 @@
 {% extends 'analyzer/base.html' %}
-
+{% load i18n %}
 {% block title %}Sign Up{% endblock %}
 
 {% block content %}
+    {% get_current_language as LANGUAGE_CODE %}
 <div class="auth-card">
     <h1>Sign Up</h1>
 
