@@ -3,7 +3,9 @@
 
 {% block title %}
     {% get_current_language as LANGUAGE_CODE %}
-    {% if LANGUAGE_CODE == 'es' %}Página de bienvenida{% else %}Welcome Page{% endif %}
+    {% if LANGUAGE_CODE == 'es' %}Página de bienvenida
+    {% else if LANGUAGE_CODE == 'fr' %}Page d’accueil
+    {% else %}Welcome Page{% endif %}
 {% endblock %}
 
 {% block content %}
@@ -14,8 +16,13 @@
     <h1>
         {% if LANGUAGE_CODE == 'es' %}¡Bienvenida, {{ user.username }}!{% else %}Welcome, {{ user.username }}!{% endif %}
     </h1>
-    <a href="/home/"><button type="button">{% if LANGUAGE_CODE == 'es' %}Acceder Al Analizador{% else %}Access Analyzer{% endif %}</button></a>
-    <a href="/past-emails/"><button type="button">Past Emails Analyzed</button></a>
+    <a href="/home/"><button type="button">
+        {% if LANGUAGE_CODE == 'es' %}Acceder al analizador
+        {% else if LANGUAGE_CODE == 'fr' %}Analyseur d'accès
+        {% else %}Access Analyzer{% endif %}</button></a>
+    <a href="/past-emails/"><button type="button">
+        {% if LANGUAGE_CODE == 'es' %}Correos electrónicos analizados
+        {% else %}Past Emails Analyzed{% endif %}</button></a>
     <br>
     <br>
    <form action="{% url 'set_language' %}" method="post">
@@ -29,11 +36,14 @@
                 </option>
             {% endfor %}
         </select>
-        <button type="submit">Switch Language</button>
+        <button type="submit">{% if LANGUAGE_CODE == 'es' %}Cambiar idioma
+        {% else %}Switch Language{% endif %}</button>
     </form>
-    <p> New to analyzer?</p>
+    <p> {% if LANGUAGE_CODE == 'es' %}¿Eres nuevo en el analizador?
+        {% else %}New to analyzer?{% endif %}</p>
         <a href="{% url 'header_help' %}">
-        <button type="button">Click here for a quick tutorial!</button>
+        <button type="button">{% if LANGUAGE_CODE == 'es' %}¡Haz clic aquí para ver un tutorial!
+        {% else %}Click here for a quick tutorial!{% endif %}</button>
         </a>
 {% endblock %}
 
