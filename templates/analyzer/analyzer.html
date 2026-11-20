@@ -1,49 +1,159 @@
 {% extends 'analyzer/base.html' %}
+{% load i18n %}
 
-{% block title %}Analyze Email{% endblock %}
+{% block title %}{% if LANGUAGE_CODE == 'es' %}Analizar correo electrónico
+    {% elif LANGUAGE_CODE == 'fr' %}Analyser l’e-mail
+    {% elif LANGUAGE_CODE == 'de' %}E-Mail analysieren
+    {% elif LANGUAGE_CODE == 'ja' %}メールを分析する
+    {% elif LANGUAGE_CODE == 'zh-hans' %}分析电子邮件
+    {% else %}Analyze Email{% endif %}{% endblock %}
 
 {% block content %}
-<h1>Analyze Email</h1>
+{% get_current_language as LANGUAGE_CODE %}
+<h1>{% if LANGUAGE_CODE == 'es' %}Analizar correo electrónico
+    {% elif LANGUAGE_CODE == 'fr' %}Analyser l’e-mail
+    {% elif LANGUAGE_CODE == 'de' %}E-Mail analysieren
+    {% elif LANGUAGE_CODE == 'ja' %}メールを分析する
+    {% elif LANGUAGE_CODE == 'zh-hans' %}分析电子邮件
+    {% else %}Analyze Email{% endif %}</h1>
 
 <div class="tabs">
   <button class="tab-btn active" onclick="switchTab(event, 'paste-tab')" type="button">
-    Paste Text
+    {% if LANGUAGE_CODE == 'es' %}Pegar texto
+    {% elif LANGUAGE_CODE == 'fr' %}Coller le texte
+    {% elif LANGUAGE_CODE == 'de' %}Text einfügen
+    {% elif LANGUAGE_CODE == 'ja' %}テキストを貼り付け
+    {% elif LANGUAGE_CODE == 'zh-hans' %}粘贴文本
+    {% else %}Paste Text{% endif %}
   </button>
   <button class="tab-btn" onclick="switchTab(event, 'upload-tab')" type="button">
-    Upload .eml File
+    {% if LANGUAGE_CODE == 'es' %}Subir archivo .eml
+    {% elif LANGUAGE_CODE == 'fr' %}Importer un fichier .eml
+    {% elif LANGUAGE_CODE == 'de' %}.eml-Datei hochladen
+    {% elif LANGUAGE_CODE == 'ja' %}.emlファイルをアップロード
+    {% elif LANGUAGE_CODE == 'zh-hans' %}上传 .eml 文件
+    {% else %}Upload .eml File{% endif %}
   </button>
 </div>
 
 <div id="paste-tab" class="tab-content active">
-    <p>Paste full email header below; optional to paste email body</p>
+    <p>{% if LANGUAGE_CODE == 'es' %}Pega a continuación el encabezado completo del correo electrónico; también puedes incluir el cuerpo del mensaje (opcional).
+    {% elif LANGUAGE_CODE == 'fr' %}Collez l'en-tête complet de l'e-mail ci-dessous ; le corps de l'e-mail est facultatif.
+    {% elif LANGUAGE_CODE == 'de' %}Fügen Sie unten den vollständigen E-Mail-Header ein; optional können Sie auch den E-Mail-Inhalt einfügen.
+    {% elif LANGUAGE_CODE == 'ja' %}以下にメールヘッダーの全文を貼り付けてください。メール本文を貼り付けることも可能です。
+    {% elif LANGUAGE_CODE == 'zh-hans' %}请在下方粘贴完整的电子邮件信头；也可选择粘贴邮件正文。
+    {% else %}Paste full email header below; optional to paste email body{% endif %}</p>
 
     <details class="instructions">
-        <summary> How to find email header?</summary>
-        <p><strong>Gmail:</strong> Open the email ➜ Click three dots (⋮) ➜ Show original ➜ Copy all text.</p>
-        <p><strong>Yahoo:</strong> Open the email ➜ More ➜ View Raw Message.</p>
-        <p><strong>Outlook:</strong> Open the email ➜ Click three dots (⋮) ➜ View ➜ View message details ➜ Copy all text.</p>
-        <p><strong>Apple Mail:</strong>  Open the email ➜ View ➜ Message ➜ All Headers</p>
+        <summary>�
+            {% if LANGUAGE_CODE == 'es' %}Cómo encontrar el encabezado de un correo electrónico
+            {% elif LANGUAGE_CODE == 'fr' %}Comment trouver l’en-tête d’un e-mail
+            {% elif LANGUAGE_CODE == 'de' %}So finden Sie den E-Mail-Header
+            {% elif LANGUAGE_CODE == 'ja' %}メールヘッダーを確認する方法
+            {% elif LANGUAGE_CODE == 'zh-hans' %}如何查找电子邮件标头
+            {% else %}How to find email header{% endif %}
+        </summary>
+        <p><strong>Gmail:</strong>
+            {% if LANGUAGE_CODE == 'es' %}Abre el correo electrónico ➜ Haz clic en los tres puntos (⋮) ➜ Mostrar original ➜ Copia todo el texto.
+            {% elif LANGUAGE_CODE == 'fr' %}Ouvrez l’e-mail ➜ Cliquez sur les trois points (⋮) ➜ Afficher l’original ➜ Copiez tout le texte.
+            {% elif LANGUAGE_CODE == 'de' %}E-Mail öffnen ➜ Auf die drei Punkte (⋮) klicken ➜ Original anzeigen ➜ gesamten Text kopieren.
+            {% elif LANGUAGE_CODE == 'ja' %}メールを開く ➜ 3つの点（⋮）をクリック ➜ 「元のメッセージを表示」を選択 ➜ すべてのテキストをコピーする。
+            {% elif LANGUAGE_CODE == 'zh-hans' %}打开邮件 ➜ 点击三个点 (⋮) ➜ 显示原文 ➜ 复制全部文本。
+            {% else %}Open the email ➜ Click three dots (⋮) ➜ Show original ➜ Copy all text.{% endif %}
+        </p>
+        <p><strong>Yahoo:</strong>
+            {% if LANGUAGE_CODE == 'es' %}Abre el correo electrónico ➜ Más ➜ Ver mensaje original.
+            {% elif LANGUAGE_CODE == 'fr' %}Ouvrez l’e-mail ➜ Plus ➜ Afficher le message brut.
+            {% elif LANGUAGE_CODE == 'de' %}E-Mail öffnen ➜ Mehr ➜ Rohdaten der Nachricht anzeigen.
+            {% elif LANGUAGE_CODE == 'ja' %}メールを開く ➜ その他 ➜ メッセージのソースを表示
+            {% elif LANGUAGE_CODE == 'zh-hans' %}打开邮件 ➜ 更多 ➜ 查看原始邮件。
+            {% else %}Open the email ➜ More ➜ View Raw Message.{% endif %}
+        </p>
+        <p><strong>Outlook:</strong>
+            {% if LANGUAGE_CODE == 'es' %}Abre el correo electrónico ➜ Haz clic en los tres puntos (⋮) ➜ Ver ➜ Ver detalles del mensaje ➜ Copia todo el texto.
+            {% elif LANGUAGE_CODE == 'fr' %}Ouvrez l’e-mail ➜ Cliquez sur les trois points (⋮) ➜ Afficher ➜ Afficher les détails du message ➜ Copiez tout le texte.
+            {% elif LANGUAGE_CODE == 'de' %}E-Mail öffnen ➜ Auf die drei Punkte (⋮) klicken ➜ Anzeigen ➜ Nachrichtendetails anzeigen ➜ gesamten Text kopieren.
+            {% elif LANGUAGE_CODE == 'ja' %}メールを開く ➜ 3点アイコン（⋮）をクリック ➜ 「表示」 ➜ 「メッセージの詳細を表示」 ➜ すべてのテキストをコピーする。
+            {% elif LANGUAGE_CODE == 'zh-hans' %}打开邮件 ➜ 点击三个点 (⋮) ➜ 查看 ➜ 查看邮件详情 ➜ 复制全部文本。
+            {% else %}Open the email ➜ Click three dots (⋮) ➜ View ➜ View message details ➜ Copy all text.{% endif %}
+        </p>
+        <p><strong>Apple Mail:</strong>
+            {% if LANGUAGE_CODE == 'es' %}Abrir el correo electrónico ➜ Ver ➜ Mensaje ➜ Todos los encabezados
+            {% elif LANGUAGE_CODE == 'fr' %}Ouvrir l’e-mail ➜ Affichage ➜ Message ➜ Tous les en-têtes
+            {% elif LANGUAGE_CODE == 'de' %}E-Mail öffnen ➜ Ansicht ➜ Nachricht ➜ Alle Kopfzeilen
+            {% elif LANGUAGE_CODE == 'ja' %}メールを開く ➜ 表示 ➜ メッセージ ➜ すべてのヘッダー
+            {% elif LANGUAGE_CODE == 'zh-hans' %}打开电子邮件 ➜ 查看 ➜ 邮件 ➜ 所有标题
+            {% else %}Open the email ➜ View ➜ Message ➜ All Headers{% endif %}
+        </p>
     </details>
 
     <form method="POST" action="/results/">
         {% csrf_token %}
-        <label for="header">Email Header (required)</label>
+        <label for="header">
+            {% if LANGUAGE_CODE == 'es' %}Encabezado del correo electrónico (obligatorio)
+            {% elif LANGUAGE_CODE == 'fr' %}En-tête d’e-mail (obligatoire)
+            {% elif LANGUAGE_CODE == 'de' %}E-Mail-Kopfzeile (erforderlich)
+            {% elif LANGUAGE_CODE == 'ja' %}メールヘッダー（必須）
+            {% elif LANGUAGE_CODE == 'zh-hans' %}电子邮件页眉（必填）
+            {% else %}Email Header (required){% endif %}</label>
         <textarea name="header" id="header" rows="12" required
             placeholder="Paste email header here: "></textarea>
-        <label for="body">Email Body (optional)</label>
+        <label for="body">
+            {% if LANGUAGE_CODE == 'es' %}Cuerpo del correo electrónico (opcional)
+            {% elif LANGUAGE_CODE == 'fr' %}Corps du courriel (facultatif)
+            {% elif LANGUAGE_CODE == 'de' %}E-Mail-Inhalt (optional)
+            {% elif LANGUAGE_CODE == 'ja' %}メール本文（任意）
+            {% elif LANGUAGE_CODE == 'zh-hans' %}邮件正文（可选）
+            {% else %}Email Body (optional){% endif %}</label>
         <textarea name="body" id="body" rows="6"
             placeholder="Paste email body here: "></textarea>
         <div class="center">
-            <button type="submit" class="btn-big">Analyze</button>
+            <button type="submit" class="btn-big">
+                {% if LANGUAGE_CODE == 'es' %}Analizar
+                {% elif LANGUAGE_CODE == 'fr' %}Analyser
+                {% elif LANGUAGE_CODE == 'de' %}Analysieren
+                {% elif LANGUAGE_CODE == 'ja' %}分析する
+                {% elif LANGUAGE_CODE == 'zh-hans' %}分析
+                {% else %}Analyze{% endif %}</button>
         </div>
     </form>
+    <br>
+      <a href="/past-emails/"><button type="button" class="btn-alt">
+          {% if LANGUAGE_CODE == 'es' %}Correos electrónicos analizados
+          {% elif LANGUAGE_CODE == 'fr' %}E-mails analysés
+          {% elif LANGUAGE_CODE == 'de' %}Analysierte E-Mails
+          {% elif LANGUAGE_CODE == 'ja' %}分析済みメール
+          {% elif LANGUAGE_CODE == 'zh-hans' %}已分析的电子邮件
+          {% else %}Past Emails Analyzed{% endif %}</button></a>
+        &nbsp;&nbsp;&nbsp;
+        <a href="/welcome/"><button type="button" class="btn-alt">
+            {% if LANGUAGE_CODE == 'es' %}Menú principal
+          {% elif LANGUAGE_CODE == 'fr' %}Menu principal
+          {% elif LANGUAGE_CODE == 'de' %}Hauptmenü
+          {% elif LANGUAGE_CODE == 'ja' %}メインメニュー
+          {% elif LANGUAGE_CODE == 'zh-hans' %}主菜单
+          {% else %}Main Menu{% endif %}</button></a>
+
+
 </div>
 <div id="upload-tab" class="tab-content">
-    <p>Upload a .eml file to analyze</p>
+    <p>
+         {% if LANGUAGE_CODE == 'es' %}Sube un archivo .eml para analizar.
+          {% elif LANGUAGE_CODE == 'fr' %}Téléversez un fichier .eml à analyser
+          {% elif LANGUAGE_CODE == 'de' %}Laden Sie eine .eml-Datei zum Analysieren hoch.
+          {% elif LANGUAGE_CODE == 'ja' %}分析する.emlファイルをアップロードしてください。
+          {% elif LANGUAGE_CODE == 'zh-hans' %}上传 .eml 文件进行分析
+          {% else %}Upload a .eml file to analyze{% endif %}</p>
     <form method="POST" action="/results/" enctype="multipart/form-data">
         {% csrf_token %}
         <input type="file" name="file" accept=".eml" required>
-        <button type="submit">Analyze .eml File</button>
+        <button type="submit">
+            {% if LANGUAGE_CODE == 'es' %}Analizar archivo .eml
+          {% elif LANGUAGE_CODE == 'fr' %}Analyser un fichier .eml
+          {% elif LANGUAGE_CODE == 'de' %}.eml-Datei analysieren
+          {% elif LANGUAGE_CODE == 'ja' %}.emlファイルを分析する
+          {% elif LANGUAGE_CODE == 'zh-hans' %}分析 .eml 文件
+          {% else %}Analyze .eml File{% endif %}</button>
     </form>
 </div>
 

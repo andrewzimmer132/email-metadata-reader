@@ -1,21 +1,50 @@
 {% load static %}
+{% load i18n %}
+{% get_current_language as LANGUAGE_CODE %}
 <!DOCTYPE html>
-<html lang="en">
+<html lang="{{ LANGUAGE_CODE }}">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}Email Metadata Reader{% endblock %}</title>
+    <title>{% block title %}
+           {% if LANGUAGE_CODE == 'es' %}Lector de metadatos de correo electrónico
+            {% elif LANGUAGE_CODE == 'fr' %}Lecteur de métadonnées d'e-mails
+            {% elif LANGUAGE_CODE == 'de' %}E-Mail-Metadaten-Leser
+            {% elif LANGUAGE_CODE == 'ja' %}メールメタデータリーダー
+            {% elif LANGUAGE_CODE == 'zh-hans' %}电子邮件元数据阅读器
+            {% else %}Email Metadata Reader{% endif %}{% endblock %}</title>
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
 </head>
 <body>
     <nav class="navbar">
-        <div class="nav-brand">Email Metadata Reader</div>
+        <div class="nav-brand">{% if LANGUAGE_CODE == 'es' %}Lector de metadatos de correo electrónico
+            {% elif LANGUAGE_CODE == 'fr' %}Lecteur de métadonnées d'e-mails
+            {% elif LANGUAGE_CODE == 'de' %}E-Mail-Metadaten-Leser
+            {% elif LANGUAGE_CODE == 'ja' %}メールメタデータリーダー
+            {% elif LANGUAGE_CODE == 'zh-hans' %}电子邮件元数据阅读器
+            {% else %}Email Metadata Reader{% endif %}</div>
         <div class="nav-links">
             {% if is_authenticated %}
-                <span>Welcome, {{ user.username }}</span>
-                <a href="{% url 'logout' %}">Logout</a>
+                <span>{% if LANGUAGE_CODE == 'es' %}Bienvenida, {{ user.username }}
+                {% elif LANGUAGE_CODE == 'fr' %}Bienvenue, {{ user.username }}
+                {% elif LANGUAGE_CODE == 'de' %}Willkommen, {{ user.username }}
+                {% elif LANGUAGE_CODE == 'ja' %}ようこそ、{{ user.username }}
+                {% elif LANGUAGE_CODE == 'zh-hans' %}欢迎，{{ user.username }}
+                {% else %}Welcome, {{ user.username }}{% endif %}
+                </span>
+                <a href="{% url 'logout' %}">  {% if LANGUAGE_CODE == 'es' %}Cerrar sesión
+                    {% elif LANGUAGE_CODE == 'fr' %}Déconnexion
+                    {% elif LANGUAGE_CODE == 'de' %}Abmelden
+                    {% elif LANGUAGE_CODE == 'ja' %}ログアウト
+                    {% elif LANGUAGE_CODE == 'zh-hans' %}退出登录
+                    {% else %}Logout{% endif %}</a>
             {% else %}
-                <a href="{% url 'login' %}">Login</a>
+                <a href="{% url 'login' %}"> {% if LANGUAGE_CODE == 'es' %}Iniciar sesión
+                    {% elif LANGUAGE_CODE == 'fr' %}Connexion
+                    {% elif LANGUAGE_CODE == 'de' %}Anmelden
+                    {% elif LANGUAGE_CODE == 'ja' %}ログイン
+                    {% elif LANGUAGE_CODE == 'zh-hans' %}登录
+                    {% else %}Login{% endif %}</a>
             {% endif %}
         </div>
     </nav>

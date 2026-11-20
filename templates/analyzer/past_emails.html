@@ -1,9 +1,15 @@
 {% extends 'analyzer/base.html' %}
-
+{% load i18n %}
 {% block content %}
 
-<h1>Past Emails Analyzed</h1>
-
+<h1>
+     {% if LANGUAGE_CODE == 'es' %}Correos electrónicos analizados
+          {% elif LANGUAGE_CODE == 'fr' %}E-mails analysés
+          {% elif LANGUAGE_CODE == 'de' %}Analysierte E-Mails
+          {% elif LANGUAGE_CODE == 'ja' %}分析済みメール
+          {% elif LANGUAGE_CODE == 'zh-hans' %}已分析的电子邮件
+          {% else %}Past Emails Analyzed{% endif %}</h1>
+{% get_current_language as LANGUAGE_CODE %}
 {% if messages %}
     {% for message in messages %}
         <p class="error">{{ message }}</p>
@@ -12,22 +18,88 @@
 
 <form method="GET" action="{% url 'past_emails' %}" class="filter-bar">
     <select name="status" class="filter-select">
-        <option value="">All Statuses</option>
-        <option value="pending" {% if selected_status == 'pending' %}selected{% endif %}>Pending</option>
-        <option value="safe" {% if selected_status == 'safe' %}selected{% endif %}>Safe</option>
-        <option value="unsafe" {% if selected_status == 'unsafe' %}selected{% endif %}>Unsafe</option>
-        <option value="spam/scam" {% if selected_status == 'spam/scam' %}selected{% endif %}>Spam/Scam</option>
+        <option value="">
+            {% if LANGUAGE_CODE == 'es' %}Todos los estados
+          {% elif LANGUAGE_CODE == 'fr' %}Tous les statuts
+          {% elif LANGUAGE_CODE == 'de' %}Alle Status
+          {% elif LANGUAGE_CODE == 'ja' %}すべてのステータス
+          {% elif LANGUAGE_CODE == 'zh-hans' %}所有状态
+          {% else %}All Statuses{% endif %}</option>
+        <option value="pending" {% if selected_status == 'pending' %}selected{% endif %}>
+            {% if LANGUAGE_CODE == 'es' %}pendiente
+          {% elif LANGUAGE_CODE == 'fr' %}en attente
+          {% elif LANGUAGE_CODE == 'de' %}ausstehend
+          {% elif LANGUAGE_CODE == 'ja' %}保留中
+          {% elif LANGUAGE_CODE == 'zh-hans' %}待办的
+          {% else %}Pending{% endif %}</option>
+        <option value="safe" {% if selected_status == 'safe' %}selected{% endif %}>
+            {% if LANGUAGE_CODE == 'es' %}seguro
+          {% elif LANGUAGE_CODE == 'fr' %}sûr
+          {% elif LANGUAGE_CODE == 'de' %}sicher
+          {% elif LANGUAGE_CODE == 'ja' %}安全
+          {% elif LANGUAGE_CODE == 'zh-hans' %}安全的
+          {% else %}Safe{% endif %}</option>
+        <option value="unsafe" {% if selected_status == 'unsafe' %}selected{% endif %}>
+             {% if LANGUAGE_CODE == 'es' %}inseguro
+          {% elif LANGUAGE_CODE == 'fr' %}dangereux
+          {% elif LANGUAGE_CODE == 'de' %}unsicher
+          {% elif LANGUAGE_CODE == 'ja' %}安全ではない
+          {% elif LANGUAGE_CODE == 'zh-hans' %}不安全
+          {% else %}Unsafe{% endif %}</option>
+        <option value="spam/scam" {% if selected_status == 'spam/scam' %}selected{% endif %}>
+            {% if LANGUAGE_CODE == 'es' %}estafa/spam
+          {% elif LANGUAGE_CODE == 'fr' %}escroquerie/pourriel
+          {% elif LANGUAGE_CODE == 'de' %}Betrug/Spam
+          {% elif LANGUAGE_CODE == 'ja' %}詐欺／スパム
+          {% elif LANGUAGE_CODE == 'zh-hans' %}诈骗/垃圾信息
+          {% else %}Spam/Scam{% endif %}</option>
     </select>
     <select name="sort" class="filter-select">
-        <option value="-id" {% if selected_sort == '-id' or not selected_sort %}selected{% endif %}>Newest First</option>
-        <option value="id" {% if selected_sort == 'id' %}selected{% endif %}>Oldest First</option>
-        <option value="status" {% if selected_sort == 'status' %}selected{% endif %}>Status (Safe First)</option>
+        <option value="-id" {% if selected_sort == '-id' or not selected_sort %}selected{% endif %}>
+            {% if LANGUAGE_CODE == 'es' %}Los más recientes primero
+          {% elif LANGUAGE_CODE == 'fr' %}Les plus récents en premier
+          {% elif LANGUAGE_CODE == 'de' %}Zuerst die neuesten
+          {% elif LANGUAGE_CODE == 'ja' %}新しい順
+          {% elif LANGUAGE_CODE == 'zh-hans' %}最新优先
+          {% else %}Newest First{% endif %}</option>
+        <option value="id" {% if selected_sort == 'id' %}selected{% endif %}>
+            {% if LANGUAGE_CODE == 'es' %}Primero los más antiguos
+          {% elif LANGUAGE_CODE == 'fr' %}Les plus anciens en premier
+          {% elif LANGUAGE_CODE == 'de' %}Zuerst die ältesten
+          {% elif LANGUAGE_CODE == 'ja' %}古い順
+          {% elif LANGUAGE_CODE == 'zh-hans' %}最旧的在前
+          {% else %}Oldest First{% endif %}</option>
+        <option value="status" {% if selected_sort == 'status' %}selected{% endif %}>
+            {% if LANGUAGE_CODE == 'es' %}Estado (seguro primero)
+          {% elif LANGUAGE_CODE == 'fr' %}État (priorité à la sécurité)
+          {% elif LANGUAGE_CODE == 'de' %}Status (Sicherheit zuerst)
+          {% elif LANGUAGE_CODE == 'ja' %}ステータス（安全第一）
+          {% elif LANGUAGE_CODE == 'zh-hans' %}状态（安全优先）
+          {% else %}Status (Safe First){% endif %}</option>
     </select>
-    <label for="email-search">Search Emails</label>
+    <label for="email-search">
+         {% if LANGUAGE_CODE == 'es' %}Buscar correos electrónicos
+          {% elif LANGUAGE_CODE == 'fr' %}Rechercher des e-mails
+          {% elif LANGUAGE_CODE == 'de' %}E-Mails durchsuchen
+          {% elif LANGUAGE_CODE == 'ja' %}メールを検索
+          {% elif LANGUAGE_CODE == 'zh-hans' %}搜索电子邮件
+          {% else %}Search Emails{% endif %}</label>
     <input type="text" name="q" class="filter-input" id="email-search" placeholder="Search header or body..." value="{{ search_query }}">
-    <button type="submit">Filter</button>
+    <button type="submit">
+        {% if LANGUAGE_CODE == 'es' %}Filtrar
+          {% elif LANGUAGE_CODE == 'fr' %}Filtre
+          {% elif LANGUAGE_CODE == 'de' %}Filter
+          {% elif LANGUAGE_CODE == 'ja' %}フィルター
+          {% elif LANGUAGE_CODE == 'zh-hans' %}筛选
+          {% else %}Filter{% endif %}</button>
     <a href="{% url 'past_emails' %}">
-        <button type="button" class="btn-secondary">Clear</button>
+        <button type="button" class="btn-secondary">
+            {% if LANGUAGE_CODE == 'es' %}Claro
+          {% elif LANGUAGE_CODE == 'fr' %}Clair
+          {% elif LANGUAGE_CODE == 'de' %}Klar
+          {% elif LANGUAGE_CODE == 'ja' %}クリア
+          {% elif LANGUAGE_CODE == 'zh-hans' %}清除
+          {% else %}Clear{% endif %}</button>
     </a>
 </form>
 
@@ -48,9 +120,21 @@
                     </div>
                     <div class="email-actions">
                         <a href="{% url 'email_results' email.id %}">
-                            <button type="button">View Results</button>
+                            <button type="button">
+                                 {% if LANGUAGE_CODE == 'es' %}Ver resultados
+          {% elif LANGUAGE_CODE == 'fr' %}Voir les résultats
+          {% elif LANGUAGE_CODE == 'de' %}Ergebnisse anzeigen
+          {% elif LANGUAGE_CODE == 'ja' %}結果を見る
+          {% elif LANGUAGE_CODE == 'zh-hans' %}查看结果
+          {% else %}View Results{% endif %}</button>
                         </a>
-                        <button type="submit" formaction="{% url 'delete_email' email.id %}" class="btn-danger" onclick="return confirm('Are you sure you want to delete this email?');">Delete</button> 
+                        <button type="submit" formaction="{% url 'delete_email' email.id %}" class="btn-danger" onclick="return confirm('Are you sure you want to delete this email?');">
+                            {% if LANGUAGE_CODE == 'es' %}Borrar
+                              {% elif LANGUAGE_CODE == 'fr' %}Supprimer
+                              {% elif LANGUAGE_CODE == 'de' %}Löschen
+                              {% elif LANGUAGE_CODE == 'ja' %}消去
+                              {% elif LANGUAGE_CODE == 'zh-hans' %}删除
+                              {% else %}Delete{% endif %}</button>
                     </div>
                 </div>
             {% endfor %}
@@ -59,14 +143,51 @@
 
     <div class="sticky-bar">
         <div class="sticky-nav">
-            <a href="{% url 'home_view' %}"><button>Back to Analyzer</button></a>
-            <a href="{% url 'reminder_view' %}"><button>Analyzer Reminder</button></a>
-            <a href="{% url 'header_help' %}"><button>Tutorial</button></a>
-            <a href="/welcome/"><button>Main Menu</button></a>
+                    <a href="{% url 'home_view' %}"><button>
+            {% if LANGUAGE_CODE == 'es' %}Volver al analizador
+            {% elif LANGUAGE_CODE == 'fr' %}Retour à l’analyseur
+            {% elif LANGUAGE_CODE == 'de' %}Zurück zum Analyzer
+            {% elif LANGUAGE_CODE == 'ja' %}アナライザーに戻る
+            {% elif LANGUAGE_CODE == 'zh-hans' %}返回分析器
+            {% else %}Back to Analyzer{% endif %}
+        </button></a>
+
+        <a href="{% url 'reminder_view' %}"><button>
+            {% if LANGUAGE_CODE == 'es' %}Recordatorio del analizador
+            {% elif LANGUAGE_CODE == 'fr' %}Rappel de l’analyseur
+            {% elif LANGUAGE_CODE == 'de' %}Analyzer-Erinnerung
+            {% elif LANGUAGE_CODE == 'ja' %}アナライザーリマインダー
+            {% elif LANGUAGE_CODE == 'zh-hans' %}分析器提醒
+            {% else %}Analyzer Reminder{% endif %}
+        </button></a>
+
+        <a href="{% url 'header_help' %}"><button>
+            {% if LANGUAGE_CODE == 'es' %}Tutorial
+            {% elif LANGUAGE_CODE == 'fr' %}Tutoriel
+            {% elif LANGUAGE_CODE == 'de' %}Anleitung
+            {% elif LANGUAGE_CODE == 'ja' %}チュートリアル
+            {% elif LANGUAGE_CODE == 'zh-hans' %}教程
+            {% else %}Tutorial{% endif %}
+        </button></a>
+
+        <a href="/welcome/"><button>
+            {% if LANGUAGE_CODE == 'es' %}Menú principal
+            {% elif LANGUAGE_CODE == 'fr' %}Menu principal
+            {% elif LANGUAGE_CODE == 'de' %}Hauptmenü
+            {% elif LANGUAGE_CODE == 'ja' %}メインメニュー
+            {% elif LANGUAGE_CODE == 'zh-hans' %}主菜单
+            {% else %}Main Menu{% endif %}
+        </button></a>
         </div>
 
         <div class="sticky-actions">
-            <button type="submit" form="compare-form" class="btn-big">Compare Selected Emails</button>
+            <button type="submit" form="compare-form" class="btn-big">
+                 {% if LANGUAGE_CODE == 'es' %}Comparar correos electrónicos seleccionados
+          {% elif LANGUAGE_CODE == 'fr' %}Comparer les e-mails sélectionnés
+          {% elif LANGUAGE_CODE == 'de' %}Ausgewählte E-Mails vergleichen
+          {% elif LANGUAGE_CODE == 'ja' %}選択したメールを比較する
+          {% elif LANGUAGE_CODE == 'zh-hans' %}比较所选邮件
+          {% else %}Compare Selected Emails{% endif %}</button>
         </div>
     </div>
 

@@ -1,20 +1,51 @@
 {% extends 'analyzer/base.html' %}
 {% load static %}
-
-{% block title %} Email Header Tutorials {% endblock %}
+{% load i18n %}
+{% block title %}
+    {% if LANGUAGE_CODE == 'es' %}Tutoriales sobre encabezados de correo electrónico
+    {% elif LANGUAGE_CODE == 'fr' %}Tutoriels sur les en-têtes d'e-mail
+    {% elif LANGUAGE_CODE == 'de' %}Anleitungen für E-Mail-Header
+    {% elif LANGUAGE_CODE == 'ja' %}メールヘッダーに関するチュートリアル
+    {% elif LANGUAGE_CODE == 'zh-hans' %}电子邮件页眉教程
+    {% else %}Email Header Tutorials{% endif %} {% endblock %}
 
 {% block content %}
-
+{% get_current_language as LANGUAGE_CODE %}
 <div class="tutorial-container">
 
     <div class="tutorial-banner">
-        <h1>Email Header Tutorials</h1>
-        <p>Learn how to retrieve email headers from your email provider.</p>
-    </div>
+    <h1>
+        {% if LANGUAGE_CODE == 'es' %}Tutoriales sobre encabezados de correo electrónico
+    {% elif LANGUAGE_CODE == 'fr' %}Tutoriels sur les en-têtes d'e-mail
+    {% elif LANGUAGE_CODE == 'de' %}Anleitungen für E-Mail-Header
+    {% elif LANGUAGE_CODE == 'ja' %}メールヘッダーに関するチュートリアル
+    {% elif LANGUAGE_CODE == 'zh-hans' %}电子邮件页眉教程
+    {% else %}Email Header Tutorials{% endif %}
+    </h1>
+    <p>
+        {% if LANGUAGE_CODE == 'es' %}Aprende a obtener los encabezados de correo electrónico de tu proveedor de correo.
+    {% elif LANGUAGE_CODE == 'fr' %}Découvrez comment récupérer les en-têtes d’e-mail auprès de votre fournisseur de messagerie.
+    {% elif LANGUAGE_CODE == 'de' %}Erfahren Sie, wie Sie E-Mail-Header von Ihrem E-Mail-Anbieter abrufen können.
+    {% elif LANGUAGE_CODE == 'ja' %}ご利用のメールプロバイダーからメールヘッダーを取得する方法を確認しましょう。
+    {% elif LANGUAGE_CODE == 'zh-hans' %}了解如何从您的电子邮件服务提供商处获取电子邮件标头。
+    {% else %}Learn how to retrieve email headers from your email provider.{% endif %}</p>
 
     <div class="tutorial-card gradient-one">
-        <h2>Gmail Tutorial</h2>
-        <p>Follow this video to learn how to retrieve an email header in Gmail.</p>
+        <h2>
+            {% if LANGUAGE_CODE == 'es' %}Tutorial de Gmail
+    {% elif LANGUAGE_CODE == 'fr' %}Tutoriel Gmail
+    {% elif LANGUAGE_CODE == 'de' %}Gmail-Anleitung
+    {% elif LANGUAGE_CODE == 'ja' %}Gmailチュートリアル
+    {% elif LANGUAGE_CODE == 'zh-hans' %}Gmail 教程
+    {% else %}Gmail Tutorial{% endif %}</h2>
+        <p>
+            {% if LANGUAGE_CODE == 'es' %}Sigue este video para aprender a obtener el encabezado de un correo electrónico en Gmail.
+    {% elif LANGUAGE_CODE == 'fr' %}Suivez cette vidéo pour apprendre à récupérer l’en-tête d’un e-mail dans Gmail.
+    {% elif LANGUAGE_CODE == 'de' %}Folgen Sie diesem Video, um zu erfahren, wie Sie in Gmail einen E-Mail-Header abrufen können.
+    {% elif LANGUAGE_CODE == 'ja' %}この動画を参考に、Gmailでメールヘッダーを取得する方法を確認しましょう。
+    {% elif LANGUAGE_CODE == 'zh-hans' %}请参考此视频，了解如何在 Gmail 中获取电子邮件标头。
+    {% else %}Follow this video to learn how to retrieve an email header in Gmail.{% endif %}
+        </p>
 
         <video controls>
             <source src="{% static 'Videos/HeadersForGmailTutorial.mp4' %}" type="video/mp4">
@@ -22,8 +53,20 @@
     </div>
 
     <div class="tutorial-card gradient-two">
-        <h2>Outlook Tutorial</h2>
-        <p>Follow this video to learn how to retrieve an email header in Outlook.</p>
+        <h2>
+            {% if LANGUAGE_CODE == 'es' %}Tutorial de Outlook
+    {% elif LANGUAGE_CODE == 'fr' %}Tutoriel Outlook
+    {% elif LANGUAGE_CODE == 'de' %}Outlook-Anleitung
+    {% elif LANGUAGE_CODE == 'ja' %}Outlookチュートリアル
+    {% elif LANGUAGE_CODE == 'zh-hans' %}Outlook 教程
+    {% else %}Outlook Tutorial{% endif %}</h2>
+        <p>
+            {% if LANGUAGE_CODE == 'es' %}Sigue este video para aprender a obtener el encabezado de un correo electrónico en Outlook.
+    {% elif LANGUAGE_CODE == 'fr' %}Suivez cette vidéo pour apprendre à récupérer l’en-tête d’un e-mail dans Outlook.
+    {% elif LANGUAGE_CODE == 'de' %}Folgen Sie diesem Video, um zu erfahren, wie Sie in Outlook einen E-Mail-Header abrufen können.
+    {% elif LANGUAGE_CODE == 'ja' %}この動画を参考に、Outlookでメールヘッダーを取得する方法を確認しましょう。
+    {% elif LANGUAGE_CODE == 'zh-hans' %}请参考此视频，了解如何在 Outlook 中获取电子邮件标头。
+    {% else %}Follow this video to learn how to retrieve an email header in Outlook.{% endif %}</p>
 
         <video controls>
             <source src="{% static 'Videos/HeadersForOutlookTutorial.mp4' %}" type="video/mp4">
@@ -33,12 +76,43 @@
 </div>
 
 <div class="sticky-bar">
-    <div class="sticky-nav">
-        <a href="{% url 'home_view' %}"><button>Back to Analyzer</button></a>
-        <a href="{% url 'past_emails' %}"><button>Past Emails</button></a>
-        <a href="{% url 'reminder_view' %}"><button>Analyzer Reminder</button></a>
-        <a href="/welcome/"><button>Main Menu</button></a>
+        <div class="sticky-nav">
+                    <a href="{% url 'home_view' %}"><button>
+            {% if LANGUAGE_CODE == 'es' %}Volver al analizador
+            {% elif LANGUAGE_CODE == 'fr' %}Retour à l’analyseur
+            {% elif LANGUAGE_CODE == 'de' %}Zurück zum Analyzer
+            {% elif LANGUAGE_CODE == 'ja' %}アナライザーに戻る
+            {% elif LANGUAGE_CODE == 'zh-hans' %}返回分析器
+            {% else %}Back to Analyzer{% endif %}
+        </button></a>
+
+        <a href="/past-emails/"><button type="button" class="btn-alt">
+          {% if LANGUAGE_CODE == 'es' %}Correos electrónicos analizados
+          {% elif LANGUAGE_CODE == 'fr' %}E-mails analysés
+          {% elif LANGUAGE_CODE == 'de' %}Analysierte E-Mails
+          {% elif LANGUAGE_CODE == 'ja' %}分析済みメール
+          {% elif LANGUAGE_CODE == 'zh-hans' %}已分析的电子邮件
+          {% else %}Past Emails Analyzed{% endif %}</button></a>
+
+        <a href="{% url 'reminder_view' %}"><button>
+            {% if LANGUAGE_CODE == 'es' %}Recordatorio del analizador
+            {% elif LANGUAGE_CODE == 'fr' %}Rappel de l’analyseur
+            {% elif LANGUAGE_CODE == 'de' %}Analyzer-Erinnerung
+            {% elif LANGUAGE_CODE == 'ja' %}アナライザーリマインダー
+            {% elif LANGUAGE_CODE == 'zh-hans' %}分析器提醒
+            {% else %}Analyzer Reminder{% endif %}
+        </button></a>
+
+        <a href="/welcome/"><button>
+            {% if LANGUAGE_CODE == 'es' %}Menú principal
+            {% elif LANGUAGE_CODE == 'fr' %}Menu principal
+            {% elif LANGUAGE_CODE == 'de' %}Hauptmenü
+            {% elif LANGUAGE_CODE == 'ja' %}メインメニュー
+            {% elif LANGUAGE_CODE == 'zh-hans' %}主菜单
+            {% else %}Main Menu{% endif %}
+        </button></a>
+        </div>
+        </div>
     </div>
-</div>
 
 {% endblock %}

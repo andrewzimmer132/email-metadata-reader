@@ -1,34 +1,97 @@
 {% extends 'analyzer/base.html' %}
-
+{% load i18n %}
 {% block title %}Sign Up{% endblock %}
 
 {% block content %}
+    {% get_current_language as LANGUAGE_CODE %}
 <div class="auth-card">
-    <h1>Sign Up</h1>
+    <h1>
+        {% if LANGUAGE_CODE == 'es' %}Inscribirse
+          {% elif LANGUAGE_CODE == 'fr' %}S'inscrire
+          {% elif LANGUAGE_CODE == 'de' %}Melden Sie sich an
+          {% elif LANGUAGE_CODE == 'ja' %}サインアップ
+          {% elif LANGUAGE_CODE == 'zh-hans' %}报名
+          {% else %}Sign Up{% endif %}</h1>
 
     {% if not signup_validation and signup_validation is not None %}
-        <p class="error">Invalid username or password</p>
+        <p class="error">
+            {% if LANGUAGE_CODE == 'es' %}Nombre de usuario o contraseña no válidos
+          {% elif LANGUAGE_CODE == 'fr' %}Nom d’utilisateur ou mot de passe incorrect
+          {% elif LANGUAGE_CODE == 'de' %}Ungültiger Benutzername oder ungültiges Passwort
+          {% elif LANGUAGE_CODE == 'ja' %}ユーザー名またはパスワードが無効です
+          {% elif LANGUAGE_CODE == 'zh-hans' %}用户名或密码无效
+          {% else %}Invalid username or password{% endif %}</p>
     {% endif %}
 
     {% if signup_entered and not unique_username %}
-        <p class="error">An account with this username already exists</p>
+        <p class="error">{% if LANGUAGE_CODE == 'es' %}Ya existe una cuenta con este nombre de usuario
+          {% elif LANGUAGE_CODE == 'fr' %}Un compte avec ce nom d’utilisateur existe déjà.
+          {% elif LANGUAGE_CODE == 'de' %}Ein Konto mit diesem Benutzernamen existiert bereits.
+          {% elif LANGUAGE_CODE == 'ja' %}このユーザー名のアカウントはすでに存在します
+          {% elif LANGUAGE_CODE == 'zh-hans' %}已存在使用此用户名的账户
+          {% else %}An account with this username already exists{% endif %}</p>
     {% elif signup_entered and not unique_email %}
-        <p class="error">An account with this email already exists</p>
+        <p class="error">
+            {% if LANGUAGE_CODE == 'es' %}Ya existe una cuenta con este correo electrónico
+          {% elif LANGUAGE_CODE == 'fr' %}Un compte associé à cette adresse e-mail existe déjà.
+          {% elif LANGUAGE_CODE == 'de' %}Es existiert bereits ein Konto mit dieser E-Mail-Adresse.
+          {% elif LANGUAGE_CODE == 'ja' %}このメールアドレスのアカウントはすでに存在します
+          {% elif LANGUAGE_CODE == 'zh-hans' %}已有使用此电子邮箱的账户
+          {% else %}An account with this email already exists{% endif %}</p>
     {% elif signup_entered and not same_password %}
-        <p class="error">Passwords must match</p>
+        <p class="error">
+         {% if LANGUAGE_CODE == 'es' %}Las contraseñas deben coincidir.
+          {% elif LANGUAGE_CODE == 'fr' %}Les mots de passe doivent correspondre.
+          {% elif LANGUAGE_CODE == 'de' %}Die Passwörter müssen übereinstimmen.
+          {% elif LANGUAGE_CODE == 'ja' %}パスワードが一致する必要があります
+          {% elif LANGUAGE_CODE == 'zh-hans' %}密码必须匹配
+          {% else %}Passwords must match.{% endif %}
+        </p>
     {% endif %}
 
     <form method="POST" action="{% url 'signup' %}">
         {% csrf_token %}
-        <label for="username">Username</label>
+        <label for="username">
+            {% if LANGUAGE_CODE == 'es' %}Nombre de usuario
+            {% elif LANGUAGE_CODE == 'fr' %}Nom d'utilisateur
+            {% elif LANGUAGE_CODE == 'de' %}Benutzername
+            {% elif LANGUAGE_CODE == 'ja' %}ユーザー名
+            {% elif LANGUAGE_CODE == 'zh-hans' %}用户名
+            {% else %}Username{% endif %}
+        </label>
         <input type="text" name="username" id="username" required>
-        <label for="email">Email</label>
+        <label for="email">
+            {% if LANGUAGE_CODE == 'es' %}Correo electrónico
+            {% elif LANGUAGE_CODE == 'fr' %}E-Mail
+            {% elif LANGUAGE_CODE == 'de' %}E-Mail
+            {% elif LANGUAGE_CODE == 'ja' %}メール
+            {% elif LANGUAGE_CODE == 'zh-hans' %}电子邮件
+            {% else %}Email{% endif %}
+        </label>
         <input type="email" name="email" id="email" required>
-        <label for="password">Password</label>
+        <label for="password">
+            {% if LANGUAGE_CODE == 'es' %}Contraseña
+            {% elif LANGUAGE_CODE == 'fr' %}Mot de passe
+            {% elif LANGUAGE_CODE == 'de' %}Passwort
+            {% elif LANGUAGE_CODE == 'ja' %}パスワード
+            {% elif LANGUAGE_CODE == 'zh-hans' %}密码
+            {% else %}Password{% endif %}</label>
         <input type="password" name="password" id="password" required>
-        <label for="password">Confirm Password</label>
+        <label for="password">
+            {% if LANGUAGE_CODE == 'es' %}confirmar Contraseña
+            {% elif LANGUAGE_CODE == 'fr' %}Confirmez le mot de passe
+            {% elif LANGUAGE_CODE == 'de' %}Passwort bestätigen
+            {% elif LANGUAGE_CODE == 'ja' %}パスワードを認証する
+            {% elif LANGUAGE_CODE == 'zh-hans' %}确认密码
+            {% else %}Confirm Password{% endif %}</label>
         <input type="password" name="confirm_password" id="confirm_password" required>
-        <button type="submit">Sign Up</button>
+        <button type="submit">
+            {% if LANGUAGE_CODE == 'es' %}Inscribirse
+          {% elif LANGUAGE_CODE == 'fr' %}S'inscrire
+          {% elif LANGUAGE_CODE == 'de' %}Melden Sie sich an
+          {% elif LANGUAGE_CODE == 'ja' %}サインアップ
+          {% elif LANGUAGE_CODE == 'zh-hans' %}报名
+          {% else %}Sign Up{% endif %}</button>
     </form>
 </div>
 {% endblock %}
