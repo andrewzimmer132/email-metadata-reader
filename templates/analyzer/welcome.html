@@ -17,44 +17,63 @@
     <p>Active Language Code: <strong>{{ LANGUAGE_CODE }}</strong></p>
 
     <h1>
-        {% if LANGUAGE_CODE == 'es' %}¡Bienvenida, {{ user.username }}!
-        {% elif LANGUAGE_CODE == 'fr' %}Bienvenue, {{ user.username }}!
-        {% elif LANGUAGE_CODE == 'de' %}Willkommen, {{ user.username }}!
-        {% elif LANGUAGE_CODE == 'ja' %}ようこそ、{{ user.username }}さん!
-        {% elif LANGUAGE_CODE == 'zh-hans' %}欢迎，{{ user.username }}!
-        {% else %}Welcome, {{ user.username }}!{% endif %}
-    </h1>
+    {% if LANGUAGE_CODE == 'es' %}¡Bienvenida, {{ user.username }}!
+    {% elif LANGUAGE_CODE == 'fr' %}Bienvenue, {{ user.username }}!
+    {% elif LANGUAGE_CODE == 'de' %}Willkommen, {{ user.username }}!
+    {% elif LANGUAGE_CODE == 'ja' %}ようこそ、{{ user.username }}さん!
+    {% elif LANGUAGE_CODE == 'zh-hans' %}欢迎，{{ user.username }}!
+    {% else %}Welcome, {{ user.username }}!{% endif %}
+</h1>
+
     <a href="/home/"><button type="button">
         {% if LANGUAGE_CODE == 'es' %}Acceder al analizador
         {% elif LANGUAGE_CODE == 'fr' %}Analyseur d'accès
         {% elif LANGUAGE_CODE == 'de' %}Zugriffsanalysator
         {% elif LANGUAGE_CODE == 'ja' %}アクセスアナライザー
         {% elif LANGUAGE_CODE == 'zh-hans' %}访问分析器
-        {% else %}Access Analyzer{% endif %}</button></a>
+        {% else %}Access Analyzer{% endif %}
+    </button></a>
+
     <a href="/past-emails/"><button type="button">
         {% if LANGUAGE_CODE == 'es' %}Correos electrónicos analizados
         {% elif LANGUAGE_CODE == 'fr' %}E-mails analysés
         {% elif LANGUAGE_CODE == 'de' %}Analysierte E-Mails
         {% elif LANGUAGE_CODE == 'ja' %}分析済みメール
         {% elif LANGUAGE_CODE == 'zh-hans' %}已分析的电子邮件
-        {% else %}Past Emails Analyzed{% endif %}</button></a>
+        {% else %}Past Emails Analyzed{% endif %}
+    </button></a>
+
+    <a href="{% url 'reminder_view' %}"><button type="button">
+        {% if LANGUAGE_CODE == 'es' %}Recordatorio del analizador
+        {% elif LANGUAGE_CODE == 'fr' %}Rappel de l’analyseur
+        {% elif LANGUAGE_CODE == 'de' %}Analyzer-Erinnerung
+        {% elif LANGUAGE_CODE == 'ja' %}アナライザーリマインダー
+        {% elif LANGUAGE_CODE == 'zh-hans' %}分析器提醒
+        {% else %}Analyzer Reminder{% endif %}
+    </button></a>
+
     <br>
     <br>
 
-    <p> {% if LANGUAGE_CODE == 'es' %}¿Eres nuevo en el analizador?
+    <p>
+        {% if LANGUAGE_CODE == 'es' %}¿Eres nuevo en el analizador?
         {% elif LANGUAGE_CODE == 'fr' %}Vous découvrez Analyzer?
         {% elif LANGUAGE_CODE == 'de' %}Neu bei Analyzer?
         {% elif LANGUAGE_CODE == 'ja' %}Analyzerを初めてお使いですか？
         {% elif LANGUAGE_CODE == 'zh-hans' %}刚接触 Analyzer？
-        {% else %}New to analyzer?{% endif %}</p>
-        <a href="{% url 'header_help' %}">
-        <button type="button">{% if LANGUAGE_CODE == 'es' %}¡Haz clic aquí para ver un tutorial!
-        {% elif LANGUAGE_CODE == 'fr' %}Cliquez ici pour un tutoriel rapide!
-        {% elif LANGUAGE_CODE == 'de' %}Hier klicken für eine Kurzanleitung!
-        {% elif LANGUAGE_CODE == 'ja' %}簡単なチュートリアルはこちらをクリック！
-        {% elif LANGUAGE_CODE == 'zh-hans' %}点击此处查看快速教程！
-        {% else %}Click here for a quick tutorial!{% endif %}</button>
-        </a>
+        {% else %}New to Analyzer?{% endif %}
+    </p>
+
+    <a href="{% url 'header_help' %}">
+        <button type="button">
+            {% if LANGUAGE_CODE == 'es' %}¡Ver tutorial!
+            {% elif LANGUAGE_CODE == 'fr' %}Voir le tutoriel !
+            {% elif LANGUAGE_CODE == 'de' %}Anleitung ansehen!
+            {% elif LANGUAGE_CODE == 'ja' %}チュートリアルを見る！
+            {% elif LANGUAGE_CODE == 'zh-hans' %}查看教程！
+            {% else %}View Tutorial!{% endif %}
+        </button>
+    </a>
     <br>
     <br>
     <form action="{% url 'set_language' %}" method="post">

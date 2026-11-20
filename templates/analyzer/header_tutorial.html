@@ -13,6 +13,7 @@
 {% get_current_language as LANGUAGE_CODE %}
 <div class="tutorial-container">
 
+    <div class="tutorial-banner">
     <h1>
         {% if LANGUAGE_CODE == 'es' %}Tutoriales sobre encabezados de correo electrónico
     {% elif LANGUAGE_CODE == 'fr' %}Tutoriels sur les en-têtes d'e-mail
@@ -29,7 +30,7 @@
     {% elif LANGUAGE_CODE == 'zh-hans' %}了解如何从您的电子邮件服务提供商处获取电子邮件标头。
     {% else %}Learn how to retrieve email headers from your email provider.{% endif %}</p>
 
-    <div class="tutorial-card">
+    <div class="tutorial-card gradient-one">
         <h2>
             {% if LANGUAGE_CODE == 'es' %}Tutorial de Gmail
     {% elif LANGUAGE_CODE == 'fr' %}Tutoriel Gmail
@@ -51,7 +52,7 @@
         </video>
     </div>
 
-    <div class="tutorial-card">
+    <div class="tutorial-card gradient-two">
         <h2>
             {% if LANGUAGE_CODE == 'es' %}Tutorial de Outlook
     {% elif LANGUAGE_CODE == 'fr' %}Tutoriel Outlook

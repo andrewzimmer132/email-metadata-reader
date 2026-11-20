@@ -143,22 +143,41 @@
 
     <div class="sticky-bar">
         <div class="sticky-nav">
-            <a href="{% url 'home_view' %}"><button>
-                {% if LANGUAGE_CODE == 'es' %}Volver al analizador
-          {% elif LANGUAGE_CODE == 'fr' %}Retour à l’analyseur
-          {% elif LANGUAGE_CODE == 'de' %}Zurück zum Analyzer
-          {% elif LANGUAGE_CODE == 'ja' %}アナライザーに戻る
-          {% elif LANGUAGE_CODE == 'zh-hans' %}返回分析器
-          {% else %}Back to Analyzer{% endif %}
-            </button></a>
-            <a href="/welcome/"><button>
-                 {% if LANGUAGE_CODE == 'es' %}Menú principal
-          {% elif LANGUAGE_CODE == 'fr' %}Menu principal
-          {% elif LANGUAGE_CODE == 'de' %}Hauptmenü
-          {% elif LANGUAGE_CODE == 'ja' %}メインメニュー
-          {% elif LANGUAGE_CODE == 'zh-hans' %}主菜单
-          {% else %}Main Menu{% endif %}
-            </button></a>
+                    <a href="{% url 'home_view' %}"><button>
+            {% if LANGUAGE_CODE == 'es' %}Volver al analizador
+            {% elif LANGUAGE_CODE == 'fr' %}Retour à l’analyseur
+            {% elif LANGUAGE_CODE == 'de' %}Zurück zum Analyzer
+            {% elif LANGUAGE_CODE == 'ja' %}アナライザーに戻る
+            {% elif LANGUAGE_CODE == 'zh-hans' %}返回分析器
+            {% else %}Back to Analyzer{% endif %}
+        </button></a>
+
+        <a href="{% url 'reminder_view' %}"><button>
+            {% if LANGUAGE_CODE == 'es' %}Recordatorio del analizador
+            {% elif LANGUAGE_CODE == 'fr' %}Rappel de l’analyseur
+            {% elif LANGUAGE_CODE == 'de' %}Analyzer-Erinnerung
+            {% elif LANGUAGE_CODE == 'ja' %}アナライザーリマインダー
+            {% elif LANGUAGE_CODE == 'zh-hans' %}分析器提醒
+            {% else %}Analyzer Reminder{% endif %}
+        </button></a>
+
+        <a href="{% url 'header_help' %}"><button>
+            {% if LANGUAGE_CODE == 'es' %}Tutorial
+            {% elif LANGUAGE_CODE == 'fr' %}Tutoriel
+            {% elif LANGUAGE_CODE == 'de' %}Anleitung
+            {% elif LANGUAGE_CODE == 'ja' %}チュートリアル
+            {% elif LANGUAGE_CODE == 'zh-hans' %}教程
+            {% else %}Tutorial{% endif %}
+        </button></a>
+
+        <a href="/welcome/"><button>
+            {% if LANGUAGE_CODE == 'es' %}Menú principal
+            {% elif LANGUAGE_CODE == 'fr' %}Menu principal
+            {% elif LANGUAGE_CODE == 'de' %}Hauptmenü
+            {% elif LANGUAGE_CODE == 'ja' %}メインメニュー
+            {% elif LANGUAGE_CODE == 'zh-hans' %}主菜单
+            {% else %}Main Menu{% endif %}
+        </button></a>
         </div>
 
         <div class="sticky-actions">
