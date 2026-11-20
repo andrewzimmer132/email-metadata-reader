@@ -141,3 +141,11 @@ STATICFILES_DIRS = [BASE_DIR / 'static']
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
+#Email add-on configurations
+EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+EMAIL_HOST = "smtp.gmail.com"
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = "meta-data-reader@gmail.com"
+EMAIL_HOST_PASSWORD = "123meta!data"
+DEFAULT_FROM_EMAIL = "Reminder Service <noreply@metadata-reader.com>"

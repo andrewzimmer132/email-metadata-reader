@@ -205,17 +205,5 @@
     <a href="/welcome/"><button>Main Menu</button></a>
 {% endif %}
 <br>
-<script>
-    document.addEventListener("DOMContentLoaded", function() {
-        const selectAllCheckbox = document.getElementById("selectAll");
-        const emailCheckboxes = document.querySelectorAll(".email-checkbox-input");
-        if (selectAllCheckbox) {
-            selectAllCheckbox.addEventListener("change", function() {
-                emailCheckboxes.forEach(cb => {
-                    cb.checked = selectAllCheckbox.checked;
-                })
-            })
-        }
-    })
-</script>
+
 {% endblock %}
