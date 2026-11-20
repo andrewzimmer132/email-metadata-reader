@@ -6,7 +6,7 @@
 <div class="comparison">
     {% for email in emails %}
         <section class="email-column">
-            <a href="{% url 'email_results' email.id %}">
+            <a href="{% url 'email_results' email.id %}?from_compare={{ emails.0.id }},{{ emails.1.id }}">
             <strong>Email #{{ email.id }}</strong>
             </a>
             <span class="status-badge status-{{ email.status }}">{{ email.status }}</span>

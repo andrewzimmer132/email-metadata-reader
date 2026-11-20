@@ -352,9 +352,14 @@ class ResetPasswordView(View):
 def compare_emails(request):
     if not request.user.is_authenticated:
         return redirect('login')
-    if request.method != "POST":
-        return redirect('past_emails')
-    email_ids = request.POST.getlist('email_ids')
+    if request.method == "POST":
+        email_ids = request.POST.getlist('email_ids')
+    else:
+        ids_param = request.GET.get('ids')
+        if not ids_param:
+            messages.error(requesr, 'No emails selected for comparison')
+            return redirect('past_emails')
+        email_ids = ids_param.split(',')
 
     if len(set(email_ids)) != 2:
         messages.error(request, 'Exactly two emails can be compared.')
