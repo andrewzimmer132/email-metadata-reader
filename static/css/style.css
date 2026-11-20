@@ -60,6 +60,14 @@ body {
     justify-content:center;
 }
 
+.welcome-logo {
+    display: block;
+    width: auto;
+    max-width: 500px;
+    height: auto;
+    margin: 0 auto 1rem;
+}
+
 .auth-card {
     background: var(--background-color);
     padding: 2rem;
