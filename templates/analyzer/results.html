@@ -174,64 +174,64 @@
             {% else %}Sender Information{% endif %}</h2>
             <div class="results-grid">
                 <p><strong>
-                     {% if LANGUAGE_CODE == 'es' %}Correo electrónico
-            {% elif LANGUAGE_CODE == 'fr' %}E-Mail
-            {% elif LANGUAGE_CODE == 'de' %}E-Mail
-            {% elif LANGUAGE_CODE == 'ja' %}メール
-            {% elif LANGUAGE_CODE == 'zh-hans' %}电子邮件
+                     {% if LANGUAGE_CODE == 'es' %}De:
+            {% elif LANGUAGE_CODE == 'fr' %}Depuis:
+            {% elif LANGUAGE_CODE == 'de' %}Aus:
+            {% elif LANGUAGE_CODE == 'ja' %}から：
+            {% elif LANGUAGE_CODE == 'zh-hans' %}从：
             {% else %}From:{% endif %}</strong> {{ results.from }}</p>
                 <p><strong>
-                     {% if LANGUAGE_CODE == 'es' %}Correo electrónico
-            {% elif LANGUAGE_CODE == 'fr' %}E-Mail
-            {% elif LANGUAGE_CODE == 'de' %}E-Mail
-            {% elif LANGUAGE_CODE == 'ja' %}メール
-            {% elif LANGUAGE_CODE == 'zh-hans' %}电子邮件
+                     {% if LANGUAGE_CODE == 'es' %}A:
+            {% elif LANGUAGE_CODE == 'fr' %}À:
+            {% elif LANGUAGE_CODE == 'de' %}Zu:
+            {% elif LANGUAGE_CODE == 'ja' %}に：
+            {% elif LANGUAGE_CODE == 'zh-hans' %}到：
             {% else %}To:{% endif %}</strong> {{ results.to }}</p>
                 <p><strong>
-                     {% if LANGUAGE_CODE == 'es' %}Correo electrónico
-            {% elif LANGUAGE_CODE == 'fr' %}E-Mail
-            {% elif LANGUAGE_CODE == 'de' %}E-Mail
-            {% elif LANGUAGE_CODE == 'ja' %}メール
-            {% elif LANGUAGE_CODE == 'zh-hans' %}电子邮件
+                     {% if LANGUAGE_CODE == 'es' %}Sujeto:
+            {% elif LANGUAGE_CODE == 'fr' %}Sujet:
+            {% elif LANGUAGE_CODE == 'de' %}Thema:
+            {% elif LANGUAGE_CODE == 'ja' %}主題：
+            {% elif LANGUAGE_CODE == 'zh-hans' %}主题：
             {% else %}Subject:{% endif %}</strong> {{ results.subject }}</p>
                 <p><strong>
-                     {% if LANGUAGE_CODE == 'es' %}Correo electrónico
-            {% elif LANGUAGE_CODE == 'fr' %}E-Mail
-            {% elif LANGUAGE_CODE == 'de' %}E-Mail
-            {% elif LANGUAGE_CODE == 'ja' %}メール
-            {% elif LANGUAGE_CODE == 'zh-hans' %}电子邮件
+                     {% if LANGUAGE_CODE == 'es' %}Fecha:
+            {% elif LANGUAGE_CODE == 'fr' %}Date:
+            {% elif LANGUAGE_CODE == 'de' %}Datum:
+            {% elif LANGUAGE_CODE == 'ja' %}日付：
+            {% elif LANGUAGE_CODE == 'zh-hans' %}日期：
             {% else %}Date:{% endif %}</strong> {{ results.date }}</p>
                 <p><strong>
-                     {% if LANGUAGE_CODE == 'es' %}Correo electrónico
-            {% elif LANGUAGE_CODE == 'fr' %}E-Mail
-            {% elif LANGUAGE_CODE == 'de' %}E-Mail
-            {% elif LANGUAGE_CODE == 'ja' %}メール
-            {% elif LANGUAGE_CODE == 'zh-hans' %}电子邮件
+                     {% if LANGUAGE_CODE == 'es' %}Ruta de retorno:
+            {% elif LANGUAGE_CODE == 'fr' %}Chemin de retour:
+            {% elif LANGUAGE_CODE == 'de' %}Rückweg:
+            {% elif LANGUAGE_CODE == 'ja' %}リターンパス:
+            {% elif LANGUAGE_CODE == 'zh-hans' %}返回路径：
             {% else %}Return-Path:{% endif %}</strong> {{ results.return_path }}</p>
                 <p><strong>
-                     {% if LANGUAGE_CODE == 'es' %}Correo electrónico
-            {% elif LANGUAGE_CODE == 'fr' %}E-Mail
-            {% elif LANGUAGE_CODE == 'de' %}E-Mail
-            {% elif LANGUAGE_CODE == 'ja' %}メール
-            {% elif LANGUAGE_CODE == 'zh-hans' %}电子邮件
+                     {% if LANGUAGE_CODE == 'es' %}ID del mensaje:
+            {% elif LANGUAGE_CODE == 'fr' %}Identifiant de message:
+            {% elif LANGUAGE_CODE == 'de' %}Nachrichten-ID:
+            {% elif LANGUAGE_CODE == 'ja' %}メッセージID:
+            {% elif LANGUAGE_CODE == 'zh-hans' %}消息 ID：
             {% else %}Message-ID:{% endif %}</strong> {{ results.message_id }}</p>
             </div>
         </div>
 
         <div class="carousel-card">
             <h2>
-                 {% if LANGUAGE_CODE == 'es' %}Correo electrónico
-            {% elif LANGUAGE_CODE == 'fr' %}E-Mail
-            {% elif LANGUAGE_CODE == 'de' %}E-Mail
-            {% elif LANGUAGE_CODE == 'ja' %}メール
-            {% elif LANGUAGE_CODE == 'zh-hans' %}电子邮件
+                 {% if LANGUAGE_CODE == 'es' %}Enrutamiento del servidor (recibido)
+            {% elif LANGUAGE_CODE == 'fr' %}Routage côté serveur (reçu)
+            {% elif LANGUAGE_CODE == 'de' %}Server-Routing (Empfangen)
+            {% elif LANGUAGE_CODE == 'ja' %}サーバー・ルーティング（受信）
+            {% elif LANGUAGE_CODE == 'zh-hans' %}服务器路由（已接收）
             {% else %}Server Routing (Received){% endif %}</h2>
             <p>
-                 {% if LANGUAGE_CODE == 'es' %}Correo electrónico
-            {% elif LANGUAGE_CODE == 'fr' %}E-Mail
-            {% elif LANGUAGE_CODE == 'de' %}E-Mail
-            {% elif LANGUAGE_CODE == 'ja' %}メール
-            {% elif LANGUAGE_CODE == 'zh-hans' %}电子邮件
+                 {% if LANGUAGE_CODE == 'es' %}Esto muestra la ruta que siguió el correo electrónico para llegar hasta ti. Las rutas más largas que atraviesan países inusuales pueden ser un indicio de actividad sospechosa.
+            {% elif LANGUAGE_CODE == 'fr' %}Cela indique le chemin parcouru par l’e-mail pour vous parvenir. Des trajets plus longs, passant par des pays inhabituels, peuvent être le signe d’une activité suspecte.
+            {% elif LANGUAGE_CODE == 'de' %}Dies zeigt den Weg, den die E-Mail zurückgelegt hat, um Sie zu erreichen. Längere Routen über ungewöhnliche Länder können ein Hinweis auf verdächtige Aktivitäten sein.
+            {% elif LANGUAGE_CODE == 'ja' %}これは、そのメールがあなたに届くまでにたどった経路を示しています。通常とは異なる国々を経由するような長い経路は、不審な活動の兆候である可能性があります。
+            {% elif LANGUAGE_CODE == 'zh-hans' %}这显示了电子邮件到达您手中所经过的路径。如果路径较长且途经一些不同寻常的国家，则可能预示着存在可疑活动。
             {% else %}This shows the path that the email took in order to reach you. Longer routes through unusual countries may be an indicator of suspicious activity.</p>
             {% endif %}
             <ul>
@@ -239,31 +239,32 @@
                     <li><strong>{{ hop.server }}</strong> - {{ hop.ip }}</li>
                 {% empty %}
                     <li>
-                         {% if LANGUAGE_CODE == 'es' %}Correo electrónico
-            {% elif LANGUAGE_CODE == 'fr' %}E-Mail
-            {% elif LANGUAGE_CODE == 'de' %}E-Mail
-            {% elif LANGUAGE_CODE == 'ja' %}メール
-            {% elif LANGUAGE_CODE == 'zh-hans' %}电子邮件
-            {% else %}No routing information found.{% endif %}</li>
+                         {% if LANGUAGE_CODE == 'es' %}No se encontró información de enrutamiento.
+                        {% elif LANGUAGE_CODE == 'fr' %}Aucune information de routage trouvée.
+                        {% elif LANGUAGE_CODE == 'de' %}Keine Routing-Informationen gefunden.
+                        {% elif LANGUAGE_CODE == 'ja' %}ルーティング情報が見つかりません。
+                        {% elif LANGUAGE_CODE == 'zh-hans' %}未找到路由信息。
+                        {% else %}No routing information found.{% endif %}
+                    </li>
                 {% endfor %}
             </ul>
         </div>
 
          <div class="carousel-card">
             <h2>
-                 {% if LANGUAGE_CODE == 'es' %}Correo electrónico
-            {% elif LANGUAGE_CODE == 'fr' %}E-Mail
-            {% elif LANGUAGE_CODE == 'de' %}E-Mail
-            {% elif LANGUAGE_CODE == 'ja' %}メール
-            {% elif LANGUAGE_CODE == 'zh-hans' %}电子邮件
-            {% else %}Approximate Email Path{% endif %}</h2>
+                 {% if LANGUAGE_CODE == 'es' %}Ruta aproximada del correo electrónico
+                {% elif LANGUAGE_CODE == 'fr' %}Trajet approximatif de l'e-mail
+                {% elif LANGUAGE_CODE == 'de' %}Ungefährer E-Mail-Pfad
+                {% elif LANGUAGE_CODE == 'ja' %}メールのおおよその経路
+                {% elif LANGUAGE_CODE == 'zh-hans' %}电子邮件大致路径
+                {% else %}Approximate Email Path{% endif %}
             <p>
-                 {% if LANGUAGE_CODE == 'es' %}Correo electrónico
-            {% elif LANGUAGE_CODE == 'fr' %}E-Mail
-            {% elif LANGUAGE_CODE == 'de' %}E-Mail
-            {% elif LANGUAGE_CODE == 'ja' %}メール
-            {% elif LANGUAGE_CODE == 'zh-hans' %}电子邮件
-            {% else %}This map shows the approximate geographic path that the email took in order to reach you based on the server IP addresses.</p>
+                 {% if LANGUAGE_CODE == 'es' %}Este mapa muestra la ruta geográfica aproximada que tomó el correo electrónico para llegar hasta ti según las direcciones IP del servidor.
+                {% elif LANGUAGE_CODE == 'fr' %}Cette carte montre le trajet géographique approximatif suivi par l'e-mail pour vous parvenir, d'après les adresses IP des serveurs.
+                {% elif LANGUAGE_CODE == 'de' %}Diese Karte zeigt den ungefähren geografischen Pfad, den die E-Mail basierend auf den Server-IP-Adressen genommen hat, um Sie zu erreichen.
+                {% elif LANGUAGE_CODE == 'ja' %}この地図は、サーバーのIPアドレスに基づいて、メールがあなたに届くまでにたどったおおよその地理的経路を示しています。
+                {% elif LANGUAGE_CODE == 'zh-hans' %}此地图根据服务器 IP 地址显示电子邮件到达您的大致地理位置路径。
+                {% else %}This map shows the approximate geographic path that the email took in order to reach you based on the server IP addresses.</p>
             {% endif %}
              <div id="email-map"></div>
             <p class="map-credit">IP location data provided by <a href="http://www.maxmind.com" target="_blank">MaxMind GeoLite2</a></p>
@@ -271,12 +272,12 @@
 
         <div class="carousel-card">
             <h2>
-                 {% if LANGUAGE_CODE == 'es' %}Correo electrónico
-            {% elif LANGUAGE_CODE == 'fr' %}E-Mail
-            {% elif LANGUAGE_CODE == 'de' %}E-Mail
-            {% elif LANGUAGE_CODE == 'ja' %}メール
-            {% elif LANGUAGE_CODE == 'zh-hans' %}电子邮件
-            {% else %}Email Authentication{% endif %}</h2>
+                 {% if LANGUAGE_CODE == 'es' %}Autenticación de correo electrónico
+                {% elif LANGUAGE_CODE == 'fr' %}Authentification de l'e-mail
+                {% elif LANGUAGE_CODE == 'de' %}E-Mail-Authentifizierung
+                {% elif LANGUAGE_CODE == 'ja' %}メール認証
+                {% elif LANGUAGE_CODE == 'zh-hans' %}电子邮件身份验证
+                {% else %}Email Authentication{% endif %}</h2>
             {% if results.authentication %}
                 <ul>
                     {% for result in results.authentication %}
@@ -285,12 +286,12 @@
                 </ul>
             {% else %}
                 <p>
-                     {% if LANGUAGE_CODE == 'es' %}Correo electrónico
-            {% elif LANGUAGE_CODE == 'fr' %}E-Mail
-            {% elif LANGUAGE_CODE == 'de' %}E-Mail
-            {% elif LANGUAGE_CODE == 'ja' %}メール
-            {% elif LANGUAGE_CODE == 'zh-hans' %}电子邮件
-            {% else %}No authentication results were found.{% endif %}</p>
+                     {% if LANGUAGE_CODE == 'es' %}No se encontraron resultados de autenticación.
+                    {% elif LANGUAGE_CODE == 'fr' %}Aucun résultat d'authentification n'a été trouvé.
+                    {% elif LANGUAGE_CODE == 'de' %}Es wurden keine Authentifizierungsergebnisse gefunden.
+                    {% elif LANGUAGE_CODE == 'ja' %}認証結果は見つかりませんでした。
+                    {% elif LANGUAGE_CODE == 'zh-hans' %}未找到身份验证结果。
+                    {% else %}No authentication results were found.{% endif %}</p>
             {% endif %}
         </div>
 
@@ -298,60 +299,57 @@
         <div class="carousel-card spam-result-card">
             {% if spam_result.potential_spam %}
                 <h2>
-                     {% if LANGUAGE_CODE == 'es' %}Correo electrónico
-            {% elif LANGUAGE_CODE == 'fr' %}E-Mail
-            {% elif LANGUAGE_CODE == 'de' %}E-Mail
-            {% elif LANGUAGE_CODE == 'ja' %}メール
-            {% elif LANGUAGE_CODE == 'zh-hans' %}电子邮件
-            {% else %}⚠️ Warning: Potential Spam Detected ⚠️{% endif %}</h2>
+                     {% if LANGUAGE_CODE == 'es' %}⚠️ Advertencia: Posible correo no deseado detectado ⚠️
+                    {% elif LANGUAGE_CODE == 'fr' %}⚠️ Avertissement : Spam potentiel détecté ⚠️
+                    {% elif LANGUAGE_CODE == 'de' %}⚠️ Warnung: Möglicher Spam erkannt ⚠️
+                    {% elif LANGUAGE_CODE == 'ja' %}⚠️ 警告：スパムの可能性が検出されました ⚠️
+                    {% elif LANGUAGE_CODE == 'zh-hans' %}⚠️ 警告：检测到潜在垃圾邮件 ⚠️
+                    {% else %}⚠️ Warning: Potential Spam Detected ⚠️{% endif %}</h2>
                 <p>
-                 {% if LANGUAGE_CODE == 'es' %}Correo electrónico
-            {% elif LANGUAGE_CODE == 'fr' %}E-Mail
-            {% elif LANGUAGE_CODE == 'de' %}E-Mail
-            {% elif LANGUAGE_CODE == 'ja' %}メール
-            {% elif LANGUAGE_CODE == 'zh-hans' %}电子邮件
-            {% else %}
-                    This email has a
-                    <strong>{{ spam_result.level }}</strong>
-                    spam risk.
-                 {% endif %}
+                 {% if LANGUAGE_CODE == 'es' %}Este correo electrónico tiene un riesgo de spam <strong>{{ spam_result.level }}</strong>.
+                    {% elif LANGUAGE_CODE == 'fr' %}Cet e-mail présente un risque de spam <strong>{{ spam_result.level }}</strong>.
+                    {% elif LANGUAGE_CODE == 'de' %}Diese E-Mail hat ein <strong>{{ spam_result.level }}</strong> Spam-Risiko.
+                    {% elif LANGUAGE_CODE == 'ja' %}このメールのスパムリスクは<strong>{{ spam_result.level }}</strong>です。
+                    {% elif LANGUAGE_CODE == 'zh-hans' %}此电子邮件具有<strong>{{ spam_result.level }}</strong>垃圾邮件风险。
+                    {% else %}This email has a <strong>{{ spam_result.level }}</strong> spam risk.{% endif %}
+
                 </p>
             {% else %}
                 <h2>
-                     {% if LANGUAGE_CODE == 'es' %}Correo electrónico
-            {% elif LANGUAGE_CODE == 'fr' %}E-Mail
-            {% elif LANGUAGE_CODE == 'de' %}E-Mail
-            {% elif LANGUAGE_CODE == 'ja' %}メール
-            {% elif LANGUAGE_CODE == 'zh-hans' %}电子邮件
-            {% else %}✅ No Significant Spam Indicators ✅{% endif %}</h2>
+                     {% if LANGUAGE_CODE == 'es' %}✅ Sin indicadores significativos de correo no deseado ✅
+                    {% elif LANGUAGE_CODE == 'fr' %}✅ Aucun indicateur significatif de spam ✅
+                    {% elif LANGUAGE_CODE == 'de' %}✅ Keine signifikanten Spam-Indikatoren ✅
+                    {% elif LANGUAGE_CODE == 'ja' %}✅ 重大なスパムの兆候はありません ✅
+                    {% elif LANGUAGE_CODE == 'zh-hans' %}✅ 未发现明显的垃圾邮件特征 ✅
+                    {% else %}✅ No Significant Spam Indicators ✅{% endif %}</h2>
                 <p>
-                     {% if LANGUAGE_CODE == 'es' %}Correo electrónico
-            {% elif LANGUAGE_CODE == 'fr' %}E-Mail
-            {% elif LANGUAGE_CODE == 'de' %}E-Mail
-            {% elif LANGUAGE_CODE == 'ja' %}メール
-            {% elif LANGUAGE_CODE == 'zh-hans' %}电子邮件
-            {% else %}This email has a low spam risk based on the available data.{% endif %}</p>
+                     {% if LANGUAGE_CODE == 'es' %}Este correo electrónico tiene un riesgo bajo de spam según los datos disponibles.
+                    {% elif LANGUAGE_CODE == 'fr' %}Cet e-mail présente un faible risque de spam selon les données disponibles.
+                    {% elif LANGUAGE_CODE == 'de' %}Diese E-Mail hat basierend auf den verfügbaren Daten ein geringes Spam-Risiko.
+                    {% elif LANGUAGE_CODE == 'ja' %}利用可能なデータに基づくと、このメールのスパムリスクは低いです。
+                    {% elif LANGUAGE_CODE == 'zh-hans' %}根据现有数据，此电子邮件的垃圾邮件风险较低。
+                    {% else %}This email has a low spam risk based on the available data.{% endif %}</p>
             {% endif %}
 
             <p>
                 <strong>
-                     {% if LANGUAGE_CODE == 'es' %}Correo electrónico
-            {% elif LANGUAGE_CODE == 'fr' %}E-Mail
-            {% elif LANGUAGE_CODE == 'de' %}E-Mail
-            {% elif LANGUAGE_CODE == 'ja' %}メール
-            {% elif LANGUAGE_CODE == 'zh-hans' %}电子邮件
-            {% else %}Spam warnings detected:{% endif %}</strong>
+                     {% if LANGUAGE_CODE == 'es' %}Advertencias de spam detectadas:
+                    {% elif LANGUAGE_CODE == 'fr' %}Avertissements de spam détectés :
+                    {% elif LANGUAGE_CODE == 'de' %}Erkannte Spam-Warnungen:
+                    {% elif LANGUAGE_CODE == 'ja' %}検出されたスパム警告：
+                    {% elif LANGUAGE_CODE == 'zh-hans' %}检测到的垃圾邮件警告：
+                    {% else %}Spam warnings detected:{% endif %}</strong>
                 {{ spam_result.score }}
             </p>
 
             {% if spam_result.warnings %}
                 <h3>
-                     {% if LANGUAGE_CODE == 'es' %}Correo electrónico
-            {% elif LANGUAGE_CODE == 'fr' %}E-Mail
-            {% elif LANGUAGE_CODE == 'de' %}E-Mail
-            {% elif LANGUAGE_CODE == 'ja' %}メール
-            {% elif LANGUAGE_CODE == 'zh-hans' %}电子邮件
-            {% else %}Reasons{% endif %}</h3>
+                    {% if LANGUAGE_CODE == 'es' %}Motivos
+                    {% elif LANGUAGE_CODE == 'fr' %}Raisons
+                    {% elif LANGUAGE_CODE == 'de' %}Gründe
+                    {% elif LANGUAGE_CODE == 'ja' %}理由
+                    {% elif LANGUAGE_CODE == 'zh-hans' %}原因
+                    {% else %}Reasons{% endif %}</h3>
                 <ul>
                     {% for warning in spam_result.warnings %}
                         <li>{{ warning }}</li>
@@ -359,14 +357,12 @@
                 </ul>
             {% endif %}
         <p>
-             {% if LANGUAGE_CODE == 'es' %}Correo electrónico
-            {% elif LANGUAGE_CODE == 'fr' %}E-Mail
-            {% elif LANGUAGE_CODE == 'de' %}E-Mail
-            {% elif LANGUAGE_CODE == 'ja' %}メール
-            {% elif LANGUAGE_CODE == 'zh-hans' %}电子邮件
-            {% else %}Note: Results may not be completely accurate, please
-         check the user's information before sending files or
-        clicking links.{% endif %}
+              {% if LANGUAGE_CODE == 'es' %}Nota: Es posible que los resultados no sean completamente precisos; verifica la información del remitente antes de enviar archivos o hacer clic en enlaces.
+                {% elif LANGUAGE_CODE == 'fr' %}Remarque : Les résultats peuvent ne pas être totalement exacts, veuillez vérifier les informations de l'expéditeur avant d'envoyer des fichiers ou de cliquer sur des liens.
+                {% elif LANGUAGE_CODE == 'de' %}Hinweis: Die Ergebnisse sind möglicherweise nicht vollständig genau. Bitte überprüfen Sie die Informationen des Absenders, bevor Sie Dateien senden oder auf Links klicken.
+                {% elif LANGUAGE_CODE == 'ja' %}注意：結果は完全に正確ではない場合があります。ファイルを送信したりリンクをクリックしたりする前に、送信者の情報をご確認ください。
+                {% elif LANGUAGE_CODE == 'zh-hans' %}注意：结果可能不完全准确，在发送文件或点击链接前请核实发件人信息。
+                {% else %}Note: Results may not be completely accurate, please check the user's information before sending files or clicking links.{% endif %}
         </p>
         </div>
         {% endif %}
@@ -374,19 +370,19 @@
         {% if spoof_flags %}
         <div class="carousel-card">
             <h2>
-                 {% if LANGUAGE_CODE == 'es' %}Correo electrónico
-            {% elif LANGUAGE_CODE == 'fr' %}E-Mail
-            {% elif LANGUAGE_CODE == 'de' %}E-Mail
-            {% elif LANGUAGE_CODE == 'ja' %}メール
-            {% elif LANGUAGE_CODE == 'zh-hans' %}电子邮件
-            {% else %}⚠︎ Spoofed Characters Detected{% endif %}</h2>
+                 {% if LANGUAGE_CODE == 'es' %}⚠︎ Caracteres falsificados detectados
+                {% elif LANGUAGE_CODE == 'fr' %}⚠︎ Caractères usurpés détectés
+                {% elif LANGUAGE_CODE == 'de' %}⚠︎ Gefälschte Zeichen erkannt
+                {% elif LANGUAGE_CODE == 'ja' %}⚠︎ なりすまし文字が検出されました
+                {% elif LANGUAGE_CODE == 'zh-hans' %}⚠︎ 检测到伪造字符
+                {% else %}⚠︎ Spoofed Characters Detected{% endif %}</h2>
             <p>
-                 {% if LANGUAGE_CODE == 'es' %}Correo electrónico
-            {% elif LANGUAGE_CODE == 'fr' %}E-Mail
-            {% elif LANGUAGE_CODE == 'de' %}E-Mail
-            {% elif LANGUAGE_CODE == 'ja' %}メール
-            {% elif LANGUAGE_CODE == 'zh-hans' %}电子邮件
-            {% else %}Either the sender's name or email address contains unusual characters or character patterns. Might be an attempt to impersonate a real person/brand</p>
+                 {% if LANGUAGE_CODE == 'es' %}El nombre o la dirección de correo electrónico del remitente contiene caracteres o patrones inusuales. Podría ser un intento de suplantar a una persona o marca real.
+{% elif LANGUAGE_CODE == 'fr' %}Le nom ou l'adresse e-mail de l'expéditeur contient des caractères ou des motifs inhabituels. Il pourrait s'agir d'une tentative d'usurpation d'identité d'une personne ou d'une marque réelle.
+{% elif LANGUAGE_CODE == 'de' %}Entweder der Name oder die E-Mail-Adresse des Absenders enthält ungewöhnliche Zeichen oder Zeichenmuster. Dies könnte ein Versuch sein, eine echte Person oder Marke nachzuahmen.
+{% elif LANGUAGE_CODE == 'ja' %}送信者の名前またはメールアドレスに特殊な文字や文字パターンが含まれています。実在の人物やブランドになりすまそうとしている可能性があります。
+{% elif LANGUAGE_CODE == 'zh-hans' %}发件人的姓名或电子邮件地址包含异常字符或字符模式，可能是试图冒充真实个人或品牌。
+{% else %}Either the sender's name or email address contains unusual characters or character patterns. Might be an attempt to impersonate a real person/brand</p>
             {% endif %}
             <ul>
                 {% for flag in spoof_flags %}
@@ -402,19 +398,19 @@
         {% if body_results %}
         <div class="carousel-card">
             <h2>
-                 {% if LANGUAGE_CODE == 'es' %}Correo electrónico
-            {% elif LANGUAGE_CODE == 'fr' %}E-Mail
-            {% elif LANGUAGE_CODE == 'de' %}E-Mail
-            {% elif LANGUAGE_CODE == 'ja' %}メール
-            {% elif LANGUAGE_CODE == 'zh-hans' %}电子邮件
-            {% else %}⚠︎ URLs Found in Email Body{% endif %}</h2>
+                 {% if LANGUAGE_CODE == 'es' %}⚠︎ URL encontradas en el cuerpo del correo
+                {% elif LANGUAGE_CODE == 'fr' %}⚠︎ URL trouvées dans le corps de l'e-mail
+                {% elif LANGUAGE_CODE == 'de' %}⚠︎ URLs im E-Mail-Text gefunden
+                {% elif LANGUAGE_CODE == 'ja' %}⚠︎ メール本文内にURLが見つかりました
+                {% elif LANGUAGE_CODE == 'zh-hans' %}⚠︎ 在邮件正文中发现 URL
+                {% else %}⚠︎ URLs Found in Email Body{% endif %}</h2>
             <p class="url-warning">
-                 {% if LANGUAGE_CODE == 'es' %}Correo electrónico
-            {% elif LANGUAGE_CODE == 'fr' %}E-Mail
-            {% elif LANGUAGE_CODE == 'de' %}E-Mail
-            {% elif LANGUAGE_CODE == 'ja' %}メール
-            {% elif LANGUAGE_CODE == 'zh-hans' %}电子邮件
-            {% else %}These URLs were found within the email body. Caution is advised.{% endif %}</p>
+                 {% if LANGUAGE_CODE == 'es' %}Se encontraron estas URL dentro del cuerpo del correo electrónico. Se recomienda precaución.
+    {% elif LANGUAGE_CODE == 'fr' %}Ces URL ont été trouvées dans le corps de l'e-mail. La prudence est de mise.
+    {% elif LANGUAGE_CODE == 'de' %}Diese URLs wurden im Textkörper der E-Mail gefunden. Vorsicht ist geboten.
+    {% elif LANGUAGE_CODE == 'ja' %}これらのURLはメール本文内で見つかりました。注意が必要です。
+    {% elif LANGUAGE_CODE == 'zh-hans' %}在邮件正文中发现了以下 URL，请谨慎操作。
+    {% else %}These URLs were found within the email body. Caution is advised.{% endif %}</p>
             <div class="url-list">
                 {% for body_result in body_results %}
                     <div class="url-item">
@@ -432,22 +428,22 @@
                                     <li>{{ warning }}</li>
                                 {% empty %}
                                     <p>
-                                         {% if LANGUAGE_CODE == 'es' %}Correo electrónico
-            {% elif LANGUAGE_CODE == 'fr' %}E-Mail
-            {% elif LANGUAGE_CODE == 'de' %}E-Mail
-            {% elif LANGUAGE_CODE == 'ja' %}メール
-            {% elif LANGUAGE_CODE == 'zh-hans' %}电子邮件
-            {% else %}No warnings found{% endif %}</p>
+                                        {% if LANGUAGE_CODE == 'es' %}No se encontraron advertencias
+                                        {% elif LANGUAGE_CODE == 'fr' %}Aucun avertissement trouvé
+                                        {% elif LANGUAGE_CODE == 'de' %}Keine Warnungen gefunden
+                                        {% elif LANGUAGE_CODE == 'ja' %}警告は見つかりませんでした
+                                        {% elif LANGUAGE_CODE == 'zh-hans' %}未发现警告
+                                        {% else %}No warnings found{% endif %}</p>
                                 {% endfor %}
                             </ul>
                         {% else %}
                             <p>
-                                 {% if LANGUAGE_CODE == 'es' %}Correo electrónico
-            {% elif LANGUAGE_CODE == 'fr' %}E-Mail
-            {% elif LANGUAGE_CODE == 'de' %}E-Mail
-            {% elif LANGUAGE_CODE == 'ja' %}メール
-            {% elif LANGUAGE_CODE == 'zh-hans' %}电子邮件
-            {% else %}No obvious warning signs detected.{% endif %}</p>
+                                 {% if LANGUAGE_CODE == 'es' %}No se detectaron señales de advertencia evidentes.
+                                    {% elif LANGUAGE_CODE == 'fr' %}Aucun signe d'avertissement évident détecté.
+                                    {% elif LANGUAGE_CODE == 'de' %}Keine offensichtlichen Warnzeichen erkannt.
+                                    {% elif LANGUAGE_CODE == 'ja' %}明らかな警告の兆候は検出されませんでした。
+                                    {% elif LANGUAGE_CODE == 'zh-hans' %}未检测到明显的警告迹象。
+                                    {% else %}No obvious warning signs detected.{% endif %}</p>
                         {% endif %}
                     </div>
                 {% endfor %}
@@ -457,20 +453,20 @@
 
         <div class="carousel-controls">
             <button type="button" id="pbutton" onclick="prevCard()">
-                 {% if LANGUAGE_CODE == 'es' %}Correo electrónico
-            {% elif LANGUAGE_CODE == 'fr' %}E-Mail
-            {% elif LANGUAGE_CODE == 'de' %}E-Mail
-            {% elif LANGUAGE_CODE == 'ja' %}メール
-            {% elif LANGUAGE_CODE == 'zh-hans' %}电子邮件
-            {% else %}⮜Previous{% endif %}</button>
+                 {% if LANGUAGE_CODE == 'es' %}⮜Anterior
+        {% elif LANGUAGE_CODE == 'fr' %}⮜Précédent
+        {% elif LANGUAGE_CODE == 'de' %}⮜Zurück
+        {% elif LANGUAGE_CODE == 'ja' %}⮜前へ
+        {% elif LANGUAGE_CODE == 'zh-hans' %}⮜上一页
+        {% else %}⮜Previous{% endif %}</button>
             <span id="progress"></span>
             <button type="button" id="nbutton" onclick="nextCard()">
-                 {% if LANGUAGE_CODE == 'es' %}Correo electrónico
-            {% elif LANGUAGE_CODE == 'fr' %}E-Mail
-            {% elif LANGUAGE_CODE == 'de' %}E-Mail
-            {% elif LANGUAGE_CODE == 'ja' %}メール
-            {% elif LANGUAGE_CODE == 'zh-hans' %}电子邮件
-            {% else %}⮞Next{% endif %}</button>
+                {% if LANGUAGE_CODE == 'es' %}⮞Siguiente
+        {% elif LANGUAGE_CODE == 'fr' %}⮞Suivant
+        {% elif LANGUAGE_CODE == 'de' %}⮞Weiter
+        {% elif LANGUAGE_CODE == 'ja' %}⮞次へ
+        {% elif LANGUAGE_CODE == 'zh-hans' %}⮞下一页
+        {% else %}⮞Next{% endif %}</button>
         </div>
     </div>
 

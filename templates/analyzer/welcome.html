@@ -40,7 +40,24 @@
         {% else %}Past Emails Analyzed{% endif %}</button></a>
     <br>
     <br>
-   <form action="{% url 'set_language' %}" method="post">
+
+    <p> {% if LANGUAGE_CODE == 'es' %}¿Eres nuevo en el analizador?
+        {% elif LANGUAGE_CODE == 'fr' %}Vous découvrez Analyzer?
+        {% elif LANGUAGE_CODE == 'de' %}Neu bei Analyzer?
+        {% elif LANGUAGE_CODE == 'ja' %}Analyzerを初めてお使いですか？
+        {% elif LANGUAGE_CODE == 'zh-hans' %}刚接触 Analyzer？
+        {% else %}New to analyzer?{% endif %}</p>
+        <a href="{% url 'header_help' %}">
+        <button type="button">{% if LANGUAGE_CODE == 'es' %}¡Haz clic aquí para ver un tutorial!
+        {% elif LANGUAGE_CODE == 'fr' %}Cliquez ici pour un tutoriel rapide!
+        {% elif LANGUAGE_CODE == 'de' %}Hier klicken für eine Kurzanleitung!
+        {% elif LANGUAGE_CODE == 'ja' %}簡単なチュートリアルはこちらをクリック！
+        {% elif LANGUAGE_CODE == 'zh-hans' %}点击此处查看快速教程！
+        {% else %}Click here for a quick tutorial!{% endif %}</button>
+        </a>
+    <br>
+    <br>
+    <form action="{% url 'set_language' %}" method="post">
         {% csrf_token %}
         <input name="next" type="hidden" value="{{ request.path }}">
         <select name="language">
@@ -60,19 +77,5 @@
             {% else %}Switch Language{% endif %}
         </button>
     </form>
-    <p> {% if LANGUAGE_CODE == 'es' %}¿Eres nuevo en el analizador?
-        {% elif LANGUAGE_CODE == 'fr' %}Vous découvrez Analyzer?
-        {% elif LANGUAGE_CODE == 'de' %}Neu bei Analyzer?
-        {% elif LANGUAGE_CODE == 'ja' %}Analyzerを初めてお使いですか？
-        {% elif LANGUAGE_CODE == 'zh-hans' %}刚接触 Analyzer？
-        {% else %}New to analyzer?{% endif %}</p>
-        <a href="{% url 'header_help' %}">
-        <button type="button">{% if LANGUAGE_CODE == 'es' %}¡Haz clic aquí para ver un tutorial!
-        {% elif LANGUAGE_CODE == 'fr' %}Cliquez ici pour un tutoriel rapide!
-        {% elif LANGUAGE_CODE == 'de' %}Hier klicken für eine Kurzanleitung!
-        {% elif LANGUAGE_CODE == 'ja' %}簡単なチュートリアルはこちらをクリック！
-        {% elif LANGUAGE_CODE == 'zh-hans' %}点击此处查看快速教程！
-        {% else %}Click here for a quick tutorial!{% endif %}</button>
-        </a>
 {% endblock %}
 
