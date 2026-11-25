@@ -1,6 +1,6 @@
 import geoip2.database
 
-DATABASE_PATH = "geoip/GeoLite2-City/GeoLite2-City_20260929/GeoLite2-City.mmdb"
+DATABASE_PATH = "geoip/GeoLite2-City/GeoLite2-City.mmdb"
 
 ASN_DATABASE_PATH = (
     "geoip/GeoLite2-ASN/GeoLite2-ASN.mmdb"
