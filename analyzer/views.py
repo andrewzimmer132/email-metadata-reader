@@ -9,18 +9,33 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.http import HttpResponse
 from django.utils import timezone
-from .models import LoginAttempt, Email
+from .models import LoginAttempt, Email, EmailReminder
 from django.shortcuts import render, redirect, get_object_or_404
 from analyzer.parser import analyze_header, analyze_body, assess_spam
 from analyzer.spoofed_chars import find_spoof_characters
 from django.views import View
-from datetime import timedelta
+from datetime import timedelta, datetime
 from email import message_from_bytes, policy
 from django.db.models import Q
 from analyzer.geolocation import add_location_and_network_info
+from zoneinfo import ZoneInfo
+from django.contrib import messages
 
 
 # Create your views here.
+def parse_authentication(auth_list):
+    parsed = {'spf': None, 'dkim': None, 'dmarc': None}
+    if not auth_list:
+        return parsed
+    auth_str = " ".join(auth_list).lower()
+    spf_match = re.search(r"spf=(\w+)", auth_str)
+    dkim_match = re.search(r"dkim=(\w+)", auth_str)
+    dmarc_match = re.search(r"dmarc=(\w+)", auth_str)
+    if spf_match: parsed['spf'] = spf_match.group(1)
+    if dkim_match: parsed['dkim'] = dkim_match.group(1)
+    if dmarc_match: parsed['dmarc'] = dmarc_match.group(1)
+    return parsed
+
 class LoginView(View):
     def get(self, request):
         return render(request, 'analyzer/login.html')
@@ -201,6 +216,8 @@ class ResultsView(View):
             new_email.status = 'unsafe'
         new_email.save()
 
+        auth_results = parse_authentication(results["authentication"])
+
         context = {
             'is_authenticated': True,
             'submitted': True,
@@ -210,6 +227,7 @@ class ResultsView(View):
             'spoof_flags': spoof_flags,
             'spam_result': spam_result,
             'email': new_email,
+            'auth_results': auth_results,
         }
 
         return render(request, 'analyzer/results.html', context)
@@ -239,6 +257,8 @@ class EmailResultsView(View):
             email.status = new_status
             email.save(update_fields=['status'])
 
+        auth_results = parse_authentication(results["authentication"])
+
         context = {
             'is_authenticated': True,
             'submitted': True,
@@ -248,6 +268,7 @@ class EmailResultsView(View):
             'spoof_flags': spoof_flags,
             'spam_result': spam_result,
             'email': email,
+            'auth_results': auth_results,
         }
         return render(request, 'analyzer/results.html', context)
 
@@ -331,9 +352,14 @@ class ResetPasswordView(View):
 def compare_emails(request):
     if not request.user.is_authenticated:
         return redirect('login')
-    if request.method != "POST":
-        return redirect('past_emails')
-    email_ids = request.POST.getlist('email_ids')
+    if request.method == "POST":
+        email_ids = request.POST.getlist('email_ids')
+    else:
+        ids_param = request.GET.get('ids')
+        if not ids_param:
+            messages.error(requesr, 'No emails selected for comparison')
+            return redirect('past_emails')
+        email_ids = ids_param.split(',')
 
     if len(set(email_ids)) != 2:
         messages.error(request, 'Exactly two emails can be compared.')
@@ -422,3 +448,26 @@ def header_help_view(request):
         "user": request.user,
     }
     return render(request, "analyzer/header_tutorial.html", context)
+
+
+def reminder_view(request):
+    if request.method == "POST":
+        email = request.POST.get("email")
+        tz_str = request.POST.get("timezone")
+        local_time_str = request.POST.get("remind_at")
+        message = request.POST.get("message", "")
+
+        user_tz = ZoneInfo(tz_str)
+        local_dt = datetime.fromisoformat(local_time_str).replace(tzinfo=user_tz)
+
+        EmailReminder.objects.create(
+            email=email,
+            timezone=tz_str,
+            remind_at=local_dt,  # Django stores this in UTC automatically if USE_TZ=True
+            message=message
+        )
+
+        messages.success(request, "Reminder scheduled successfully!")
+        return redirect("reminder_view")
+
+    return render(request, "analyzer/reminder.html")

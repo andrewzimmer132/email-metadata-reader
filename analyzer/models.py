@@ -54,3 +54,14 @@ class LoginAttempt(models.Model):
 
     def __str__(self):
         return self.username
+
+
+class EmailReminder(models.Model):
+    email = models.EmailField()
+    timezone = models.CharField(max_length=50, default="UTC")
+    remind_at = models.DateTimeField()  # Store in UTC
+    message = models.TextField()
+    sent = models.BooleanField(default=False)
+
+    def __str__(self):
+        return self.email
